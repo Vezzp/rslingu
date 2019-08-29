@@ -1,0 +1,336 @@
+\definecolor{brightube}{rgb}{0.82, 0.62, 0.91}
+
+\colorlet{BaseColor}{NavyBlue}
+\colorlet{PrefixColor}{BrickRed}
+\colorlet{SuffixColor}{Emerald}
+\colorlet{RootColor}{CadetBlue}
+\colorlet{EndingColor}{OliveGreen}
+\colorlet{PostfixColor}{brightube}
+
+\newcommand{\MorphemeSignYPad}{2pt}
+\newcommand{\MorphemeSignXPad}{1pt}
+\newcommand{\MorphemeSignHeight}{4pt}
+\newcommand\MorphemeSignLineWidth{1pt}
+
+
+\newlength{\LenBig}%
+\newlength{\LenSmall}%
+\settoheight\LenSmall{а}%
+\getlength{\TmpSmall}{\LenSmall}%
+
+\NewDocumentCommand{\ExamineMorphemeShift}{ m }{%
+    \settoheight\LenBig{#1}%
+    \getlength{\TmpBig}{\LenBig}%
+    \FPsub\MorphemeYShiftAux\TmpBig\TmpSmall%
+    \FPifneg\MorphemeYShiftAux%
+        \FPset\MorphemeYShiftAux{0}%
+    \else%
+    \fi%
+}
+
+
+% ====================================================================
+% ======================== Prefix (приставка) ========================
+% ====================================================================
+ 
+    \NewDocumentCommand{\WordPrefixAux}{ m O{black} }{%
+        \ExamineMorphemeShift{#1}%
+        \ifblank{#1}{}{%
+            \tikz[baseline=(Root.base)] {%
+                \node[%
+                    inner sep=0pt,
+                    outer sep=0pt,
+                ] (Root) {#1};
+                
+                \begingroup
+                \draw[%
+                    #2,
+                    line width=\MorphemeSignLineWidth,
+                    transform canvas={
+                        yshift=\MorphemeSignYPad - \MorphemeYShiftAux pt,
+                    },
+                ]
+                    let
+                        \p1 = (Root.north west),
+                        \p2 = (Root.north east)
+                    in
+                        (\x1 + \MorphemeSignXPad, \y1 + \MorphemeSignHeight) --
+                        ++(\x2 - \x1 - 2 *  \MorphemeSignXPad, 0) --
+                        ++(0, -\MorphemeSignHeight);
+                \endgroup
+            }%
+        }%
+    }
+    
+    \NewDocumentCommand{\WordPrefixSingle}{ s m }{%
+        \IfBooleanTF{#1}{\WordPrefixAux{#2}[PrefixColor]}{\WordPrefixAux{#2}}%
+    }
+
+    \NewDocumentCommand{\WordPrefix}{ s m }{%
+        \ifblank{#2}{}{%
+            \IfBooleanTF{#1}{%
+                \ProcessVector{\WordPrefixSingle*}{#2}%
+                }{\ProcessVector{\WordPrefixSingle}{#2}}%
+        }%
+    }
+
+    \NewDocumentCommand{\tmp}{ m }{\WordPrefixSingle{\phantom{#1}}}
+    \NewDocumentCommand{\WordPrefixPhantom}{ s m }{%
+        \ifblank{#2}{}{%
+            \IfBooleanTF{#1}{%
+                \ProcessVector{\WordPrefixSingle*\phantom}{#2}%
+                }{\ProcessVector{\tmp}{#2}}%
+        }%
+    }
+
+
+% ====================================================================
+% ======================= Postfix (постфикс) =========================
+% ====================================================================
+
+    \NewDocumentCommand{\WordPostfixAux}{ m O{black} } {%
+        \ifblank{#1}{}%
+        {%
+            \tikz[baseline=(Root.base)]{
+                \node[
+                    inner sep=0pt,
+                    outer sep=0pt
+                ] (Root) {#1};
+    
+                \draw[
+                    #2,
+                    line width=\MorphemeSignLineWidth
+                ]
+                    let
+                        \p1 = (Root.north west),
+                        \p2 = (Root.north east)
+                    in
+                        (\x1 + \MorphemeSignXPad, \y1 + \MorphemeSignYPad) --
+                        (0.5 * \x1 + 0.5 * \x2, \y2 + \MorphemeSignYPad + \MorphemeSignHeight) -- 
+                        (\x2 - \MorphemeSignXPad, \y2 + \MorphemeSignYPad)
+                        (\x1 + \MorphemeSignXPad, \y1 + \MorphemeSignYPad + 3pt) --
+                        (0.5 * \x1 + 0.5 * \x2, \y2 + \MorphemeSignYPad + \MorphemeSignHeight + 3pt) -- 
+                        (\x2 - \MorphemeSignXPad, \y2 + \MorphemeSignYPad + 3pt)
+                        ;
+            }%
+        }%
+    }
+
+
+    \NewDocumentCommand{\WordPostfix}{ s m }{%
+        \IfBooleanTF{#1}{\WordPostfixAux{#2}[PostfixColor]}{\WordPostfixAux{#2}}%
+    }
+    
+    
+    \NewDocumentCommand{\WordPostfixSeq}{ s m }{%
+        \ifblank{#2}{}{%
+            \IfBooleanTF{#1}{%
+                \ProcessVector{\WordPostfix*}{#2}%
+                }{\ProcessVector{\WordPostfix}{#2}}%
+        }%
+    }
+
+
+% ====================================================================
+% ======================== Suffux (суффикс) ==========================
+% ====================================================================
+
+    \NewDocumentCommand{\WordSuffixAux}{ m O{black} } {%
+        \ifblank{#1}{}%
+        {%
+            \tikz[baseline=(Root.base)]{
+                \node[
+                    inner sep=0pt,
+                    outer sep=0pt
+                ] (Root) {#1};
+    
+                \draw[
+                    #2,
+                    line width=\MorphemeSignLineWidth
+                ]
+                    let
+                        \p1 = (Root.north west),
+                        \p2 = (Root.north east)
+                    in
+                        (\x1 + \MorphemeSignXPad, \y1 + \MorphemeSignYPad) --
+                        (0.5 * \x1 + 0.5 * \x2, \y2 + \MorphemeSignYPad + \MorphemeSignHeight) -- 
+                        (\x2 - \MorphemeSignXPad, \y2 + \MorphemeSignYPad);
+            }%
+        }%
+    }
+
+    
+    \NewDocumentCommand{\WordSuffix}{ s m }{%
+        \IfBooleanTF{#1}{\WordSuffixAux{#2}[SuffixColor]}{\WordSuffixAux{#2}}%
+    }
+    
+    
+    \NewDocumentCommand{\WordSuffixSeq}{ s m }{%
+        \ifblank{#2}{}{%
+            \IfBooleanTF{#1}{%
+                \ProcessVector{\WordSuffix*}{#2}%
+                }{\ProcessVector{\WordSuffix}{#2}}%
+        }%
+    }
+
+
+
+% ====================================================================
+% ========================== Root (корень) ===========================
+% ====================================================================
+
+
+    \NewDocumentCommand{\WordRootAux}{ m O{black} }{%
+        \ExamineMorphemeShift{#1}%
+        \tikz[baseline=(Root.base)]{%
+            \node[inner sep=0pt, outer sep=0pt] (Root) {#1};%
+            
+            \draw[%
+                #2,
+                line width=\MorphemeSignLineWidth,%
+                transform canvas={
+                    yshift=\MorphemeSignYPad,
+                },
+            ]%
+                ([xshift=\MorphemeSignXPad]Root.north west)%
+                parabola[bend pos=0.5] bend + (0, \MorphemeSignHeight)%
+                ([xshift=-\MorphemeSignXPad]Root.north east);%
+        }%
+    }
+    
+    \NewDocumentCommand{\WordRoot}{ s m }{%
+        \IfBooleanTF{#1}{\WordRootAux{#2}[RootColor]}{\WordRootAux{#2}}%
+    }
+    
+    
+    \NewDocumentCommand{\WordRootSeq}{ s m }{%
+        \IfBooleanTF{#1}{%
+            \ProcessVector{\WordRoot*}{#2}%
+            }{\ProcessVector{\WordRoot}{#2}}%
+    }
+
+
+
+% ====================================================================
+% ======================== Ending (окончание) ========================
+% ====================================================================
+
+    \NewDocumentCommand{\WordEndingTmp}{ m O{black}}{%
+        \tikz[baseline=(Root.base)]{%
+            \node[
+                inner sep=1pt,
+                outer sep=0pt
+            ] (Root) {%
+                \fullVPhantom\ifblank{#1}{\hphantom{o}}{#1}%
+            };%
+            \draw[
+                #2,
+                line width=\MorphemeSignLineWidth,
+            ]%
+                let%
+                    \p1 = (Root.south west),%
+                    \p2 = (Root.north east)%
+                in%
+                    (\x1, \y1 - \MorphemeSignYPad + 1) |-%
+                    (\x2, \y2 + \MorphemeSignYPad) |-%
+                    cycle;%
+        }%
+    }
+    
+    \NewDocumentCommand{\WordEnding}{ s m }{%
+        \IfBooleanTF{#1}{\WordEndingTmp{#2}[EndingColor]}{\WordEndingTmp{#2}}%
+    }
+
+
+% ====================================================================
+% =========================== Base (основа) ==========================
+% ====================================================================
+    
+        \NewDocumentCommand{\WordBaseTmp}{ m O{black} }{%
+            \IfValueT{#1}{%
+                \tikz[baseline=(Root.base)]{%
+                    \node[inner sep=0pt, outer sep=0pt] (Root) {#1\downVPhantom};
+                    \draw[#2, line width=\MorphemeSignLineWidth]
+                        let
+                            \p1 = (Root.south west),
+                            \p2 = (Root.south east)
+                        in
+                            (\x1 + 1.5 * \MorphemeSignXPad, \y1 + .15 * \MorphemeSignYPad) --
+                            ++(0, -1.15 * \MorphemeSignYPad) -|
+                            (\x2 - 1.5 * \MorphemeSignXPad, \y2 + .15 * \MorphemeSignYPad);
+                }%
+            }%
+        }
+        
+        \NewDocumentCommand{\WordBase}{ s m }{%
+            \IfBooleanTF{#1}{\WordBaseTmp{#2}[BaseColor]}{\WordBaseTmp{#2}}%
+        }
+        
+        
+    % Right base (Правая основа). 
+        \NewDocumentCommand{\WordBaseRTmp}{ m O{black} }{%
+            \IfValueT{#1}{%
+                \tikz[baseline=(Root.base)]{%
+                    \node[inner sep=0pt, outer sep=0pt] (Root) {#1\downVPhantom};
+                    \draw[#2, line width=\MorphemeSignLineWidth]
+                        let
+                            \p1 = (Root.south west),
+                            \p2 = (Root.south east)
+                        in
+                            (\x1 + \MorphemeSignXPad, \y1 - \MorphemeSignYPad) -|
+                            (\x2 - \MorphemeSignXPad, \y2 + .15 * \MorphemeSignYPad);
+                }%
+            }%
+        }
+        
+        \NewDocumentCommand{\WordBaseR}{ s m }{%
+            \IfBooleanTF{#1}{\WordBaseRTmp{#2}[BaseColor]}{\WordBaseRTmp{#2}}%
+        }
+        
+        
+    % Left base (Левая основа). 
+        \NewDocumentCommand{\WordBaseLTmp}{ m O{black} }{%
+            \IfValueT{#1}{%
+                \tikz[baseline=(Root.base)]{%
+                    \node[inner sep=0pt, outer sep=0pt] (Root) {#1\downVPhantom};
+                    \draw[
+                        #2,
+                        line width=\MorphemeSignLineWidth
+                    ]
+                        let
+                            \p1 = (Root.south west),
+                            \p2 = (Root.south east)
+                        in
+                            (\x1 + \MorphemeSignXPad, \y1 + .15 * \MorphemeSignYPad) --
+                            ++(0, -1.15 * \MorphemeSignYPad pt) --
+                            (\x2 - \MorphemeSignXPad, \y2 - \MorphemeSignYPad);
+                }%
+            }%
+        }
+        
+        \NewDocumentCommand{\WordBaseL}{ s m }{%
+            \IfBooleanTF{#1}{\WordBaseLTmp{#2}[BaseColor]}{\WordBaseLTmp{#2}}%
+        }
+
+
+% ====================================================================
+% ================ Word Analysis (стандартный разбор) ================
+% ====================================================================
+% Стандартный морфмемный разбор слова (основа непрерывна).
+    \NewDocumentCommand{\StdWordAnalysis}{ smmmmm }{%
+        \IfBooleanTF{#1}{%
+            \WordBase*{%
+                \WordPrefixSeq*{#2}%
+                \WordRootSeq*{#3}%
+                \WordSuffixSeq*{#4}%
+            }\WordEnding*{#5}%
+            \WordPostfixSeq*{#6}%
+        }{%
+            \WordBase{%
+                \WordPrefixSeq{#2}%
+                \WordRootSeq{#3}%
+                \WordSuffixSeq{#4}%
+            }\WordEnding{#5}%
+            \WordPostfixSeq{#6}%
+        }%
+    }

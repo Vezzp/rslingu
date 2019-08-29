@@ -1,0 +1,108 @@
+% Process input of form `Key:Value`
+\NewDocumentCommand{\ProcessPair}{ m m }{%
+    \StrCut{#2}{:}\Key\Value%
+    #1{\Key}{\Value}%
+}
+
+
+% Process input of form `Item1, Item2, ...`
+\NewDocumentCommand{\ProcessVector}{ m m O{} }{%
+    {%
+        \newcommand{\isFirstIteration}{1}%
+        \setsepchar{,}%
+        \readlist*\looplist{#2}%
+        \foreachitem \n \in \looplist{%
+            \ifthenelse{\isFirstIteration = 1}{%
+                \renewcommand{\isFirstIteration}{0}%
+            }{#3}%
+            #1{\n}%
+        }%
+    }%
+}
+
+
+% Process input of form `K1:V1, K2:V2, ...`.
+\NewDocumentCommand{\ProcessMap}{ m m O{} }{%
+    {%
+        \newcommand{\tmpFn}[1]{\ProcessPair{#1}{##1}}%
+        \ProcessVector{\tmpFn}{#2}[#3]%
+    }%
+}
+
+
+% NOTE: Could be broaden to broader functionality.
+\NewDocumentCommand{\textoverset}{ O{\commonYShift} m m }{%
+    \tikz[baseline=(Root.base)]{%
+        \node[inner sep=0pt,
+              outer sep=0pt,
+              label={[inner sep=0pt,
+                      outer sep=0pt,
+                      font=\tiny\itshape,
+                      yshift=#1] #3\upperVPhantom}] (Root) {#2\upperVPhantom};%
+    }%
+}
+
+
+% Extracts value from dimen.
+% https://tex.stackexchange.com/questions/15001/getting-length-as-number
+\newcommand*{\getlength}[2]{%
+   \pgfmathsetmacro#1{#2}%  Result in `pt`
+   % Or:
+   %\pgfmathsetmacro#1{0.0351459804*#2}%  Result in `cm`
+}
+
+
+\newif\ifstartcompletesineup
+\newif\ifendcompletesineup
+\pgfkeys{
+    /pgf/decoration/.cd,
+    start up/.is if=startcompletesineup,
+    start up=true,
+    start up/.default=true,
+    start down/.style={/pgf/decoration/start up=false},
+    end up/.is if=endcompletesineup,
+    end up=true,
+    end up/.default=true,
+    end down/.style={/pgf/decoration/end up=false}
+}
+\pgfdeclaredecoration{complete sines}{initial}
+{
+    \state{initial}[
+        width=+0pt,
+        next state=upsine,
+        persistent precomputation={
+            \ifstartcompletesineup
+                \pgfkeys{/pgf/decoration automaton/next state=upsine}
+                \ifendcompletesineup
+                    \pgfmathsetmacro\matchinglength{
+                        0.5*\pgfdecoratedinputsegmentlength / (ceil(0.5* \pgfdecoratedinputsegmentlength / \pgfdecorationsegmentlength) )
+                    }
+                \else
+                    \pgfmathsetmacro\matchinglength{
+                        0.5 * \pgfdecoratedinputsegmentlength / (ceil(0.5 * \pgfdecoratedinputsegmentlength / \pgfdecorationsegmentlength ) - 0.499)
+                    }
+                \fi
+            \else
+                \pgfkeys{/pgf/decoration automaton/next state=downsine}
+                \ifendcompletesineup
+                    \pgfmathsetmacro\matchinglength{
+                        0.5* \pgfdecoratedinputsegmentlength / (ceil(0.5 * \pgfdecoratedinputsegmentlength / \pgfdecorationsegmentlength ) - 0.4999)
+                    }
+                \else
+                    \pgfmathsetmacro\matchinglength{
+                        0.5 * \pgfdecoratedinputsegmentlength / (ceil(0.5 * \pgfdecoratedinputsegmentlength / \pgfdecorationsegmentlength ) )
+                    }
+                \fi
+            \fi
+            \setlength{\pgfdecorationsegmentlength}{\matchinglength pt}
+        }] {}
+    \state{downsine}[width=\pgfdecorationsegmentlength,next state=upsine]{
+        \pgfpathsine{\pgfpoint{0.5\pgfdecorationsegmentlength}{0.5\pgfdecorationsegmentamplitude}}
+        \pgfpathcosine{\pgfpoint{0.5\pgfdecorationsegmentlength}{-0.5\pgfdecorationsegmentamplitude}}
+    }
+    \state{upsine}[width=\pgfdecorationsegmentlength,next state=downsine]{
+        \pgfpathsine{\pgfpoint{0.5\pgfdecorationsegmentlength}{-0.5\pgfdecorationsegmentamplitude}}
+        \pgfpathcosine{\pgfpoint{0.5\pgfdecorationsegmentlength}{0.5\pgfdecorationsegmentamplitude}}
+}
+    \state{final}{}
+}

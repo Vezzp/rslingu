@@ -1,0 +1,175 @@
+% Colours.
+
+
+
+
+\definecolor{SubjectColor}{HTML}{673ab7}
+\definecolor{PredicateColor}{HTML}{e81e62}
+\definecolor{AttributeColor}{HTML}{2196f3}
+\definecolor{AdverbarialColor}{HTML}{009688}
+\definecolor{ObjectColor}{HTML}{ffa500}
+
+
+% Underline subject.
+\NewDocumentCommand{\UnderlineSubject}{ O{black} m }{%
+    \tikz[baseline=(Root.base)]{%
+        \node[
+            inner sep=0pt,
+             outer sep=0pt
+        ] (Root) {\downVPhantom#2};
+        \path ([yshift=-\commonYShift]Root.south west);             
+        \draw[%
+            color=#1,
+            line width=\phraseUnderlineLineWidth,
+            inner sep=0pt,
+            outer sep=0pt,
+            overlay
+        ] ([yshift=-\commonYShift]Root.south west) --
+          ([yshift=-\commonYShift]Root.south east);
+    }%
+}
+
+
+% Underline predicate.
+\NewDocumentCommand{\UnderlinePredicate}{ O{black} m }{%
+    \tikz[baseline=(Root.base)]{%
+        \node[
+            inner sep=0pt,
+             outer sep=0pt,
+        ] (Root) {\downVPhantom#2};
+        \path ([yshift=-2*\commonYShift]Root.south west);             
+        \draw[%
+            #1,
+            line width=\phraseUnderlineLineWidth,
+            inner sep=0pt,
+            outer sep=0pt,
+            overlay,
+        ] ([yshift=-\commonYShift]Root.south west) --
+          ([yshift=-\commonYShift]Root.south east);
+        \draw[%
+            #1,
+            line width=\phraseUnderlineLineWidth,
+            inner sep=0pt,
+            outer sep=0pt,
+            overlay,
+        ] ([yshift=-\commonYShift - 1.75]Root.south west) --
+          ([yshift=-\commonYShift - 1.75]Root.south east);
+    }%
+}
+
+
+% Underline adverbarial.
+\NewDocumentCommand{\UnderlineAdverbarial}{ O{black} m }{%
+    \tikz[baseline=(Root.base)]{%
+        \node[inner sep=0pt,
+              outer sep=0pt] (Root) {\downVPhantom#2};
+        \draw[%
+            #1,
+            line width=\phraseUnderlineLineWidth,
+            inner sep=0pt,
+            outer sep=0pt,
+            overlay,
+            dash pattern={on 5pt off 1pt on 1pt off 1pt}
+        ] ([yshift=-\commonYShift]Root.south west) --
+          ([yshift=-\commonYShift]Root.south east);
+    }%
+}
+
+% Underline attribute.
+\NewDocumentCommand{\UnderlineAttribute}{ O{black} m }{%
+    \tikz[baseline=(Root.base)]{%
+        \node[inner sep=0pt,
+              outer sep=0pt] (Root) {\downVPhantom#2};
+        \draw[%
+            #1,
+            line width=\phraseUnderlineLineWidth,
+            inner sep=0pt,
+            outer sep=0pt,
+            overlay,
+            decorate,
+            decoration={
+                complete sines,
+                segment length=2.75pt,
+                amplitude=1.75,
+                mirror,
+                start up,
+                end down
+            }
+        ] ([yshift=-\commonYShift]Root.south west) --
+          ([yshift=-\commonYShift]Root.south east);
+    }%
+}
+
+
+
+% Underline adverbarial.
+\NewDocumentCommand{\UnderlineObject}{ O{black} m }{%
+    \tikz[baseline=(Root.base)]{%
+        \node[inner sep=0pt,
+              outer sep=0pt] (Root) {\downVPhantom#2};
+        \draw[%
+            #1,
+            line width=\phraseUnderlineLineWidth,
+            inner sep=0pt,
+            outer sep=0pt,
+            overlay,
+            dash pattern={on 5pt off 2pt on 1pt off 0pt}
+        ] ([yshift=-\commonYShift]Root.south west) --
+          ([yshift=-\commonYShift]Root.south east);
+    }%
+}
+
+
+\NewDocumentCommand{\Subject}{ s m }{%
+    \IfBooleanTF{#1}{%
+        \UnderlineSubject[SubjectColor]{\ProcessMap{\textoverset}{#2}[ ]}%
+    }{%
+        \UnderlineSubject{\ProcessMap{\textoverset}{#2}[ ]}%
+    }%
+}
+
+
+\NewDocumentCommand{\Predicate}{ s m }{%
+    \IfBooleanTF{#1}{%
+        \UnderlinePredicate[PredicateColor]{\ProcessMap{\textoverset}{#2}[ ]}%
+    }{%
+        \UnderlinePredicate{\ProcessMap{\textoverset}{#2}[ ]}%
+    }%
+}
+
+
+\NewDocumentCommand{\Adverbarial}{ s m }{%
+    \IfBooleanTF{#1}{%
+        \UnderlineAdverbarial[AdverbarialColor]{\ProcessMap{\textoverset}{#2}[ ]}%
+    }{%
+        \UnderlineAdverbarial{\ProcessMap{\textoverset}{#2}[ ]}%
+    }%
+}
+
+
+\NewDocumentCommand{\Attribute}{ s m }{%
+    \IfBooleanTF{#1}{%
+        \UnderlineAttribute[AttributeColor]{\ProcessMap{\textoverset}{#2}[ ]}%
+    }{%
+        \UnderlineAttribute{\ProcessMap{\textoverset}{#2}[ ]}%
+    }%
+}
+
+
+\NewDocumentCommand{\Object}{ s m }{%
+    \IfBooleanTF{#1}{%
+        \UnderlineObject[ObjectColor]{\ProcessMap{\textoverset}{#2}[ ]}%
+    }{%
+        \UnderlineObject{\ProcessMap{\textoverset}{#2}[ ]}%
+    }%
+}
+
+
+\NewDocumentCommand{\Noun}{ m }{\textoverset{#1}{сущ.}}
+\NewDocumentCommand{\Pronoun}{ m }{\textoverset{#1}{мест.}}
+\NewDocumentCommand{\Verb}{ m }{\textoverset{#1}{глаг.}}
+\NewDocumentCommand{\Adjective}{ m }{\textoverset{#1}{прил.}}
+\NewDocumentCommand{\Particle}{ m }{\textoverset{#1}{част.}}
+\NewDocumentCommand{\Union}{ m }{\textoverset{#1}{союз}}
+\NewDocumentCommand{\Adverb}{ m }{\textoverset{#1}{нареч.}}
+\NewDocumentCommand{\Pretext}{ m }{\textoverset{#1}{предлог}}

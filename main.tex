@@ -1,0 +1,37 @@
+\documentclass[20pt, dvipsnames]{extarticle}
+
+\usepackage[bottom=2cm,
+            left=2cm,
+            right=2cm,
+            top=2cm]{geometry}
+
+\linespread{1.5}
+
+\usepackage{ifxetex}
+\ifxetex
+    \usepackage[cm-default]{fontspec}
+    \defaultfontfeatures{Ligatures=TeX}
+    \usepackage{polyglossia}
+    \setdefaultlanguage{russian}
+    \setmainfont{Times New Roman}
+    \newfontfamily\cyrillicfont{Times New Roman}[Script=Cyrillic]
+\else
+   \usepackage[utf8]{inputenc}
+   \usepackage[russian]{babel}
+\fi
+
+\usepackage{RSLingu/rslingu}
+
+
+\begin{document}
+
+Начинайте набирать текст.
+
+\Attribute*{привет}
+\Object*{привет}
+\Subject*{привет}
+\Adverbarial*{привет}
+\Predicate*{привет}
+
+
+\end{document}

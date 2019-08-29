@@ -1,0 +1,41 @@
+% Russian School Linguistics package.
+% 
+% (c) Vladislav Shlenskii
+%
+%% This program can be redistributed and/or modified under the terms
+%% of the LaTeX Project Public License Distributed.
+% 
+
+
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{rslinguistics}
+  [2019/07/08 v0.01 LaTeX package for]
+
+
+\def\commonYShift{0.75}
+\def\phraseUnderlineLineWidth{1}
+
+\def\upperVPhantom{\vphantom{б}}
+\def\downVPhantom{\vphantom{у}}
+\def\fullVPhantom{\upperVPhantom\downVPhantom}
+
+
+\RequirePackage{tikz}
+    \usetikzlibrary{calc}
+    \usetikzlibrary{decorations.pathmorphing}
+
+\RequirePackage{xstring}
+\RequirePackage{listofitems}
+\RequirePackage{xparse}
+\RequirePackage{ifthen}
+\RequirePackage{xcolor}
+\RequirePackage{fp}
+\RequirePackage{pgf}
+
+
+
+\input{RSLingu/functional.tex}
+\input{RSLingu/morphemes.tex}
+\input{RSLingu/syntax.tex}
+
+\endinput
