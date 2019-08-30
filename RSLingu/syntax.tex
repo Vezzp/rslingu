@@ -1,11 +1,7 @@
 \def\RSUlineYShift{2}
 \def\RSUlineWidth{1.25}
 
-\tikzset{%
-    RSCage/.style={
-        inner sep=0pt,
-        outer sep=0pt,
-    },
+\tikzset{
     RSUline/.style={
         line width=\RSUlineWidth pt,
         % inner sep=0pt,
@@ -150,56 +146,39 @@
     }
 
 
-\NewDocumentCommand{\Noun}{ O{} m }{
-    \ifblank{#1}{%
-        \textoverset{#2}{\rsverb}
-    }{%
-        \textoverset{#2}{\NOUN, #1}
-    }
+
+\NewDocumentCommand{\rsNoun}{ O{} m }{%
+    \textoverset{#2}{сущ.\ifblank{#1}{}{, #1}}%
 }
 
 
-\NewDocumentCommand{\Verb}{ O{} m }{
-    \ifblank{#1}{%
-        \textoverset{#2}{\rsverb}
-    }{%
-        \textoverset{#2}{\rsverb, #1}
-    }
+\NewDocumentCommand{\rsVerb}{ O{} m }{%
+    \textoverset{#2}{глаг.\ifblank{#1}{}{, #1}}%
 }
 
 
-\NewDocumentCommand{\Adverb}{ O{} m }{
-    \ifblank{#1}{%
-        \textoverset{#2}{\rsadv}
-    }{%
-        \textoverset{#2}{\rsadv, #1}
-    }
-}
-
-\NewDocumentCommand{\Pretext}{ O{} m }{
-    \ifblank{#1}{%
-        \textoverset{#2}{\rsptxt}
-    }{%
-        \textoverset{#2}{\rsptxt, #1}
-    }
+\NewDocumentCommand{\rsAdverb}{ O{} m }{%
+    \textoverset{#2}{нареч.\ifblank{#1}{}{, #1}}%
 }
 
 
-\NewDocumentCommand{\Particle}{ O{} m }{
-    \ifblank{#1}{%
-        \textoverset{#2}{\rsptcl}
-    }{%
-        \textoverset{#2}{\rsptcl, #1}
-    }
+\NewDocumentCommand{\rsPretext}{ O{} m }{%
+    \textoverset{#2}{предлог\ifblank{#1}{}{, #1}}%
 }
 
 
+\NewDocumentCommand{\rsUnion}{ O{} m }{%
+    \textoverset{#2}{союз\ifblank{#1}{}{, #1}}%
+}
 
-% \NewDocumentCommand{\Noun}{ m }{\textoverset{#1}{сущ.}}
-% \NewDocumentCommand{\Pronoun}{ m }{\textoverset{#1}{мест.}}
-% \NewDocumentCommand{\Verb}{ m }{\textoverset{#1}{глаг.}}
-% \NewDocumentCommand{\Adjective}{ m }{\textoverset{#1}{прил.}}
-% \NewDocumentCommand{\Particle}{ m }{\textoverset{#1}{част.}}
-% \NewDocumentCommand{\Union}{ m }{\textoverset{#1}{союз}}
-% \NewDocumentCommand{\Adverb}{ m }{\textoverset{#1}{нареч.}}
-% \NewDocumentCommand{\Pretext}{ m }{\textoverset{#1}{предлог}}
+\NewDocumentCommand{\rsPronoun}{ O{} m }{%
+    \textoverset{#2}{мест.\ifblank{#1}{}{, #1}}%
+}
+
+\NewDocumentCommand{\rsAdjective}{ O{} m }{%
+    \textoverset{#2}{прил.\ifblank{#1}{}{, #1}}%
+}
+
+\NewDocumentCommand{\rsParticle}{ O{} m }{%
+    \textoverset{#2}{част.\ifblank{#1}{}{, #1}}%
+}

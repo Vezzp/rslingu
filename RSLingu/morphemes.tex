@@ -13,6 +13,35 @@
 \newcommand\MorphemeSignLineWidth{1pt}
 
 
+
+\newcommand{\RSMorphemeSignHeight}{4}
+\newcommand{\RSMorphemeSignXPad}{1}
+\newcommand{\RSMorphemeSignYPad}{3}
+\newcommand{\RSMorphemeSignLineWidth}{2}
+
+\newlength{\RSLenTallAux}
+\newlength{\RSLenNormalAux}
+\settoheight\RSLenNormalAux{о}    
+\getlength{\RSLenNormal}{\RSLenNormalAux}
+
+\NewDocumentCommand{\rsGetMorphemeShift}{ m }{%
+    \settoheight\RSLenTallAux{#1}%
+    \getlength{\RSLenTall}{\RSLenTallAux}%
+    \FPsub\RSMorphemeSignYPadAux\RSLenTall\RSLenNormal%
+    \FPifneg\RSMorphemeSignYPadAux%
+        \FPSet\RSMorphemeSignYPadAux{0}%
+    \else%
+    \fi%
+}
+
+\tikzset{%
+    RSMorphemeLine/.style={%
+        line width=\RSMorphemeSignLineWidth pt,
+    },
+}
+
+
+
 \newlength{\LenBig}%
 \newlength{\LenSmall}%
 \settoheight\LenSmall{а}%
@@ -29,59 +58,79 @@
 }
 
 
+\ExplSyntaxOn
+
+\keys_define:nn { rs/morphemes/phantom }{%
+    phantom .bool_set:N = \l_rs_morphemes_phantom_bool,
+    phantom .default:n = true
+}
+
+\ExplSyntaxOff
+
+
 % ====================================================================
 % ======================== Prefix (приставка) ========================
 % ====================================================================
- 
-    \NewDocumentCommand{\WordPrefixAux}{ m O{black} }{%
-        \ExamineMorphemeShift{#1}%
-        \ifblank{#1}{}{%
-            \tikz[baseline=(Root.base)] {%
-                \node[%
-                    inner sep=0pt,
-                    outer sep=0pt,
-                ] (Root) {#1};
-                
-                \begingroup
-                \draw[%
-                    #2,
-                    line width=\MorphemeSignLineWidth,
-                    transform canvas={
-                        yshift=\MorphemeSignYPad - \MorphemeYShiftAux pt,
+
+\ExplSyntaxOn
+
+    \NewDocumentCommand{\rsPrefixAux}{ s O{} m }{%
+        \rsGetMorphemeShift{#3}
+        \ifblank{#3}{}{%
+            \keys_set:nn { rs/morphemes/phantom } {%
+                phantom=false, % initialize to false
+                #2
+             }
+            \tikz[baseline=(Root.base)]{%
+                \bool_if:NTF \l_rs_morphemes_phantom_bool{
+                    \begingroup
+                        \StrLen{#3}[\tmp]
+                        \node[RSCage] (Root) {\phantom{\dorepeate{\tmp}{о}}};
+                        \node at (Root.center) {\textbullet};
+                    \endgroup
+                }{
+                    \node[RSCage] (Root) {#3};
+                }
+                \draw[
+                    RSMorphemeLine,
+                    \IfBooleanTF{#1}{RSPrefixColor}{black},
+                    transform~canvas={%
+                        yshift=\RSMorphemeSignYPad - \RSMorphemeSignYPadAux pt,
                     },
                 ]
                     let
-                        \p1 = (Root.north west),
-                        \p2 = (Root.north east)
+                        \p1 = (Root.north~west),
+                        \p2 = (Root.north~east)
                     in
-                        (\x1 + \MorphemeSignXPad, \y1 + \MorphemeSignHeight) --
-                        ++(\x2 - \x1 - 2 *  \MorphemeSignXPad, 0) --
-                        ++(0, -\MorphemeSignHeight);
-                \endgroup
+                        (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignHeight) --
+                        (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignHeight) --
+                        ++(0, -\RSMorphemeSignHeight pt);
             }%
         }%
     }
     
-    \NewDocumentCommand{\WordPrefixSingle}{ s m }{%
-        \IfBooleanTF{#1}{\WordPrefixAux{#2}[PrefixColor]}{\WordPrefixAux{#2}}%
-    }
-
-    \NewDocumentCommand{\WordPrefix}{ s m }{%
-        \ifblank{#2}{}{%
+    \NewDocumentCommand{\rsPrefix}{ s O{} m }{%
+        \keys_set:nn { rs/morphemes/phantom } {%
+            phantom=false, % initialize to false
+            #2
+         }
+        \ifblank{#3}{}{%
             \IfBooleanTF{#1}{%
-                \ProcessVector{\WordPrefixSingle*}{#2}%
-                }{\ProcessVector{\WordPrefixSingle}{#2}}%
+                \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                    \ProcessVector{\rsPrefixAux*[phantom]}{#3}%
+                }{%
+                    \ProcessVector{\rsPrefixAux*}{#3}%
+                }%
+            }{%
+                \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                    \ProcessVector{\rsPrefixAux[phantom]}{#3}%
+                }{
+                    \ProcessVector{\rsPrefixAux}{#3}%
+                }%
+            }%
         }%
     }
-
-    \NewDocumentCommand{\tmp}{ m }{\WordPrefixSingle{\phantom{#1}}}
-    \NewDocumentCommand{\WordPrefixPhantom}{ s m }{%
-        \ifblank{#2}{}{%
-            \IfBooleanTF{#1}{%
-                \ProcessVector{\WordPrefixSingle*\phantom}{#2}%
-                }{\ProcessVector{\tmp}{#2}}%
-        }%
-    }
+\ExplSyntaxOff
 
 
 % ====================================================================
@@ -132,46 +181,65 @@
 
 
 % ====================================================================
-% ======================== Suffux (суффикс) ==========================
+% ======================== Suffix (суффикс) ==========================
 % ====================================================================
 
-    \NewDocumentCommand{\WordSuffixAux}{ m O{black} } {%
-        \ifblank{#1}{}%
-        {%
-            \tikz[baseline=(Root.base)]{
-                \node[
-                    inner sep=0pt,
-                    outer sep=0pt
-                ] (Root) {#1};
-    
-                \draw[
-                    #2,
-                    line width=\MorphemeSignLineWidth
-                ]
-                    let
-                        \p1 = (Root.north west),
-                        \p2 = (Root.north east)
-                    in
-                        (\x1 + \MorphemeSignXPad, \y1 + \MorphemeSignYPad) --
-                        (0.5 * \x1 + 0.5 * \x2, \y2 + \MorphemeSignYPad + \MorphemeSignHeight) -- 
-                        (\x2 - \MorphemeSignXPad, \y2 + \MorphemeSignYPad);
+\ExplSyntaxOn
+
+\NewDocumentCommand{\rsSuffixAux}{ s O{} m }{%
+    \ifblank{#3}{}{%
+        \keys_set:nn { rs/morphemes/phantom } {%
+            phantom=false, % initialize to false
+            #2
+         }
+        \tikz[baseline=(Root.base)]{%
+            \bool_if:NTF \l_rs_morphemes_phantom_bool{
+                \begingroup
+                    \StrLen{#3}[\tmp]
+                    \node[RSCage] (Root) {\phantom{\dorepeate{\tmp}{о}}};
+                    \node at (Root.center) {\textbullet};
+                \endgroup
+            }{
+                \node[RSCage] (Root) {#3};
+            }
+            \draw[
+                RSMorphemeLine,
+                \IfBooleanTF{#1}{RSSuffixColor}{black},
+            ]
+                let
+                    \p1 = (Root.north~west),
+                    \p2 = (Root.north~east)
+                in
+                    (\x1 + \RSMsignXPad, \y1 + \RSMsignYPad) --
+                    (.5 * \x1 + .5 * \x2, \y2 + \RSMsignYPad + \RSMsignHeight) --
+                    (\x2 - \RSMsignXPad, \y2 + \RSMsignYPad);
+        }%
+    }%
+}
+
+\NewDocumentCommand{\rsSuffix}{ s O{} m }{%
+    \keys_set:nn { rs/morphemes/phantom } {%
+        phantom=false, % initialize to false
+        #2
+     }
+    \ifblank{#3}{}{%
+        \IfBooleanTF{#1}{%
+            \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                \ProcessVector{\rsSuffixAux*[phantom]}{#3}%
+            }{%
+                \ProcessVector{\rsSuffixAux*}{#3}%
+            }%
+        }{%
+            \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                \ProcessVector{\rsSuffixAux[phantom]}{#3}%
+            }{
+                \ProcessVector{\rsSuffixAux}{#3}%
             }%
         }%
-    }
+    }%
+}
 
-    
-    \NewDocumentCommand{\WordSuffix}{ s m }{%
-        \IfBooleanTF{#1}{\WordSuffixAux{#2}[SuffixColor]}{\WordSuffixAux{#2}}%
-    }
-    
-    
-    \NewDocumentCommand{\WordSuffixSeq}{ s m }{%
-        \ifblank{#2}{}{%
-            \IfBooleanTF{#1}{%
-                \ProcessVector{\WordSuffix*}{#2}%
-                }{\ProcessVector{\WordSuffix}{#2}}%
-        }%
-    }
+\ExplSyntaxOff
 
 
 
@@ -317,20 +385,20 @@
 % ================ Word Analysis (стандартный разбор) ================
 % ====================================================================
 % Стандартный морфмемный разбор слова (основа непрерывна).
-    \NewDocumentCommand{\StdWordAnalysis}{ smmmmm }{%
-        \IfBooleanTF{#1}{%
-            \WordBase*{%
-                \WordPrefixSeq*{#2}%
-                \WordRootSeq*{#3}%
-                \WordSuffixSeq*{#4}%
-            }\WordEnding*{#5}%
-            \WordPostfixSeq*{#6}%
-        }{%
-            \WordBase{%
-                \WordPrefixSeq{#2}%
-                \WordRootSeq{#3}%
-                \WordSuffixSeq{#4}%
-            }\WordEnding{#5}%
-            \WordPostfixSeq{#6}%
-        }%
-    }
+    % \NewDocumentCommand{\StdWordAnalysis}{ smmmmm }{%
+    %     \IfBooleanTF{#1}{%
+    %         \WordBase*{%
+    %             \WordPrefixSeq*{#2}%
+    %             \WordRootSeq*{#3}%
+    %             \WordSuffixSeq*{#4}%
+    %         }\WordEnding*{#5}%
+    %         \WordPostfixSeq*{#6}%
+    %     }{%
+    %         \WordBase{%
+    %             \WordPrefixSeq{#2}%
+    %             \WordRootSeq{#3}%
+    %             \WordSuffixSeq{#4}%
+    %         }\WordEnding{#5}%
+    %         \WordPostfixSeq{#6}%
+    %     }%
+    % }
