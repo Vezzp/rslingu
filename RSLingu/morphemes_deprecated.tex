@@ -1,0 +1,476 @@
+\definecolor{brightube}{rgb}{0.82, 0.62, 0.91}
+
+\colorlet{BaseColor}{NavyBlue}
+\colorlet{PrefixColor}{BrickRed}
+\colorlet{SuffixColor}{Emerald}
+\colorlet{RootColor}{CadetBlue}
+\colorlet{EndingColor}{OliveGreen}
+\colorlet{PostfixColor}{brightube}
+
+\newcommand{\MorphemeSignYPad}{2pt}
+\newcommand{\MorphemeSignXPad}{1pt}
+\newcommand{\MorphemeSignHeight}{4pt}
+\newcommand\MorphemeSignLineWidth{1pt}
+
+\newlength{\LenBig}%
+\newlength{\LenSmall}%
+\settoheight\LenSmall{а}%
+\getlength{\TmpSmall}{\LenSmall}%
+
+\NewDocumentCommand{\ExamineMorphemeShift}{ m }{%
+    \settoheight\LenBig{#1}%
+    \getlength{\TmpBig}{\LenBig}%
+    \FPsub\MorphemeYShiftAux\TmpBig\TmpSmall%
+    \FPifneg\MorphemeYShiftAux%
+        \FPset\MorphemeYShiftAux{0}%
+    \else%
+    \fi%
+}
+
+
+\ExplSyntaxOn
+
+\keys_define:nn { rs/morphemes/keys }{%
+    phantom .bool_set:N = \l_rs_morphemes_phantom_bool,
+    phantom .default:n = true,
+    color .bool_set:N = \l_rs_morphemes_color_bool,
+    color .default:n = true
+}
+
+\ExplSyntaxOff
+
+
+\newcommand{\RSMorphemeSignHeight}{5}
+\newcommand{\RSMorphemeSignXPad}{1}
+\newcommand{\RSMorphemeSignYPad}{2}
+\newcommand{\RSMorphemeSignLineWidth}{1.5}
+
+\newlength{\RSLenTallAux}
+\newlength{\RSLenNormalAux}
+\settoheight\RSLenNormalAux{о}    
+\getlength{\RSLenNormal}{\RSLenNormalAux}
+
+\NewDocumentCommand{\rsGetMorphemeShift}{ m }{%
+    \settoheight\RSLenTallAux{#1}%
+    \getlength{\RSLenTall}{\RSLenTallAux}%
+    \FPsub\RSMorphemeSignYPadAux\RSLenTall\RSLenNormal%
+    \FPifneg\RSMorphemeSignYPadAux%
+        \FPset\RSMorphemeSignYPadAux{0}%
+    \else%
+    \fi%
+}
+
+\FPset\RSMorphemeSignYPadAux{0}%
+
+\tikzset{%
+    RSMorphemeLine/.style={%
+        line width=\RSMorphemeSignLineWidth pt,
+    },
+    RSMorphemeLineShifted/.style={%
+        RSMorphemeLine,
+        transform canvas={%
+            yshift=\RSMorphemeSignYPad - \RSMorphemeSignYPadAux pt,
+        },
+    }
+}
+
+
+
+\newcommand{\RSPhantomBool}{0}
+\newcommand{\RSColorBool}{0}
+
+\ExplSyntaxOn
+\NewDocumentCommand{\rsChooseColorAux}{ mm }{%
+    \bool_if:nTF {\RSColorBool || \l_rs_morphemes_phantom_bool  || #1}
+        {#2}{black}
+}
+
+\NewDocumentCommand{\rsChooseTextAux}{ m }{%
+    \bool_if:nTF {\RSPhantomBool || \l_rs_morphemes_phantom_bool}
+    {
+        \begingroup
+            \StrLen{#1}[\tmp]
+            \node[RSCage] (Root) {\phantom{\dorepeate{\tmp}{о}}};
+            \node at (Root.center) {\textbullet};
+        \endgroup
+    }{
+        \node[RSCage] (Root) {#1};
+    }
+}
+\ExplSyntaxOff
+
+
+
+% ====================================================================
+% ======================== Prefix (приставка) ========================
+% ====================================================================
+
+% \ExplSyntaxOn
+
+%     \NewDocumentCommand{\rsPrefixAux}{ O{} m }{%
+%         \ifblank{#2}{}{%
+%             \keys_set:nn { rs/morphemes/keys } {%
+%                 phantom=false,
+%                 color=false,
+%                 #1
+%              }
+            
+%             \rsGetMorphemeShift{#2}
+%             \tikz[baseline=(Root.base)]{%
+%                 \rsChooseTextAux{#2}
+%                 \draw[%
+%                     RSMorphemeLineShifted,
+%                     \bool_if:nTF {\RSColorBool || \l_rs_morphemes_color_bool}{RSPrefixColor}{black},
+%                 ]
+%                     let
+%                         \p1 = (Root.north~west),
+%                         \p2 = (Root.north~east)
+%                     in
+%                         (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignHeight) --
+%                         (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignHeight) --
+%                         ++(0, -\RSMorphemeSignHeight pt);
+%             }%
+%         }%
+%     }
+    
+%     \NewDocumentCommand{\rsPrefix}{ O{} m }{%
+%         \keys_set:nn { rs/morphemes/keys } {%
+%             phantom=false, % initialize to false
+%             color=false,
+%             #2
+%         }
+%         \ProcessVector{\rsPrefixAux[#1]}{#2}
+%         % \ifblank{#2}{}{%
+%         %     \IfBooleanTF{#1}{%
+%         %         \bool_if:NTF \l_rs_morphemes_phantom_bool
+%         %         {%
+%         %             \ProcessVector{\rsPrefixAux*[phantom]}{#2}%
+%         %         }{%
+%         %             \ProcessVector{\rsPrefixAux*}{#2}%
+%         %         }%
+%         %     }{%
+%         %         \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+%         %             \ProcessVector{\rsPrefixAux[phantom]}{#2}%
+%         %         }{
+%         %             \ProcessVector{\rsPrefixAux}{#2}%
+%         %         }%
+%         %     }%
+%         % }%
+%     }
+% \ExplSyntaxOff
+
+
+% ====================================================================
+% ======================= Postfix (постфикс) =========================
+% ====================================================================
+
+\ExplSyntaxOn
+
+\NewDocumentCommand{\rsPostfixAux}{ s O{} m }{%
+    \ifblank{#3}{}{%
+        \keys_set:nn { rs/morphemes/keys } {%
+            phantom=false, % initialize to false
+            color=false,
+            #2,
+         }
+        \tikz[baseline=(Root.base)]{%
+            \rsChooseTextAux{#3}
+            \draw[
+                RSMorphemeLine,
+                \bool_if:nTF {\RSColorBool || \l_rs_morphemes_color_bool  || #1}{RSPostfixColor}{black}
+            ]
+                let
+                    \p1 = (Root.north~west),
+                    \p2 = (Root.north~east)
+                in
+                    (\x1 + \RSMsignXPad, \y1 + \RSMsignYPad) --
+                    (.5 * \x1 + .5 * \x2, \y2 + \RSMsignYPad + \RSMsignHeight) --
+                    (\x2 - \RSMsignXPad, \y2 + \RSMsignYPad)
+                    (\x1 + \RSMsignXPad, \y1 + \RSMsignYPad + 3pt) --
+                    (.5 * \x1 + .5 * \x2, \y2 + \RSMsignYPad + \RSMsignHeight + 3pt) --
+                    (\x2 - \RSMsignXPad, \y2 + \RSMsignYPad + 3pt);
+        }%
+    }%
+}
+
+\NewDocumentCommand{\rsPostfix}{ s O{} m }{%
+    \keys_set:nn { rs/morphemes/keys } {%
+        phantom=false, % initialize to false
+        color=false,
+        #2
+     }
+    \ifblank{#3}{}{%
+        \IfBooleanTF{#1}{%
+            \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                \ProcessVector{\rsPostfixAux*[phantom]}{#3}%
+            }{%
+                \ProcessVector{\rsPostfixAux*}{#3}%
+            }%
+        }{%
+            \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                \ProcessVector{\rsPostfixAux[phantom]}{#3}%
+            }{
+                \ProcessVector{\rsPostfixAux}{#3}%
+            }%
+        }%
+    }%
+}
+
+\ExplSyntaxOff
+
+
+% ====================================================================
+% ======================== Suffix (суффикс) ==========================
+% ====================================================================
+
+\ExplSyntaxOn
+
+\NewDocumentCommand{\rsSuffixAux}{ s O{} m }{%
+    \ifblank{#3}{}{%
+        \keys_set:nn { rs/morphemes/keys } {%
+            phantom=false, % initialize to false
+            #2
+         }
+        \tikz[baseline=(Root.base)]{%
+            \bool_if:nTF {\RSPhantomBool || \l_rs_morphemes_phantom_bool}
+            {
+                \begingroup
+                    \StrLen{#3}[\tmp]
+                    \node[RSCage] (Root) {\phantom{\dorepeate{\tmp}{о}}};
+                    \node at (Root.center) {\textbullet};
+                \endgroup
+            }{
+                \node[RSCage] (Root) {#3};
+            }
+            \draw[
+                RSMorphemeLine,
+                \IfBooleanTF{#1}{RSSuffixColor}{black},
+            ]
+                let
+                    \p1 = (Root.north~west),
+                    \p2 = (Root.north~east)
+                in
+                    (\x1 + \RSMsignXPad, \y1 + \RSMsignYPad) --
+                    (.5 * \x1 + .5 * \x2, \y2 + \RSMsignYPad + \RSMsignHeight) --
+                    (\x2 - \RSMsignXPad, \y2 + \RSMsignYPad);
+        }%
+    }%
+}
+
+\NewDocumentCommand{\rsSuffix}{ s O{} m }{%
+    \keys_set:nn { rs/morphemes/keys } {%
+        phantom=false, % initialize to false
+        #2
+     }
+    \ifblank{#3}{}{%
+        \IfBooleanTF{#1}{%
+            \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                \ProcessVector{\rsSuffixAux*[phantom]}{#3}%
+            }{%
+                \ProcessVector{\rsSuffixAux*}{#3}%
+            }%
+        }{%
+            \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                \ProcessVector{\rsSuffixAux[phantom]}{#3}%
+            }{
+                \ProcessVector{\rsSuffixAux}{#3}%
+            }%
+        }%
+    }%
+}
+
+\ExplSyntaxOff
+
+
+
+% ====================================================================
+% ========================== Root (корень) ===========================
+% ====================================================================
+
+
+\ExplSyntaxOn
+
+    \NewDocumentCommand{\rsRootAux}{ s O{} m }{%
+        \rsGetMorphemeShift{#3}
+        \ifblank{#3}{}{%
+            \keys_set:nn { rs/morphemes/keys } {%
+                phantom=false, % initialize to false
+                #2
+             }
+            \tikz[baseline=(Root.base)]{%
+                \bool_if:nTF {\RSPhantomBool || \l_rs_morphemes_phantom_bool}
+                {
+                    \begingroup
+                        \StrLen{#3}[\tmp]
+                        \node[RSCage] (Root) {\phantom{\dorepeate{\tmp}{о}}};
+                        \node at (Root.center) {\textbullet};
+                    \endgroup
+                }{
+                    \node[RSCage] (Root) {#3};
+                }
+                \draw[
+                    RSMorphemeLine,
+                    \IfBooleanTF{#1}{RSRootColor}{black},
+                    transform~canvas={%
+                        yshift=\RSMorphemeSignYPad - \RSMorphemeSignYPadAux,
+                    },
+                ]
+                    let
+                        \p1 = (Root.north~west),
+                        \p2 = (Root.north~east)
+                    in
+                        (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignYPad)
+                        parabola[bend~pos=.5] bend + (0, \RSMorphemeSignHeight pt)
+                        (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignYPad);
+            }%
+        }%
+    }
+
+    \NewDocumentCommand{\rsRoot}{ s O{} m }{%
+        \keys_set:nn { rs/morphemes/keys } {%
+            phantom=false, % initialize to false
+            #2
+         }
+        \ifblank{#3}{}{%
+            \IfBooleanTF{#1}{%
+                \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                    \ProcessVector{\rsRootAux*[phantom]}{#3}%
+                }{%
+                    \ProcessVector{\rsRootAux*}{#3}%
+                }%
+            }{%
+                \bool_if:NTF \l_rs_morphemes_phantom_bool{%
+                    \ProcessVector{\rsRootAux[phantom]}{#3}%
+                }{
+                    \ProcessVector{\rsRootAux}{#3}%
+                }%
+            }%
+        }%
+    }
+\ExplSyntaxOff
+
+
+
+% ====================================================================
+% ======================== Ending (окончание) ========================
+% ====================================================================
+
+    \NewDocumentCommand{\WordEndingTmp}{ m O{black}}{%
+        \tikz[baseline=(Root.base)]{%
+            \node[
+                inner sep=1pt,
+                outer sep=0pt
+            ] (Root) {%
+                \fullVPhantom\ifblank{#1}{\hphantom{o}}{#1}%
+            };%
+            \draw[
+                #2,
+                line width=\MorphemeSignLineWidth,
+            ]%
+                let%
+                    \p1 = (Root.south west),%
+                    \p2 = (Root.north east)%
+                in%
+                    (\x1, \y1 - \MorphemeSignYPad + 1) |-%
+                    (\x2, \y2 + \MorphemeSignYPad) |-%
+                    cycle;%
+        }%
+    }
+    
+    \NewDocumentCommand{\WordEnding}{ s m }{%
+        \IfBooleanTF{#1}{\WordEndingTmp{#2}[EndingColor]}{\WordEndingTmp{#2}}%
+    }
+
+
+% ====================================================================
+% =========================== Base (основа) ==========================
+% ====================================================================
+    
+        \NewDocumentCommand{\WordBaseTmp}{ m O{black} }{%
+            \IfValueT{#1}{%
+                \tikz[baseline=(Root.base)]{%
+                    \node[inner sep=0pt, outer sep=0pt] (Root) {#1\downVPhantom};
+                    \draw[#2, line width=\MorphemeSignLineWidth]
+                        let
+                            \p1 = (Root.south west),
+                            \p2 = (Root.south east)
+                        in
+                            (\x1 + 1.5 * \MorphemeSignXPad, \y1 + .15 * \MorphemeSignYPad) --
+                            ++(0, -1.15 * \MorphemeSignYPad) -|
+                            (\x2 - 1.5 * \MorphemeSignXPad, \y2 + .15 * \MorphemeSignYPad);
+                }%
+            }%
+        }
+        
+        \NewDocumentCommand{\WordBase}{ s m }{%
+            \IfBooleanTF{#1}{\WordBaseTmp{#2}[BaseColor]}{\WordBaseTmp{#2}}%
+        }
+        
+        
+    % Right base (Правая основа). 
+        \NewDocumentCommand{\WordBaseRTmp}{ m O{black} }{%
+            \IfValueT{#1}{%
+                \tikz[baseline=(Root.base)]{%
+                    \node[inner sep=0pt, outer sep=0pt] (Root) {#1\downVPhantom};
+                    \draw[#2, line width=\MorphemeSignLineWidth]
+                        let
+                            \p1 = (Root.south west),
+                            \p2 = (Root.south east)
+                        in
+                            (\x1 + \MorphemeSignXPad, \y1 - \MorphemeSignYPad) -|
+                            (\x2 - \MorphemeSignXPad, \y2 + .15 * \MorphemeSignYPad);
+                }%
+            }%
+        }
+        
+        \NewDocumentCommand{\WordBaseR}{ s m }{%
+            \IfBooleanTF{#1}{\WordBaseRTmp{#2}[BaseColor]}{\WordBaseRTmp{#2}}%
+        }
+        
+        
+    % Left base (Левая основа). 
+        \NewDocumentCommand{\WordBaseLTmp}{ m O{black} }{%
+            \IfValueT{#1}{%
+                \tikz[baseline=(Root.base)]{%
+                    \node[inner sep=0pt, outer sep=0pt] (Root) {#1\downVPhantom};
+                    \draw[
+                        #2,
+                        line width=\MorphemeSignLineWidth
+                    ]
+                        let
+                            \p1 = (Root.south west),
+                            \p2 = (Root.south east)
+                        in
+                            (\x1 + \MorphemeSignXPad, \y1 + .15 * \MorphemeSignYPad) --
+                            ++(0, -1.15 * \MorphemeSignYPad pt) --
+                            (\x2 - \MorphemeSignXPad, \y2 - \MorphemeSignYPad);
+                }%
+            }%
+        }
+        
+        \NewDocumentCommand{\WordBaseL}{ s m }{%
+            \IfBooleanTF{#1}{\WordBaseLTmp{#2}[BaseColor]}{\WordBaseLTmp{#2}}%
+        }
+
+
+% ====================================================================
+% ================ Word Analysis (стандартный разбор) ================
+% ====================================================================
+% Стандартный морфмемный разбор слова (основа непрерывна).
+    % \NewDocumentCommand{\StdWordAnalysis}{ smmmmm }{%
+    %     \IfBooleanTF{#1}{%
+    %         \WordBase*{%
+    %             \WordPrefixSeq*{#2}%
+    %             \WordRootSeq*{#3}%
+    %             \WordSuffixSeq*{#4}%
+    %         }\WordEnding*{#5}%
+    %         \WordPostfixSeq*{#6}%
+    %     }{%
+    %         \WordBase{%
+    %             \WordPrefixSeq{#2}%
+    %             \WordRootSeq{#3}%
+    %             \WordSuffixSeq{#4}%
+    %         }\WordEnding{#5}%
+    %         \WordPostfixSeq{#6}%
+    %     }%
+    % }

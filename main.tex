@@ -1,4 +1,4 @@
-\documentclass[20pt, dvipsnames]{extarticle}
+\documentclass[17pt, dvipsnames]{extarticle}
 
 \usepackage[bottom=2cm,
             left=2cm,
@@ -27,24 +27,26 @@
 
 Начинайте набирать текст.
 
-\rsAttribute*{привет}
-\rsObject*{привет}
-\rsSubject*{пивет}
-\rsAdverbarial*{привет}
-\rsPredicate*{привет}
+% \rsAttribute*{привет}
+% \rsObject*{привет}
+% \rsSubject*{пивет}
+% \rsAdverbarial*{привет}
+% \rsPredicate*{привет}
 
 
-\rsAttribute{привет}
-\rsObject{привет}
-\rsSubject{пивет}
-\rsAdverbarial{привет}
-\rsPredicate{привет}
+% \rsAttribute{привет}
+% \rsObject{привет}
+% \rsSubject{пивет}
+% \rsAdverbarial{привет}
+% \rsPredicate{привет}
 
-\rsNoun{дом}
-\rsNoun[ед.ч.]{дом}
-\rsPronoun{вашего}
-\rsVerb[инф.]{ходить}
-\rsUnion{и}
+% \rsNoun{дом}
+% \rsNoun[ед.ч.]{дом}
+% % \rsNoun{дом}[ед.ч.]
+
+% \rsPronoun{вашего}
+% \rsVerb[инф.]{ходить}
+% \rsUnion{и}
 
 
 
@@ -67,22 +69,78 @@
 }
 
 
-\definecolor{RSSuffixColor}{HTML}{966842}
-\definecolor{RSPrefixColor}{HTML}{f44747}
+
+% \rsPostfixAux[color]{постфикс}
+% \rsPostfixAux*{постфикс}
 
 
-\rsSuffixAux{суффикс}
-\rsSuffixAux*[phantom]{суффикс}
-\rsSuffix{суф, фикс}
-\rsSuffix*{суф, фикс}
-\rsSuffix*[phantom]{суф, фикс}
+% \rsPostfixAux*[phantom]{постфикс}
+% \rsPostfix{пост, фикс}
+% \rsPostfix[phantom]{пост, фикс}
+% \rsPostfix*{пост, фикс}
+% \rsPostfix*[phantom]{пост, фикс}
 
 
-\rsPrefixAux{приставка}
-\rsPrefixAux*{приставка}
-\rsPrefix{при, став, ка}
-\rsPrefix*{при, став, ка}
-\rsPrefix[phantom]{при, став, ка}
-\rsPrefix*[phantom]{при, став, ка}
+
+% \rsRootAux{корень}
+% \rsRootAux*[phantom]{корень}
+% \rsRoot{кор, ень}
+% \rsRoot[phantom]{кор, ень}
+% \rsRoot*{кор, ень}
+% \rsRoot*[phantom]{кор, ень}
+
+
+% \rsSuffixAux{суффикс}
+% \rsSuffixAux*[phantom]{суффикс}
+% \rsSuffix{суф, фикс}
+% \rsSuffix[phantom]{суф, фикс}
+% \rsSuffix*{суф, фикс}
+% \rsSuffix*[phantom]{суф, фикс}
+
+
+% \begingroup
+%     \renewcommand{\RSPhantomBool}{1}
+%     \renewcommand{\RSColorBool}{1}
+
+%     \rsPostfix{пост, фикс}
+%     \rsRoot{кор, ень}
+%     \rsPrefix{при, став, ка}
+%     \rsSuffix{суф, фикс}
+% \endgroup
+
+
+
+
+% \begingroup
+%     \renewcommand{\RSPhantomBool}{1}
+%     \renewcommand{\RSColorBool}{1}
+
+%     \rsPrefix{при, став, ка}
+%     \rsRoot{кор, ень}
+%     \rsSuffix{суф, фикс}
+%     \rsPostfix{пост, фикс}
+
+%     \renewcommand{\RSPhantomBool}{0}
+%     \renewcommand{\RSColorBool}{0}
+% \endgroup
+
+
+
+
+\begin{rslingu}[color]
+    \rsPrefix{при, став, ка}
+    \rsRoot{кор, ень}
+    \rsSuffix{суф, фикс}
+    \rsPostfix{пост, фикс}
+    \rsBase{основа}
+    \rsEnding{}
+    \rsMorphemicAnalysis{под, за}{голов}{ок}{}{}
+\end{rslingu}
+
+    
+    \rsMorphemicAnalysis{}{караван}{}{}{}
+    \rsMorphemicAnalysis{}{рубин}{}{}{}
+ 
+    \rsMorphemicAnalysis[color, phantom]{под, за}{голов}{ок}{}{}
 
 \end{document}
