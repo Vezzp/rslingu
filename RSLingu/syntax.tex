@@ -4,9 +4,6 @@
 \tikzset{
     RSUline/.style={
         line width=\RSUlineWidth pt,
-        % inner sep=0pt,
-        % outer sep=0pt,
-        % overlay
     },
 }
 
@@ -18,167 +15,204 @@
 \definecolor{RSObjectColor}{HTML}{ffa500}
 
 
-% ==============================================
-% =========== Subject (подлежащее) =============
-% ==============================================
+\ExplSyntaxOn
+    \cs_generate_variant:Nn \seq_set_split:Nnn { NnV }
 
-    % Underline subject.
-    \NewDocumentCommand{\rsUnderlineSubject}{ O{black} m }{%
-        \tikz[baseline=(Root.base)]{%
-            \node[RSCage] (Root) {\downVPhantom#2};
-            \draw[#1, RSUline]
-                ([yshift=-\RSUlineYShift pt]Root.south west) --
-                ([yshift=-\RSUlineYShift pt]Root.south east);
-        }%
-    }
-
-    \NewDocumentCommand{\rsSubject}{ s m }{%
-        \rsUnderlineSubject
-            [\IfBooleanTF{#1}{RSSubjectColor}{}]
-            {\ProcessMap{\textoverset}{#2}[ ]}%
-    }
-
-
-% ==============================================
-% =========== Predicate (сказуемое) ============
-% ==============================================
-
-    % Underline predicate.
-    \NewDocumentCommand{\rsUnderlinePredicate}{ O{black} m }{%
-        \tikz[baseline=(Root.base)]{%
-            \node[RSCage] (Root) {\downVPhantom#2};
-            \draw[#1, RSUline]
-                ([yshift=-\RSUlineYShift pt]Root.south west) --
-                ([yshift=-\RSUlineYShift pt]Root.south east);
-            \draw[#1, RSUline]
-                ([yshift=-\RSUlineYShift - 2 pt]Root.south west) --
-                ([yshift=-\RSUlineYShift - 2 pt]Root.south east);
-        }%
-    }
-
-    \NewDocumentCommand{\rsPredicate}{ s m }{%
-        \rsUnderlinePredicate
-            [\IfBooleanTF{#1}{RSPredicateColor}{}]
-            {\ProcessMap{\textoverset}{#2}[ ]}%
-    }
-
-
-% ==============================================
-% ======== Adverbarial (обстоятельство) ========
-% ==============================================
-
-    % Underline predicate.
-    \NewDocumentCommand{\rsUnderlineAdverbarial}{ O{black} m }{%
-        \tikz[baseline=(Root.base)]{%
-            \node[RSCage] (Root) {\downVPhantom#2};
-            \draw[
-                #1,
-                RSUline,
-                dash pattern={on 5pt off 2pt on 1.5pt off 2pt},
-            ]
-                ([yshift=-\RSUlineYShift pt]Root.south west) --
-                ([yshift=-\RSUlineYShift pt]Root.south east);
-        }%
-    }
-
-    \NewDocumentCommand{\rsAdverbarial}{ s m }{%
-        \rsUnderlineAdverbarial
-            [\IfBooleanTF{#1}{RSAdverbarialColor}{}]
-            {\ProcessMap{\textoverset}{#2}[ ]}%
+    \cs_new_protected:Nn \l__rs_syntax_choose_text:n {
+        \group_begin:
+            \def\l__do_spacing{0}
+            \node[RSCage] (Root) {
+                \clist_map_variable:nNn { #1 } {\l__item} {
+                    \FPifeq{\l__do_spacing}{0}
+                        \def\l__do_spacing{1}
+                    \else
+                        \space
+                    \fi
+                    \StrCut{\l__item}{=}\l__word\l__text
+                    \seq_set_split:NnV \l__tmp_seq { + } { \l__text }
+                    \bool_if:nTF { \RSPhantomBool || \l_rs_syntax_phantom_bool }
+                    {
+                        \textoverset{%
+                            \tikz[baseline=(tmp.base)]{
+                                \node[RSCage] (tmp) {\phantom{\l__word}};
+                                \node[RSCage] at (tmp.center) {\textbullet};
+                            }
+                        }{ \seq_use:Nn \l__tmp_seq {,\space} }
+                    }{
+                        \textoverset{\l__word}{ \seq_use:Nn \l__tmp_seq {,\space} }
+                    }
+                    
+                }\RSDownVPhantom
+            };
+        \group_end:
     }
     
+    \cs_generate_variant:Nn \l__rs_syntax_choose_text:n { p }
+
+\ExplSyntaxOff
+
+
+% % ==============================================
+% % =========== Subject (подлежащее) =============
+% % ==============================================
+
+%     % Underline subject.
+%     \NewDocumentCommand{\rsUnderlineSubject}{ O{black} m }{%
+%         \tikz[baseline=(Root.base)]{%
+%             \node[RSCage] (Root) {\downVPhantom#2};
+%             \draw[#1, RSUline]
+%                 ([yshift=-\RSUlineYShift pt]Root.south west) --
+%                 ([yshift=-\RSUlineYShift pt]Root.south east);
+%         }%
+%     }
+
+%     % \NewDocumentCommand{\rsSubject}{ s m }{%
+%     %     \rsUnderlineSubject
+%     %         [\IfBooleanTF{#1}{RSSubjectColor}{}]
+%     %         {\ProcessMap{\textoverset}{#2}[ ]}%
+%     % }
+
+
+% % ==============================================
+% % =========== Predicate (сказуемое) ============
+% % ==============================================
+
+%     % Underline predicate.
+%     \NewDocumentCommand{\rsUnderlinePredicate}{ O{black} m }{%
+%         \tikz[baseline=(Root.base)]{%
+%             \node[RSCage] (Root) {\downVPhantom#2};
+%             \draw[#1, RSUline]
+%                 ([yshift=-\RSUlineYShift pt]Root.south west) --
+%                 ([yshift=-\RSUlineYShift pt]Root.south east);
+%             \draw[#1, RSUline]
+%                 ([yshift=-\RSUlineYShift - 2 pt]Root.south west) --
+%                 ([yshift=-\RSUlineYShift - 2 pt]Root.south east);
+%         }%
+%     }
+
+%     % \NewDocumentCommand{\rsPredicate}{ s m }{%
+%     %     \rsUnderlinePredicate
+%     %         [\IfBooleanTF{#1}{RSPredicateColor}{}]
+%     %         {\ProcessMap{\textoverset}{#2}[ ]}%
+%     % }
+
+
+% % ==============================================
+% % ======== Adverbarial (обстоятельство) ========
+% % ==============================================
+
+%     % Underline predicate.
+%     \NewDocumentCommand{\rsUnderlineAdverbarial}{ O{black} m }{%
+%         \tikz[baseline=(Root.base)]{%
+%             \node[RSCage] (Root) {\downVPhantom#2};
+%             \draw[
+%                 #1,
+%                 RSUline,
+%                 dash pattern={on 5pt off 2pt on 1.5pt off 2pt},
+%             ]
+%                 ([yshift=-\RSUlineYShift pt]Root.south west) --
+%                 ([yshift=-\RSUlineYShift pt]Root.south east);
+%         }%
+%     }
+
+%     % \NewDocumentCommand{\rsAdverbarial}{ s m }{%
+%     %     \rsUnderlineAdverbarial
+%     %         [\IfBooleanTF{#1}{RSAdverbarialColor}{}]
+%     %         {\ProcessMap{\textoverset}{#2}[ ]}%
+%     % }
     
-% ==============================================
-% ======== Attribute (определение) =============
-% ==============================================
+    
+% % ==============================================
+% % ======== Attribute (определение) =============
+% % ==============================================
 
-    % Underline predicate.
-    \NewDocumentCommand{\rsUnderlineAttribute}{ O{black} m }{%
-        \tikz[baseline=(Root.base)]{%
-            \node[RSCage] (Root) {\downVPhantom#2};
-            \draw[
-                #1,
-                RSUline,
-                decorate,
-                decoration={
-                    complete sines,
-                    segment length=2.75pt,
-                    amplitude=1.75,
-                    mirror,
-                    start up,
-                    end down
-                }
-            ]
-                ([yshift=-\RSUlineYShift pt]Root.south west) --
-                ([yshift=-\RSUlineYShift pt]Root.south east);
-        }%
-    }
+%     % Underline predicate.
+%     \NewDocumentCommand{\rsUnderlineAttribute}{ O{black} m }{%
+%         \tikz[baseline=(Root.base)]{%
+%             \node[RSCage] (Root) {\downVPhantom#2};
+%             \draw[
+%                 #1,
+%                 RSUline,
+%                 decorate,
+%                 decoration={
+%                     complete sines,
+%                     segment length=2.75pt,
+%                     amplitude=1.75,
+%                     mirror,
+%                     start up,
+%                     end down
+%                 }
+%             ]
+%                 ([yshift=-\RSUlineYShift pt]Root.south west) --
+%                 ([yshift=-\RSUlineYShift pt]Root.south east);
+%         }%
+%     }
 
-    \NewDocumentCommand{\rsAttribute}{ s m }{%
-        \rsUnderlineAttribute
-            [\IfBooleanTF{#1}{RSAttributeColor}{}]
-            {\ProcessMap{\textoverset}{#2}[ ]}%
-    }
-
-
-% ==============================================
-% ======== Adverbarial (обстоятельство) ========
-% ==============================================
-
-    % Underline predicate.
-    \NewDocumentCommand{\rsUnderlineObject}{ O{black} m }{%
-        \tikz[baseline=(Root.base)]{%
-            \node[RSCage] (Root) {\downVPhantom#2};
-            \draw[
-                #1,
-                RSUline,
-                dash pattern={on 5pt off 2pt on 1pt off 0pt},
-            ]
-                ([yshift=-\RSUlineYShift pt]Root.south west) --
-                ([yshift=-\RSUlineYShift pt]Root.south east);
-        }%
-    }
-
-    \NewDocumentCommand{\rsObject}{ s m }{%
-        \rsUnderlineObject
-            [\IfBooleanTF{#1}{RSObjectColor}{}]
-            {\ProcessMap{\textoverset}{#2}[ ]}%
-    }
+%     % \NewDocumentCommand{\rsAttribute}{ s m }{%
+%     %     \rsUnderlineAttribute
+%     %         [\IfBooleanTF{#1}{RSAttributeColor}{}]
+%     %         {\ProcessMap{\textoverset}{#2}[ ]}%
+%     % }
 
 
+% % ==============================================
+% % ======== Adverbarial (обстоятельство) ========
+% % ==============================================
 
-\NewDocumentCommand{\rsNoun}{ O{} m }{%
-    \textoverset{#2}{сущ.\ifblank{#1}{}{, #1}}%
+%     % Underline predicate.
+%     \NewDocumentCommand{\rsUnderlineObject}{ O{black} m }{%
+%         \tikz[baseline=(Root.base)]{%
+%             \node[RSCage] (Root) {\downVPhantom#2};
+%             \draw[
+%                 #1,
+%                 RSUline,
+%                 dash pattern={on 5pt off 2pt on 1pt off 0pt},
+%             ]
+%                 ([yshift=-\RSUlineYShift pt]Root.south west) --
+%                 ([yshift=-\RSUlineYShift pt]Root.south east);
+%         }%
+%     }
+
+%     % \NewDocumentCommand{\rsObject}{ s m }{%
+%     %     \rsUnderlineObject
+%     %         [\IfBooleanTF{#1}{RSObjectColor}{}]
+%     %         {\ProcessMap{\textoverset}{#2}[ ]}%
+%     % }
+
+
+
+\NewDocumentCommand{\rsNoun}{ m O{} }{%
+    \textoverset{#1}{сущ.\ifblank{#2}{}{, #2}}%
 }
 
 
-\NewDocumentCommand{\rsVerb}{ O{} m }{%
-    \textoverset{#2}{глаг.\ifblank{#1}{}{, #1}}%
+\NewDocumentCommand{\rsVerb}{ m O{} }{%
+    \textoverset{#1}{глаг.\ifblank{#2}{}{, #2}}%
 }
 
 
-\NewDocumentCommand{\rsAdverb}{ O{} m }{%
-    \textoverset{#2}{нареч.\ifblank{#1}{}{, #1}}%
+\NewDocumentCommand{\rsAdverb}{ m O{} }{%
+    \textoverset{#1}{нареч.\ifblank{#2}{}{, #2}}%
 }
 
 
-\NewDocumentCommand{\rsPretext}{ O{} m }{%
-    \textoverset{#2}{предлог\ifblank{#1}{}{, #1}}%
+\NewDocumentCommand{\rsPretext}{ m O{} }{%
+    \textoverset{#1}{предлог\ifblank{#2}{}{, #2}}%
 }
 
 
-\NewDocumentCommand{\rsUnion}{ O{} m }{%
-    \textoverset{#2}{союз\ifblank{#1}{}{, #1}}%
+\NewDocumentCommand{\rsUnion}{ m O{} }{%
+    \textoverset{#1}{союз\ifblank{#2}{}{, #2}}%
 }
 
-\NewDocumentCommand{\rsPronoun}{ O{} m }{%
-    \textoverset{#2}{мест.\ifblank{#1}{}{, #1}}%
+\NewDocumentCommand{\rsPronoun}{ m O{} }{%
+    \textoverset{#1}{мест.\ifblank{#2}{}{, #2}}%
 }
 
-\NewDocumentCommand{\rsAdjective}{ O{} m }{%
-    \textoverset{#2}{прил.\ifblank{#1}{}{, #1}}%
+\NewDocumentCommand{\rsAdjective}{ m O{} }{%
+    \textoverset{#1}{прил.\ifblank{#2}{}{, #2}}%
 }
 
-\NewDocumentCommand{\rsParticle}{ O{} m }{%
-    \textoverset{#2}{част.\ifblank{#1}{}{, #1}}%
+\NewDocumentCommand{\rsParticle}{ m O{} }{%
+    \textoverset{#1}{част.\ifblank{#2}{}{, #2}}%
 }

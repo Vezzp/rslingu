@@ -43,6 +43,33 @@
 
 
 
+\ExplSyntaxOn
+    \keys_define:nn { rs/syntax/keys }{%
+        phantom .bool_set:N = \l_rs_syntax_phantom_bool,
+        phantom .default:n = true,
+        color .bool_set:N = \l_rs_syntax_color_bool,
+        color .default:n = true
+    }
+
+    % Morphemes key-val arguments.
+    \keys_define:nn { rs/morphemes/keys }{%
+        phantom .bool_set:N = \l_rs_morphemes_phantom_bool,
+        phantom .default:n = true,
+        color .bool_set:N = \l_rs_morphemes_color_bool,
+        color .default:n = true
+    }
+    
+    % Base key-val arguments.
+    \keys_define:nn { rs/morphemes/base/keys }{%
+        left .bool_set:N = \l_rs_base_left_bool,
+        left .default:n = true,
+        right .bool_set:N = \l_rs_base_right_bool,
+        right .default:n = true
+    }
+
+\ExplSyntaxOff
+
+
 \input{RSLingu/functional.tex}
 \input{RSLingu/morphemes.tex}
 \input{RSLingu/syntax.tex}

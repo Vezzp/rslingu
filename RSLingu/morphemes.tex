@@ -3,7 +3,7 @@
 \definecolor{RSRootColor}{HTML}{eedc31}
 \definecolor{RSPostfixColor}{HTML}{966842}
 \definecolor{RSEndingColor}{HTML}{0e68ce}
-\definecolor{RSBaseColor}{HTML}{c0c0c0}
+\definecolor{RSBaseColor}{HTML}{990066}
 
 
 \newcommand{\RSMorphemeSignHeight}{4}
@@ -77,23 +77,7 @@
     % For `color` option.
     \tl_new:N \l__rs_color
     \cs_new_protected:Nn \l__rs_choose_color:n {
-        \tl_set:Nn \l__rs_color { \bool_if:nTF {\RSColorBool || \l_rs_morphemes_color_bool}{#1}{black} }
-    }
-    
-    % Morphemes key-val arguments.
-    \keys_define:nn { rs/morphemes/keys }{%
-        phantom .bool_set:N = \l_rs_morphemes_phantom_bool,
-        phantom .default:n = true,
-        color .bool_set:N = \l_rs_morphemes_color_bool,
-        color .default:n = true
-    }
-    
-    % Base key-val arguments.
-    \keys_define:nn { rs/morphemes/base/keys }{%
-        left .bool_set:N = \l_rs_base_left_bool,
-        left .default:n = true,
-        right .bool_set:N = \l_rs_base_right_bool,
-        right .default:n = true
+        \tl_set:Nn \l__rs_color { \bool_if:nTF { \RSColorBool || \l_rs_morphemes_color_bool || \l_rs_syntax_color_bool }{#1}{black} }
     }
 
     % Environment.
@@ -125,7 +109,7 @@
     \NewDocumentCommand{\rsPrefix}{ O{} m }{
         \group_begin:
         \IfNoValueTF{#2}{}{
-            \keys_set:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
+            \keys_set_known:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
 
             \clist_map_variable:nNn { #2 } { \l__item } {
                 \tikz[baseline=(Root.base)]{
@@ -167,7 +151,7 @@
     \NewDocumentCommand{\rsRoot}{ O{} m }{
         \group_begin:
         \IfNoValueTF{#2}{}{
-            \keys_set:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
+            \keys_set_known:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
 
             \clist_map_variable:nNn { #2 } { \l__item } {
                 \tikz[baseline=(Root.base)]{
@@ -207,7 +191,7 @@
     \NewDocumentCommand{\rsSuffix}{ O{} m }{
         \group_begin:
         \IfNoValueTF{#2}{}{
-            \keys_set:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
+            \keys_set_known:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
 
             \clist_map_variable:nNn { #2 } { \l__item } {
                 \tikz[baseline=(Root.base)]{
@@ -245,7 +229,7 @@
     \NewDocumentCommand{\rsPostfix}{ O{} m }{
         \group_begin:
         \IfNoValueTF{#2}{}{
-            \keys_set:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
+            \keys_set_known:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
 
             \clist_map_variable:nNn { #2 } { \l__item } {
                 \tikz[baseline=(Root.base)]{
@@ -295,7 +279,7 @@
                 \node[RSCage] (Root) {\phantom{о}\RSFullVPhantom};
                 \node at (Root.center) {\textbullet};
             }{
-                \node[RSCage] (Root) {\IfNoValueTF{#2}{#2}{\phantom{о}}\RSFullVPhantom};
+                \node[RSCage] (Root) {\ifblank{#2}{\phantom{о}}{#2}\RSFullVPhantom};
             }
 
             \l__rs_choose_color:n { RSEndingColor }

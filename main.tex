@@ -31,22 +31,120 @@
 Начинайте набирать текст.
 
 
-\input{documentation.tex}
-
-% \begin{rslingu}[color, phantom]
-%     \rsPrefix{при, став, ка}
-%     \rsRoot{кор, ень}
-%     \rsSuffix{суф, фикс}
-%     \rsPostfix{пост, фикс}
-%     \rsBase{основа}
-%     \rsEnding{}
-%     \rsMorphemicAnalysis{под, за}{голов}{ок}{}{}
-% \end{rslingu}
+    % \NewDocumentCommand{\rsSubject}{ s m }{%
+    %     \rsUnderlineSubject
+    %         [\IfBooleanTF{#1}{RSSubjectColor}{}]
+    %         {\ProcessMap{\textoverset}{#2}[ ]}%
+    % }
+    
+    
+% Syntax key-val arguments.
 
     
-%     \rsMorphemicAnalysis{}{караван}{}{}{}
-%     \rsMorphemicAnalysis{}{рубин}{}{}{}
- 
-%     \rsMorphemicAnalysis[color, phantom]{под, за}{голов}{ок}{}{}
+    
+
+% \ExplSyntaxOn
+
+% \NewDocumentCommand{\rsSubject}{ O{} m }{%
+%     \keys_set_known:nn { rs/syntax/keys } {color=false, phantom=false, width, #1}
+
+%     \tikz[baseline=(Root.base)]{
+%         \l__rs_syntax_choose_text:p  { #2 }
+%         \l__rs_choose_color:n { RSSubjectColor }
+%         \draw[\l__rs_color, RSUline]
+%             ([yshift=-\RSUlineYShift pt]Root.south~west) --
+%             ([yshift=-\RSUlineYShift pt]Root.south~east);
+%     }
+% }
+
+% \ExplSyntaxOff
+
+
+
+% \ExplSyntaxOn
+
+% \NewDocumentCommand{\rsPredicate}{ O{} m }{%
+%     \keys_set_known:nn { rs/syntax/keys } {color=false, phantom=false, width, #1}
+
+%     \tikz[baseline=(Root.base)]{
+%         \l__rs_syntax_choose_text:p  { #2 }
+%         \l__rs_choose_color:n { RSPredicateColor }
+%         \draw[\l__rs_color, RSUline]
+%             ([yshift=-\RSUlineYShift pt]Root.south~west) --
+%             ([yshift=-\RSUlineYShift pt]Root.south~east);
+%         \draw[\l__rs_color, RSUline]
+%             ([yshift=-\RSUlineYShift - 2 pt]Root.south~west) --
+%             ([yshift=-\RSUlineYShift - 2 pt]Root.south~east);
+%     }
+% }
+
+% \ExplSyntaxOff
+
+
+
+
+% \ExplSyntaxOn
+
+% \NewDocumentCommand{\rsAdverbarial}{ O{} m }{%
+%     \keys_set_known:nn { rs/syntax/keys } {color=false, phantom=false, width, #1}
+
+%     \tikz[baseline=(Root.base)]{
+%         \l__rs_syntax_choose_text:p  { #2 }
+%         \l__rs_choose_color:n { RSAdverbarialColor }
+%         \draw[
+%             \l__rs_color,
+%             RSUline,
+%             dash~pattern={on 5pt off 2pt on 1.5pt off 2pt},
+%         ]
+%             ([yshift=-\RSUlineYShift pt]Root.south~west) --
+%             ([yshift=-\RSUlineYShift pt]Root.south~east);
+%     }
+% }
+
+% \ExplSyntaxOff
+
+
+
+
+% \ExplSyntaxOn
+
+% \NewDocumentCommand{\rsAttribute}{ O{} m }{%
+%     \keys_set_known:nn { rs/syntax/keys } {color=false, phantom=false, width, #1}
+
+%     \tikz[baseline=(Root.base)]{
+%         \l__rs_syntax_choose_text:p  { #2 }
+%         \l__rs_choose_color:n { RSAttributeColor }
+%         \draw[
+%             \l__rs_color,
+%             RSUline, 
+%             decorate,
+%             decoration={
+%                 complete~sines,
+%                 segment~length=2.75pt,
+%                 amplitude=1.75,
+%                 mirror,
+%                 start~up,
+%                 end~down
+%             }
+%         ]
+%             ([yshift=-\RSUlineYShift pt]Root.south~west) --
+%             ([yshift=-\RSUlineYShift pt]Root.south~east);
+%     }
+% }
+
+% \ExplSyntaxOff
+
+
+
+
+% \rsSubject[color]{подлежащее=сущ.}
+% \rsPredicate[color, phantom]{сказуемое=глаг. + п.в. + м.р., сказуемое=глаг. + п.в.}
+% \rsAdverbarial[color, phantom]{обстоятельство=сущ.}
+% \rsAttribute[color]{определение}
+
+
+\input{documentation.tex}
+
+
 
 \end{document}
