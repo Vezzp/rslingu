@@ -1,0 +1,189 @@
+\NewDocumentCommand{\rsCodeAux}{ s m }{%
+   \texttt{\IfBooleanTF{#1}{\textbackslash} #2}%
+}
+
+\NewDocumentCommand{\rsOptionsAux}{ s O{options} }{%
+   \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{red!75}{#2}>}%
+}
+
+\NewDocumentCommand{\rsArgAux}{ s O{clist} }{%
+   \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{blue!75}{#2}>}%
+}
+
+\tableofcontents
+
+
+
+\section{Морфемный анализ слов} 
+
+\subsection{Приставка}
+
+\rsCodeAux*{rsPrefix[\rsOptionsAux]\{\rsArgAux\}} \\
+\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color, phantom}. 
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsPrefix{\{\}}} & \rsPrefix{} \\
+        \rsCodeAux*{rsPrefix{\{приставка\}}} & \rsPrefix{приставка} \\
+        \rsCodeAux*{rsPrefix{\{при, став, ка\}}} & \rsPrefix{при, став, ка} \\
+        \rsCodeAux*{rsPrefix[color]{\{при, став, ка\}}} & \rsPrefix[color]{при, став, ка} \\
+        \rsCodeAux*{rsPrefix[phantom]{\{при, став, ка\}}} & \rsPrefix[phantom]{при, став, ка} \\
+        \rsCodeAux*{rsPrefix[color, phantom]{\{при, став, ка\}}} & \rsPrefix[color, phantom]{при, став, ка} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды для приставки.}
+\end{table}
+\endgroup
+
+
+
+
+\subsection{Корень}
+
+\rsCodeAux*{rsRoot[\rsOptionsAux]\{\rsArgAux\}} \\
+\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color, phantom}.
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsRoot{\{\}}} & \rsRoot{} \\
+        \rsCodeAux*{rsRoot{\{корень\}}} & \rsRoot{корень} \\
+        \rsCodeAux*{rsRoot{\{кор, ень\}}} & \rsRoot{кор, ень} \\
+        \rsCodeAux*{rsRoot[color]{\{кор, ень\}}} & \rsRoot[color]{кор, ень} \\
+        \rsCodeAux*{rsRoot[phantom]{\{кор, ень\}}} & \rsRoot[phantom]{кор, ень} \\
+        \rsCodeAux*{rsRoot[color, phantom]{\{кор, ень\}}} & \rsRoot[color, phantom]{кор, ень} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды для приставки.}
+\end{table} 
+\endgroup
+
+
+
+
+\subsection{Суффикс}
+
+\rsCodeAux*{rsSuffix[\rsOptionsAux]\{\rsArgAux\}} \\
+\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color, phantom}.
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsSuffix{\{\}}} & \rsSuffix{} \\
+        \rsCodeAux*{rsSuffix{\{суффикс\}}} & \rsSuffix{суффикс} \\
+        \rsCodeAux*{rsSuffix{\{суф, фикс\}}} & \rsSuffix{суф, фикс} \\
+        \rsCodeAux*{rsSuffix[color]{\{суф, фикс\}}} & \rsSuffix[color]{суф, фикс} \\
+        \rsCodeAux*{rsSuffix[phantom]{\{суф, фикс\}}} & \rsSuffix[phantom]{суф, фикс} \\
+        \rsCodeAux*{rsSuffix[color, phantom]{\{суф, фикс\}}} & \rsSuffix[color, phantom]{суф, фикс} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды для приставки.}
+\end{table}
+\endgroup
+
+
+
+
+\subsection{Окончание}
+
+\rsCodeAux*{rsEnding[\rsOptionsAux]\{\rsArgAux[tl]\}} \\
+\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color, phantom}.
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsEnding{\{окончание\}}} & \rsEnding{окончание} \\
+        \rsCodeAux*{rsEnding[color]{\{окончание\}}} & \rsEnding[color]{окончание} \\
+        \rsCodeAux*{rsEnding[phantom]{\{окончание\}}} & \rsEnding[phantom]{окончание} \\
+        \rsCodeAux*{rsEnding[color, phantom]{\{окончание\}}} & \rsEnding[color, phantom]{окончание} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды для приставки.}
+\end{table}
+\endgroup
+
+
+
+
+\subsection{Постфикc}
+
+\rsCodeAux*{rsPostfix[\rsOptionsAux]\{\rsArgAux\}} \\
+\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color, phantom}.
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsPostfix{\{\}}} & \rsPostfix{} \\
+        \rsCodeAux*{rsPostfix{\{постфикс\}}} & \rsPostfix{постфикс} \\
+        \rsCodeAux*{rsPostfix{\{пост, фикс\}}} & \rsPostfix{пост, фикс} \\
+        \rsCodeAux*{rsPostfix[color]{\{пост, фикс\}}} & \rsPostfix[color]{пост, фикс} \\
+        \rsCodeAux*{rsPostfix[phantom]{\{пост, фикс\}}} & \rsPostfix[phantom]{пост, фикс} \\
+        \rsCodeAux*{rsPostfix[color, phantom]{\{пост, фикс\}}} & \rsPostfix[color, phantom]{пост, фикс} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды для приставки.}
+\end{table}
+\endgroup
+
+
+
+
+\subsection{Основа}
+
+\rsCodeAux*{rsBase[\rsOptionsAux]\{\rsArgAux[tl]\}} \\
+\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color, right, left}.
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsBase{\{основа\}}} & \rsBase{основа} \\
+        \rsCodeAux*{rsBase[color]{\{основа\}}} & \rsBase[color]{основа} \\
+        \rsCodeAux*{rsBase[left]{\{основа\}}} & \rsBase[left]{основа} \\
+        \rsCodeAux*{rsBase[color, right]{\{основа\}}} & \rsBase[color, right]{основа} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды для приставки.}
+\end{table}
+\endgroup
+
+
+
+
+\subsection{Разбор слова с непрерывной основной}
+
+{\small \rsCodeAux*{rsMorphemicAnalysis[\rsOptionsAux]\{\rsArgAux\}\{\rsArgAux\}\{\rsArgAux\}\{\rsArgAux[tl]\}\{\rsArgAux\}}} \\
+\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color, phantom}.
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        {\small \rsCodeAux*{rsMorphemicAnalysis\{бес, при\}\{дан\}\{н, ниц\}\{а\}\{\}}} & \rsMorphemicAnalysis{бес, при}{дан}{н, ниц}{а}{} \\
+        {\small \rsCodeAux*{rsMorphemicAnalysis\{из\}\{маз\}\{а, л\}\{\}\{ся\}}} & \rsMorphemicAnalysis{из}{маз}{а, л}{}{ся} \\
+        {\small \rsCodeAux[phantom]*{rsMorphemicAnalysis\{из\}\{маз\}\{а, л\}\{\}\{ся\}}} & \rsMorphemicAnalysis[phantom]{из}{маз}{а, л}{}{ся} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды для приставки.}
+\end{table}
+\endgroup

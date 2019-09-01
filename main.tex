@@ -1,4 +1,4 @@
-\documentclass[17pt, dvipsnames]{extarticle}
+\documentclass[14pt, dvipsnames]{extarticle}
 
 \usepackage[bottom=2cm,
             left=2cm,
@@ -14,7 +14,8 @@
     \usepackage{polyglossia}
     \setdefaultlanguage{russian}
     \setmainfont{Times New Roman}
-    \newfontfamily\cyrillicfont{Times New Roman}[Script=Cyrillic]
+    \newfontfamily\cyrillicfont{Times New Roman}
+    \setmonofont{CMU Typewriter Text}
 \else
    \usepackage[utf8]{inputenc}
    \usepackage[russian]{babel}
@@ -22,125 +23,30 @@
 
 \usepackage{RSLingu/rslingu}
 
+\usepackage{multicol}
+\usepackage{pythontex}
 
 \begin{document}
 
 Начинайте набирать текст.
 
-% \rsAttribute*{привет}
-% \rsObject*{привет}
-% \rsSubject*{пивет}
-% \rsAdverbarial*{привет}
-% \rsPredicate*{привет}
 
+\input{documentation.tex}
 
-% \rsAttribute{привет}
-% \rsObject{привет}
-% \rsSubject{пивет}
-% \rsAdverbarial{привет}
-% \rsPredicate{привет}
-
-% \rsNoun{дом}
-% \rsNoun[ед.ч.]{дом}
-% % \rsNoun{дом}[ед.ч.]
-
-% \rsPronoun{вашего}
-% \rsVerb[инф.]{ходить}
-% \rsUnion{и}
-
-
-
-% #966842	(150,104,66)
-% #f44747	(244,71,71)
-% #eedc31	(238,220,49)
-% #7fdb6a	(127,219,106)
-% #0e68ce	(14,104,206)
-
-\newcommand{\RSMlineWidth}{1.5}
-\newcommand{\RSMsignXPad}{1.5}
-\newcommand{\RSMsignYPad}{1.5}
-\newcommand{\RSMsignHeight}{4}
-
-
-\tikzset{
-    RSMlineWidth/.style={
-        line width=\RSMlineWidth pt,
-    }
-}
-
-
-
-% \rsPostfixAux[color]{постфикс}
-% \rsPostfixAux*{постфикс}
-
-
-% \rsPostfixAux*[phantom]{постфикс}
-% \rsPostfix{пост, фикс}
-% \rsPostfix[phantom]{пост, фикс}
-% \rsPostfix*{пост, фикс}
-% \rsPostfix*[phantom]{пост, фикс}
-
-
-
-% \rsRootAux{корень}
-% \rsRootAux*[phantom]{корень}
-% \rsRoot{кор, ень}
-% \rsRoot[phantom]{кор, ень}
-% \rsRoot*{кор, ень}
-% \rsRoot*[phantom]{кор, ень}
-
-
-% \rsSuffixAux{суффикс}
-% \rsSuffixAux*[phantom]{суффикс}
-% \rsSuffix{суф, фикс}
-% \rsSuffix[phantom]{суф, фикс}
-% \rsSuffix*{суф, фикс}
-% \rsSuffix*[phantom]{суф, фикс}
-
-
-% \begingroup
-%     \renewcommand{\RSPhantomBool}{1}
-%     \renewcommand{\RSColorBool}{1}
-
-%     \rsPostfix{пост, фикс}
-%     \rsRoot{кор, ень}
-%     \rsPrefix{при, став, ка}
-%     \rsSuffix{суф, фикс}
-% \endgroup
-
-
-
-
-% \begingroup
-%     \renewcommand{\RSPhantomBool}{1}
-%     \renewcommand{\RSColorBool}{1}
-
+% \begin{rslingu}[color, phantom]
 %     \rsPrefix{при, став, ка}
 %     \rsRoot{кор, ень}
 %     \rsSuffix{суф, фикс}
 %     \rsPostfix{пост, фикс}
-
-%     \renewcommand{\RSPhantomBool}{0}
-%     \renewcommand{\RSColorBool}{0}
-% \endgroup
-
-
-
-
-\begin{rslingu}[color]
-    \rsPrefix{при, став, ка}
-    \rsRoot{кор, ень}
-    \rsSuffix{суф, фикс}
-    \rsPostfix{пост, фикс}
-    \rsBase{основа}
-    \rsEnding{}
-    \rsMorphemicAnalysis{под, за}{голов}{ок}{}{}
-\end{rslingu}
+%     \rsBase{основа}
+%     \rsEnding{}
+%     \rsMorphemicAnalysis{под, за}{голов}{ок}{}{}
+% \end{rslingu}
 
     
-    \rsMorphemicAnalysis{}{караван}{}{}{}
-    \rsMorphemicAnalysis{}{рубин}{}{}{}
+%     \rsMorphemicAnalysis{}{караван}{}{}{}
+%     \rsMorphemicAnalysis{}{рубин}{}{}{}
  
-    \rsMorphemicAnalysis[color, phantom]{под, за}{голов}{ок}{}{}
+%     \rsMorphemicAnalysis[color, phantom]{под, за}{голов}{ок}{}{}
 
 \end{document}

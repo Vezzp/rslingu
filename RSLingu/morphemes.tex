@@ -6,9 +6,9 @@
 \definecolor{RSBaseColor}{HTML}{c0c0c0}
 
 
-\newcommand{\RSMorphemeSignHeight}{4.5}
-\newcommand{\RSMorphemeSignXPad}{1}
-\newcommand{\RSMorphemeSignYPad}{.5}
+\newcommand{\RSMorphemeSignHeight}{4}
+\newcommand{\RSMorphemeSignXPad}{1.5}
+\newcommand{\RSMorphemeSignYPad}{1}
 \newcommand{\RSMorphemeSignLineWidth}{1.5}
 
 \newcommand{\RSBaseSignXPad}{1}
@@ -222,9 +222,9 @@
                             \p1 = (Root.north~west),
                             \p2 = (Root.north~east)
                         in
-                            (\x1 + \RSMsignXPad, \y1 + \RSMsignYPad) --
-                            (.5 * \x1 + .5 * \x2, \y2 + \RSMsignYPad + \RSMsignHeight) --
-                            (\x2 - \RSMsignXPad, \y2 + \RSMsignYPad);
+                            (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignYPad) --
+                            (.5 * \x1 + .5 * \x2, \y2 + \RSMorphemeSignYPad + \RSMorphemeSignHeight) --
+                            (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignYPad);
                 }
             }
         }
@@ -260,12 +260,12 @@
                             \p1 = (Root.north~west),
                             \p2 = (Root.north~east)
                         in
-                            (\x1 + \RSMsignXPad, \y1 + \RSMsignYPad) --
-                            (.5 * \x1 + .5 * \x2, \y2 + \RSMsignYPad + \RSMsignHeight) --
-                            (\x2 - \RSMsignXPad, \y2 + \RSMsignYPad)
-                            (\x1 + \RSMsignXPad, \y1 + \RSMsignYPad + 3pt) --
-                            (.5 * \x1 + .5 * \x2, \y2 + \RSMsignYPad + \RSMsignHeight + 3pt) --
-                            (\x2 - \RSMsignXPad, \y2 + \RSMsignYPad + 3pt);
+                            (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignYPad) --
+                            (.5 * \x1 + .5 * \x2, \y2 + \RSMorphemeSignYPad + \RSMorphemeSignHeight) --
+                            (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignYPad)
+                            (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignYPad + 3pt) --
+                            (.5 * \x1 + .5 * \x2, \y2 + \RSMorphemeSignYPad + \RSMorphemeSignHeight + 3pt) --
+                            (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignYPad + 3pt);
                 }
             }
         }
@@ -336,7 +336,7 @@
                 \node[RSCage] (Root) {#2\RSDownVPhantom};
 
                 \l__rs_choose_color:n { RSBaseColor }
-                \FPdiv\RSAux\RSMlineWidth{2}
+                \FPdiv\RSAux\RSMorphemeSignLineWidth{2}
                 \foreach \n in {0}
                     \draw[
                         RSMorphemeLine,
