@@ -1,149 +1,18 @@
-\documentclass[14pt, dvipsnames]{extarticle}
+\documentclass[14pt, dvipsnames]{extreport}
+\usepackage{style}
 
-\usepackage[bottom=2cm,
-            left=2cm,
-            right=2cm,
-            top=2cm]{geometry}
 
-\linespread{1.5}
-
-\usepackage{ifxetex}
-\ifxetex
-    \usepackage[cm-default]{fontspec}
-    \defaultfontfeatures{Ligatures=TeX}
-    \usepackage{polyglossia}
-    \setdefaultlanguage{russian}
-    \setmainfont{Times New Roman}
-    \newfontfamily\cyrillicfont{Times New Roman}
-    \setmonofont{CMU Typewriter Text}
-\else
-   \usepackage[utf8]{inputenc}
-   \usepackage[russian]{babel}
-\fi
-
-\usepackage{RSLingu/rslingu}
-
-\usepackage{multicol}
-\usepackage{pythontex}
 
 \begin{document}
 
-Начинайте набирать текст.
-
-
-    % \NewDocumentCommand{\rsSubject}{ s m }{%
-    %     \rsUnderlineSubject
-    %         [\IfBooleanTF{#1}{RSSubjectColor}{}]
-    %         {\ProcessMap{\textoverset}{#2}[ ]}%
-    % }
-    
-    
-% Syntax key-val arguments.
-
-    
-    
-
-% \ExplSyntaxOn
-
-% \NewDocumentCommand{\rsSubject}{ O{} m }{%
-%     \keys_set_known:nn { rs/syntax/keys } {color=false, phantom=false, width, #1}
-
-%     \tikz[baseline=(Root.base)]{
-%         \l__rs_syntax_choose_text:p  { #2 }
-%         \l__rs_choose_color:n { RSSubjectColor }
-%         \draw[\l__rs_color, RSUline]
-%             ([yshift=-\RSUlineYShift pt]Root.south~west) --
-%             ([yshift=-\RSUlineYShift pt]Root.south~east);
-%     }
-% }
-
-% \ExplSyntaxOff
-
-
-
-% \ExplSyntaxOn
-
-% \NewDocumentCommand{\rsPredicate}{ O{} m }{%
-%     \keys_set_known:nn { rs/syntax/keys } {color=false, phantom=false, width, #1}
-
-%     \tikz[baseline=(Root.base)]{
-%         \l__rs_syntax_choose_text:p  { #2 }
-%         \l__rs_choose_color:n { RSPredicateColor }
-%         \draw[\l__rs_color, RSUline]
-%             ([yshift=-\RSUlineYShift pt]Root.south~west) --
-%             ([yshift=-\RSUlineYShift pt]Root.south~east);
-%         \draw[\l__rs_color, RSUline]
-%             ([yshift=-\RSUlineYShift - 2 pt]Root.south~west) --
-%             ([yshift=-\RSUlineYShift - 2 pt]Root.south~east);
-%     }
-% }
-
-% \ExplSyntaxOff
-
-
-
-
-% \ExplSyntaxOn
-
-% \NewDocumentCommand{\rsAdverbarial}{ O{} m }{%
-%     \keys_set_known:nn { rs/syntax/keys } {color=false, phantom=false, width, #1}
-
-%     \tikz[baseline=(Root.base)]{
-%         \l__rs_syntax_choose_text:p  { #2 }
-%         \l__rs_choose_color:n { RSAdverbarialColor }
-%         \draw[
-%             \l__rs_color,
-%             RSUline,
-%             dash~pattern={on 5pt off 2pt on 1.5pt off 2pt},
-%         ]
-%             ([yshift=-\RSUlineYShift pt]Root.south~west) --
-%             ([yshift=-\RSUlineYShift pt]Root.south~east);
-%     }
-% }
-
-% \ExplSyntaxOff
-
-
-
-
-% \ExplSyntaxOn
-
-% \NewDocumentCommand{\rsAttribute}{ O{} m }{%
-%     \keys_set_known:nn { rs/syntax/keys } {color=false, phantom=false, width, #1}
-
-%     \tikz[baseline=(Root.base)]{
-%         \l__rs_syntax_choose_text:p  { #2 }
-%         \l__rs_choose_color:n { RSAttributeColor }
-%         \draw[
-%             \l__rs_color,
-%             RSUline, 
-%             decorate,
-%             decoration={
-%                 complete~sines,
-%                 segment~length=2.75pt,
-%                 amplitude=1.75,
-%                 mirror,
-%                 start~up,
-%                 end~down
-%             }
-%         ]
-%             ([yshift=-\RSUlineYShift pt]Root.south~west) --
-%             ([yshift=-\RSUlineYShift pt]Root.south~east);
-%     }
-% }
-
-% \ExplSyntaxOff
-
-
+\input{documentation.tex}
 
 
 % \rsSubject[color]{подлежащее=сущ.}
 % \rsPredicate[color, phantom]{сказуемое=глаг. + п.в. + м.р., сказуемое=глаг. + п.в.}
 % \rsAdverbarial[color, phantom]{обстоятельство=сущ.}
 % \rsAttribute[color]{определение}
-
-
-\input{documentation.tex}
+% \rsObject[color]{дополнение}
 
 
 

@@ -1,18 +1,18 @@
-\NewDocumentCommand{\rsCodeAux}{ s m }{%
-   \texttt{\IfBooleanTF{#1}{\textbackslash}\,#2}%
-}
+\newpage 
 
-\NewDocumentCommand{\rsOptionsAux}{ s O{options} }{%
-   \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{red!75}{#2}>}%
-}
+\thispagestyle{empty}
 
-\NewDocumentCommand{\rsArgAux}{ s O{clist} }{%
-   \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{blue!75}{#2}>}%
-}
+\vspace*{7cm}
+\begin{center}
+    { \huge \rsCodeAux{RSLingu}. } \\
+    { \Large \LaTeX-пакет для школьной лингвистики. }\\
+\end{center}
 
-\NewDocumentCommand{\rsTypeAux}{ s O{cmd} }{%
-   \texttt{\IfBooleanTF{#1}{\textbackslash}\textcolor{ForestGreen!75}{#2}}%
-}
+
+\vspace*{7cm}
+\begin{flushright}
+    Автор
+\end{flushright}
 
 
 \newpage
@@ -22,12 +22,70 @@
 \newpage
 
 
+\chapter[Изучаем \LaTeX]{Изучаем \LaTeX}
+
+
+\section{Где набираться знаний?}
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item В книге по \href{https://www.mccme.ru/free-books/llang/newllang.pdf}{ссылке}.
+    \item В справочном практическом пособии по \href{http://www.ccas.ru/voron/download/voron05latex.pdf}{ссылке}.
+    \item На бесплатном онлайн-курсе на Coursera по ссылке \href{https://ru.coursera.org/learn/latex}{ссылке}.
+\end{itemize}
+
+
+\section{Где оттачивать мастерство и работать?}
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item В интернете на \href{overleaf.com}{overleaf.com}.
+    \item На персональном компьютере, установив программу MiKTeX по \href{https://miktex.org/download}{ссылке}.
+\end{itemize}
+
+
+\section{Ещё полезности?}
+
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item <<Исчерпывающий список символов>> по \href{http://tug.ctan.org/info/symbols/comprehensive/symbols-a4.pdf}{ссылке}.
+    \item Репозиторий существующих пактов \href{ctan.org}{ctan.org}.
+\end{itemize}
+
+
+
+\chapter{Пакет \rsCodeAux{rslingu} для школьной лингвистики}
+
+
+\section{Условные обозначения}
+
+Формально описание команды или окружения будет даваться следующим образом, например:
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{rsPrefix[\rsOptionsAux]\{\rsArgAux\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}. 
+\end{tcolorbox}
+
+Разберём первую строчку, которая содержит сигнатуру объекта-модификатор текста:
+\begin{center}
+    \rsTypeAux:\rsCodeAux{rsPrefix[\rsOptionsAux]\{\rsArgAux\}}
+\end{center}
+Сначала идёт обозначения типа объекта-модификатора текста, он может быть либо \rsTypeAux\space --- для команды --- или \rsTypeAux[env] --- для окружения. Далее идёт \rsCodeAux{:}, смысловой нагрузки он несёт --- это просто разделитель для лучшей читаемости. Затем имя, как в данном примере, команды --- \rsCodeAux{rsPrefix}. 
+
+После следуют аргументы, которые принимает команда или окружение. Обязательные аргументы пишутся в фигурных скобках; необязательные --- в квадратных. Указание \rsOptionsAux\space в квадратных скобках означает, что 
+
+
+
+
 \section{Морфемный анализ слов} 
 
 \subsection{Приставка}
 
-\rsTypeAux:\rsCodeAux{rsPrefix[\rsOptionsAux]\{\rsArgAux\}} \\
-\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}. 
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{rsPrefix[\rsOptionsAux]\{\rsArgAux\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}. 
+\end{tcolorbox}
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
@@ -52,8 +110,11 @@
 
 \subsection{Корень}
 
-\rsTypeAux:\rsCodeAux{rsRoot[\rsOptionsAux]\{\rsArgAux\}} \\
-\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{rsRoot[\rsOptionsAux]\{\rsArgAux\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
@@ -77,9 +138,12 @@
 
 
 \subsection{Суффикс}
-
-\rsTypeAux:\rsCodeAux{rsSuffix[\rsOptionsAux]\{\rsArgAux\}} \\
-\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+    
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{rsSuffix[\rsOptionsAux]\{\rsArgAux\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}    
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
@@ -104,8 +168,11 @@
 
 \subsection{Окончание}
 
-\rsTypeAux:\rsCodeAux{rsEnding[\rsOptionsAux]\{\rsArgAux[tl]\}} \\
-\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{rsEnding[\rsOptionsAux]\{\rsArgAux[tl]\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
@@ -129,8 +196,11 @@
 
 \subsection{Постфикc}
 
-\rsTypeAux:\rsCodeAux{rsPostfix[\rsOptionsAux]\{\rsArgAux\}} \\
-\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{rsPostfix[\rsOptionsAux]\{\rsArgAux\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
@@ -155,8 +225,11 @@
 
 \subsection{Основа}
 
-\rsTypeAux:\rsCodeAux{rsBase[\rsOptionsAux]\{\rsArgAux[tl]\}} \\
-\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, right:bool=false, left:bool=false}.
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{rsBase[\rsOptionsAux]\{\rsArgAux[tl]\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, right:bool=false, left:bool=false}.
+\end{tcolorbox}
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
@@ -179,8 +252,11 @@
 
 \subsection{Разбор слова с непрерывной основной}
 
-{\small \rsTypeAux:\rsCodeAux{rsMorphemicAnalysis[\rsOptionsAux]\{\rsArgAux\}\{\rsArgAux\}\{\rsArgAux\}\{\rsArgAux[tl]\}\{\rsArgAux\}}} \\
-\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{rsMorphemicAnalysis[\rsOptionsAux]\{\rsArgAux\}\{\rsArgAux\}\{\rsArgAux\}\{\rsArgAux[tl]\}\{\rsArgAux\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}    
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
@@ -222,8 +298,10 @@
 
 \subsection{Окружение \rsCodeAux{rslingu}}
 
-\noindent\rsTypeAux[env]:\rsCodeAux{rslingu[\rsOptionsAux]} \\
-\hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\begin{tcolorbox}
+    \noindent\rsTypeAux[env]:\rsCodeAux{rslingu[\rsOptionsAux]} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
 
 Иногда может возникать необходимость, например, морфемного разбора слов с <<разрывной>> основой. Для таких случаев нет специально
 определённых команд, подобно команде \rsCodeAux*{rsMorphemicAnalysis}, так что единственный способ отобразить такие слова --- это
@@ -233,3 +311,5 @@
 
 
 Решить эту проблему призвано окружение \rsCodeAux{rslingu}, которое указании какого-либо дополнительного аргумента, <<активирует>> его для всех команд, принимающий данный аргумент, внутри окружения.
+
+Как водится, для более объемлющего понимания лучше один раз увидеть, чем читать <<сухой>> текст <<документации>>.

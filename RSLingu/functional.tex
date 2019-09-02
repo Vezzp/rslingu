@@ -118,3 +118,21 @@
        }
  }
 \ExplSyntaxOff
+
+
+
+\NewDocumentCommand{\rsCodeAux}{ s m }{%
+   \texttt{\IfBooleanTF{#1}{\textbackslash}\,#2}%
+}
+
+\NewDocumentCommand{\rsOptionsAux}{ s O{options} }{%
+   \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{red!75}{#2}>}%
+}
+
+\NewDocumentCommand{\rsArgAux}{ s O{clist} }{%
+   \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{blue!75}{#2}>}%
+}
+
+\NewDocumentCommand{\rsTypeAux}{ s O{cmd} }{%
+   \texttt{\IfBooleanTF{#1}{\textbackslash}\textcolor{ForestGreen!75}{#2}}%
+}
