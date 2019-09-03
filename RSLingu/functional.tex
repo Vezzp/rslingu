@@ -129,10 +129,15 @@
    \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{red!75}{#2}>}%
 }
 
-\NewDocumentCommand{\rsArgAux}{ s O{clist} }{%
-   \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{blue!75}{#2}>}%
+\NewDocumentCommand{\rsArgAux}{ s O{clist} O{} }{%
+   \texttt{\IfBooleanTF{#1}{\textbackslash}<\textcolor{blue!75}{#2}>\textcolor{blue!75}{#3}}%
 }
 
 \NewDocumentCommand{\rsTypeAux}{ s O{cmd} }{%
    \texttt{\IfBooleanTF{#1}{\textbackslash}\textcolor{ForestGreen!75}{#2}}%
+}
+
+
+\NewDocumentCommand{\rsNameref}{ m }{%
+    \ref{#1} <<\textit{\nameref{#1}}>>%
 }

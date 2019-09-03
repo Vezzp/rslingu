@@ -11,7 +11,10 @@
 
 \vspace*{7cm}
 \begin{flushright}
-    Автор
+    \begin{tabular}{@{}l@{}}
+        Автор: Шлёнский Владислав \\
+        e-mail: \texttt{vladislav.shlyonskiy@yandex.ru}
+    \end{tabular}
 \end{flushright}
 
 
@@ -22,58 +25,40 @@
 \newpage
 
 
-\chapter[Изучаем \LaTeX]{Изучаем \LaTeX}
-
-
-\section{Где набираться знаний?}
-
-\begin{itemize}
-    \setlength{\itemsep}{0pt}
-    \item В книге по \href{https://www.mccme.ru/free-books/llang/newllang.pdf}{ссылке}.
-    \item В справочном практическом пособии по \href{http://www.ccas.ru/voron/download/voron05latex.pdf}{ссылке}.
-    \item На бесплатном онлайн-курсе на Coursera по ссылке \href{https://ru.coursera.org/learn/latex}{ссылке}.
-\end{itemize}
-
-
-\section{Где оттачивать мастерство и работать?}
-
-\begin{itemize}
-    \setlength{\itemsep}{0pt}
-    \item В интернете на \href{overleaf.com}{overleaf.com}.
-    \item На персональном компьютере, установив программу MiKTeX по \href{https://miktex.org/download}{ссылке}.
-\end{itemize}
-
-
-\section{Ещё полезности?}
-
-\begin{itemize}
-    \setlength{\itemsep}{0pt}
-    \item <<Исчерпывающий список символов>> по \href{http://tug.ctan.org/info/symbols/comprehensive/symbols-a4.pdf}{ссылке}.
-    \item Репозиторий существующих пактов \href{ctan.org}{ctan.org}.
-\end{itemize}
-
-
-
-\chapter{Пакет \rsCodeAux{rslingu} для школьной лингвистики}
 
 
 \section{Условные обозначения}
 
 Формально описание команды или окружения будет даваться следующим образом, например:
 \begin{tcolorbox}
-    \small
-    \rsTypeAux:\rsCodeAux{rsPrefix[\rsOptionsAux]\{\rsArgAux\}} \\
+    \small \rsTypeAux:\rsCodeAux{rsPrefix[\rsOptionsAux]\{\rsArgAux\}} \\
     \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}. 
 \end{tcolorbox}
 
-Разберём первую строчку, которая содержит сигнатуру объекта-модификатор текста:
+Разберём первую строчку, которая содержит сигнатуру объекта-модификатора текста:
 \begin{center}
     \rsTypeAux:\rsCodeAux{rsPrefix[\rsOptionsAux]\{\rsArgAux\}}
 \end{center}
-Сначала идёт обозначения типа объекта-модификатора текста, он может быть либо \rsTypeAux\space --- для команды --- или \rsTypeAux[env] --- для окружения. Далее идёт \rsCodeAux{:}, смысловой нагрузки он несёт --- это просто разделитель для лучшей читаемости. Затем имя, как в данном примере, команды --- \rsCodeAux{rsPrefix}. 
+Сначала идёт обозначения типа объекта-модификатора текста, он может быть либо \rsTypeAux\space --- для команды --- или \rsTypeAux[env] --- для окружения. Далее идёт символ двоеточия <<\rsCodeAux{:}>>, смысловой нагрузки он несёт --- это просто разделитель для лучшей читаемости. Затем имя, как в данном примере, команды --- \rsCodeAux{rsPrefix}. 
 
-После следуют аргументы, которые принимает команда или окружение. Обязательные аргументы пишутся в фигурных скобках; необязательные --- в квадратных. Указание \rsOptionsAux\space в квадратных скобках означает, что 
+После следуют аргументы, которые принимает команда или окружение. Обязательные аргументы пишутся в фигурных скобках; необязательные --- в квадратных. В каждой из скобок указан ожидаемый вход, который может принимать несколько значений:
+\begin{itemize}
+    \item \rsOptionsAux. Означает, что в данное место передать дополнительные параметры, которые меняют поведение команды по умолчанию. То, какие дополнительные параметры можно передавать, а так же значения по умолчанию, описывается на следующих строчках.
+    \item \rsArgAux[tl]\space (от англ. \textit{token list}). Означает, что весь передаваемый текст будет обработан целиком.
+    \item \rsArgAux\space (от англ. \textit{comma list}). Означает, что при наличии в передаваемом тексте запятых, каждая часть переданной строки, находящаяся между запятыми (либо началом строчки и запятой или запятой и концом строчки), будет обработана отдельно.
+    \item В некоторых командах, предназначенных, например, для синтаксического разбора предложений, происходит, вообще говоря, разбиение, или парсинг (от англ. \textit{parse}), входной строчки по нескольким разделителям. Например, если парсинг возможен сначала по запятой, потом по знаку <<\texttt{=}>> и, наконец, скажем, по знаку <<\texttt{+}>>, это будет указано следующим образом\footnote{Для наглядной демонстрации написанного смотрите в пункте \rsNameref{sec:SyntaxAnalysis}.}:
+    \begin{center}
+        \rsArgAux[clist][[=, +]].
+    \end{center}
+\end{itemize}
 
+
+Разберём теперь вторую строчку, в которой разъясняются дополнительные параметры:
+\begin{center}
+    \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}. 
+\end{center}
+
+После двоеточия следует перечисление через запятую возможных параметров для данного объекта, их тип и значение по умолчанию.
 
 
 
@@ -279,18 +264,102 @@
 
 \section{Части речи}
 
+Все команды данной группы имеют вид:
+\begin{tcolorbox}
+    \small
+    \rsTypeAux:\rsCodeAux{<name>\{\rsArgAux[tl]\}[\rsArgAux[tl]]}
+\end{tcolorbox}
+где \rsCodeAux{<name>} может принимать одно из следующих значений:
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        \rsCodeAux{rsNoun} & существительное & \rsCodeAux{rsVerb} & глагол \\\hline
+        \rsCodeAux{rsAdverb} & наречие & \rsCodeAux{rsPretext} & предлог \\\hline
+        \rsCodeAux{rsUnion} & союз & \rsCodeAux{rsPronoun} & местоимение \\\hline
+        \rsCodeAux{rsAdjective} & прилагательное & \rsCodeAux{rsParticle} & частица \\\hline
+    \end{tabular}
+    \caption{Команды для частей речи.}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsNoun\{существительное\}} & \rsNoun{существительное} \\ 
+        \rsCodeAux*{rsNoun\{существительное\}[ср.р., им.п.]} & \rsNoun{существительное}[ср.р., им.п.] \\
+        \rsCodeAux*{rsVerb\{глагол\}} & \rsVerb{глагол} \\
+        \rsCodeAux*{rsAdverb\{наречие\}} & \rsAdverb{наречие} \\
+        \rsCodeAux*{rsPretext\{предлог\}} & \rsAdverb{предлог} \\
+        \rsCodeAux*{rsUnion\{союз\}} & \rsUnion{союз} \\
+        \rsCodeAux*{rsPronoun\{местоимение\}} & \rsUnion{местоимение} \\
+        \rsCodeAux*{rsAdjective\{прилагательное\}} & \rsAdjective{прилагательное} \\
+        \rsCodeAux*{rsParticle\{частица\}} & \rsParticle{частица} \\\hline
+    \end{tabular}
+    \caption{Использование команд для частей речи.}
+\end{table}
+
+
+
+% ======================================================
+% ======== Синтаксический разбор предложений ===========
+% ======================================================
 
 \section{Синтаксический разбор предложений}
+\label{sec:SyntaxAnalysis}
 
 \subsection{Подлежащее}
+\begin{tcolorbox}
+    \rsTypeAux:\rsCodeAux{rsSubject[\rsOptionsAux]\{\rsArgAux[clist][[=, +]]\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
+
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \small
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsSubject{\{подлежащее\}}} & \rsSubject{подлежащее} \\
+        \rsCodeAux*{rsSubject[color]{\{подлежащее\}}} & \rsSubject[color]{подлежащее} \\
+        \rsCodeAux*{rsSubject[phantom, color]{\{подлежащее\}}} & \rsSubject[phantom, color]{подлежащее} \\
+        \rsCodeAux*{rsSubject[phantom, color]{\{подлежащее=сущ.\}}} & \rsSubject[color]{подлежащее=сущ.} \\
+        \rsCodeAux*{rsSubject{\{подлежащее, подлежащее\}}} & \rsSubject{подлежащее, подлежащее} \\
+        \rsCodeAux*{rsSubject{\{подлежащее=сущ. + им.п + ср.р., подлежащее=ср.р.\}}} & \rsSubject{подлежащее=сущ. + им.п. + ср.р., подлежащее=ср.р} \\
+        \rsCodeAux*{rsSubject[color, phantom]{\{подлежащее, подлежащее=ср.р.\}}} & \rsSubject[color, phantom]{подлежащее, подлежащее=ср.р.} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды подлежащего.}
+\end{table}
+\endgroup
+
 
 \subsection{Сказуемое}
+\begin{tcolorbox}
+    \rsTypeAux:\rsCodeAux{rsPredicate[\rsOptionsAux]\{\rsArgAux[clist][[=, +]]\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
+
 
 \subsection{Дополнение}
+\begin{tcolorbox}
+    \rsTypeAux:\rsCodeAux{rsObject[\rsOptionsAux]\{\rsArgAux[clist][[=, +]]\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
 
 \subsection{Определение}
+\begin{tcolorbox}
+    \rsTypeAux:\rsCodeAux{rsAttribute[\rsOptionsAux]\{\rsArgAux[clist][[=, +]]\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
 
 \subsection{Обстоятельство}
+\begin{tcolorbox}
+    \rsTypeAux:\rsCodeAux{rsAdverbarial[\rsOptionsAux]\{\rsArgAux[clist][[=, +]]\}} \\
+    \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
+\end{tcolorbox}
 
 
 
@@ -311,5 +380,89 @@
 
 
 Решить эту проблему призвано окружение \rsCodeAux{rslingu}, которое указании какого-либо дополнительного аргумента, <<активирует>> его для всех команд, принимающий данный аргумент, внутри окружения.
+\begin{figure}[htp!]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \begin{minted}[
+            frame=lines,
+            framesep=2mm,
+            baselinestretch=1.2,
+            bgcolor=black!5!white,
+            fontsize=\small,
+            linenos
+        ]{latex}
+\begin{rslingu}[color]
+    \rsAttribute{Уставшая} \rsSubject{мама} \rsPredicate{мыла} \rsObject{раму}
+    \rsAdverbarial{вечером}.
+\end{rslingu}
+        \end{minted}
+    \caption{Код с использованием окружения \rsCodeAux{rslingu}.}
+    \end{subfigure}\vspace*{.75cm}
+    \begin{subfigure}{\textwidth}
+        \begin{minted}[
+            frame=lines,
+            framesep=2mm,
+            baselinestretch=1.2,
+            bgcolor=black!5!white,
+            fontsize=\small,
+            linenos
+        ]{latex}
+\rsAttribute[color]{Уставшая} \rsSubject[color]{мама} \rsPredicate[color]{мыла}
+\rsObject[color]{раму} \rsAdverbarial[color]{вечером}.
+        \end{minted}
+    \caption{Код без использованием окружения \rsCodeAux{rslingu}.}
+    \end{subfigure}\vspace*{.75cm}
+    \begin{subfigure}{.9\textwidth}
+        \centering
+        \begin{rslingu}[color]
+            \rsAttribute{Уставшая} \rsSubject{мама} \rsPredicate{мыла} \rsObject{раму} \rsAdverbarial{вечером}.
+        \end{rslingu}
+    \caption{Результат (одинаков) выполнения каждого из частей кода выше.}
+    \end{subfigure}
+    \caption{Демонстрация возможностей окружения \rsCodeAux{rslingu} c параметром \rsCodeAux{color}.}
+\end{figure}
 
-Как водится, для более объемлющего понимания лучше один раз увидеть, чем читать <<сухой>> текст <<документации>>.
+
+
+\begin{figure}[htp!]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \begin{minted}[
+            frame=lines,
+            framesep=2mm,
+            baselinestretch=1.2,
+            bgcolor=black!5!white,
+            fontsize=\small,
+            linenos
+        ]{latex}
+\begin{rslingu}[color, phantom]
+    \rsAttribute{Уставшая} \rsSubject{мама} \rsPredicate{мыла} \rsObject{раму}
+    \rsAdverbarial{вечером}.
+\end{rslingu}
+        \end{minted}
+    \caption{Код с использованием окружения \rsCodeAux{rslingu}.}
+    \end{subfigure}\vspace*{.75cm}
+    \begin{subfigure}{\textwidth}
+        \begin{minted}[
+            frame=lines,
+            framesep=2mm,
+            baselinestretch=1.2,
+            bgcolor=black!5!white,
+            fontsize=\small,
+            linenos
+        ]{latex}
+\rsAttribute[color, phantom]{Уставшая} \rsSubject[phantom, color]{мама}
+\rsPredicate[phanto, color]{мыла} \rsObject[phantom, color]{раму}
+\rsAdverbarial[phantom, color]{вечером}.
+        \end{minted}
+    \caption{Код без использованием окружения \rsCodeAux{rslingu}.}
+    \end{subfigure}\vspace*{.75cm}
+    \begin{subfigure}{.9\textwidth}
+        \centering
+        \begin{rslingu}[color, phantom]
+            \rsAttribute{Уставшая} \rsSubject{мама} \rsPredicate{мыла} \rsObject{раму} \rsAdverbarial{вечером}.
+        \end{rslingu}
+    \caption{Результат (одинаков) выполнения каждого из частей кода выше.}
+    \end{subfigure}
+    \caption{Демонстрация возможностей окружения \rsCodeAux{rslingu} c параметрами и \rsCodeAux{phantom}.}
+\end{figure}
