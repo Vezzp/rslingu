@@ -4,16 +4,17 @@
 
 \vspace*{7cm}
 \begin{center}
-    { \huge \rsCodeAux{RSLingu}. } \\
-    { \Large \LaTeX-пакет для школьной лингвистики. }\\
+    { \huge \rsCodeAux{RSLingu}. } \\[1cm]
+    { \Large \LaTeX-пакет для \rsMorphemicAnalysis[color]{}{школь}{н}{ой}{} \rsObject{лингвистики}}\\
 \end{center}
 
 
 \vspace*{7cm}
 \begin{flushright}
-    \begin{tabular}{@{}l@{}}
-        Автор: Шлёнский Владислав \\
-        e-mail: \texttt{vladislav.shlyonskiy@yandex.ru}
+    \begin{tabular}{@{}r@{\hskip .75cm}l@{}}
+        Автор &  Шлёнский Владислав \\
+        E-mail & \texttt{vladislav.shlyonskiy@yandex.ru} \\
+        Обновлено & 04.09.2019
     \end{tabular}
 \end{flushright}
 
@@ -342,6 +343,26 @@
     \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
 \end{tcolorbox}
 
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \small
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsPredicate{\{сказуемое\}}} & \rsPredicate{сказуемое} \\
+        \rsCodeAux*{rsPredicate[color]{\{сказуемое\}}} & \rsPredicate[color]{сказуемое} \\
+        \rsCodeAux*{rsPredicate[phantom, color]{\{сказуемое\}}} & \rsPredicate[phantom, color]{сказуемое} \\
+        \rsCodeAux*{rsPredicate[phantom, color]{\{сказуемое=глаг.\}}} & \rsPredicate[color]{сказуемое=глаг.} \\
+        \rsCodeAux*{rsPredicate{\{сказуемое, сказуемое\}}} & \rsPredicate{сказуемое, сказуемое} \\
+        \rsCodeAux*{rsPredicate{\{сказуемое=глаг. + н.в., сказуемое=пр.в.\}}} & \rsPredicate{сказуемое=глаг. + н.в. + пр.в., сказуемое=б.в.} \\
+        \rsCodeAux*{rsPredicate[color, phantom]{\{сказуемое, сказуемое=пр.в.\}}} & \rsPredicate[color, phantom]{сказуемое, сказуемое=пр.в.} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды сказуемого.}
+\end{table}
+\endgroup
+
 
 \subsection{Дополнение}
 \begin{tcolorbox}
@@ -349,17 +370,78 @@
     \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
 \end{tcolorbox}
 
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \small
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsObject{\{дополнение\}}} & \rsObject{дополнение} \\
+        \rsCodeAux*{rsObject[color]{\{дополнение\}}} & \rsObject[color]{дополнение} \\
+        \rsCodeAux*{rsObject[phantom, color]{\{дополнение\}}} & \rsObject[phantom, color]{дополнение} \\
+        \rsCodeAux*{rsObject[phantom, color]{\{дополнение=сущ.\}}} & \rsObject[color]{дополнение=сущ.} \\
+        \rsCodeAux*{rsObject{\{дополнение, дополнение\}}} & \rsObject{дополнение, дополнение} \\
+        \rsCodeAux*{rsObject{\{дополнение=сущ., дополнение=сущ. + им.п.\}}} & \rsObject{дополнение=сущ., дополнение=сущ. + им.п.} \\
+        \rsCodeAux*{rsObject[color, phantom]{\{дополнение, дополнение=сущ.\}}} & \rsObject[color, phantom]{дополнение, дополнение=сущ.} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды дополнения.}
+\end{table}
+\endgroup
+
+
+
 \subsection{Определение}
 \begin{tcolorbox}
     \rsTypeAux:\rsCodeAux{rsAttribute[\rsOptionsAux]\{\rsArgAux[clist][[=, +]]\}} \\
     \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
 \end{tcolorbox}
 
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \small
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsAttribute{\{определение\}}} & \rsAttribute{определение} \\
+        \rsCodeAux*{rsAttribute[color]{\{определение\}}} & \rsAttribute[color]{определение} \\
+        \rsCodeAux*{rsAttribute[phantom, color]{\{определение\}}} & \rsAttribute[phantom, color]{определение} \\
+        \rsCodeAux*{rsAttribute[phantom, color]{\{определение=прил.\}}} & \rsAttribute[color]{определение=прил.} \\
+        \rsCodeAux*{rsAttribute{\{определение, определение\}}} & \rsAttribute{определение, определение} \\
+        \rsCodeAux*{rsAttribute{\{определение=прил., определение=прил. + согл.\}}} & \rsAttribute{определение=прил., определение=прил. + согл.} \\
+        \rsCodeAux*{rsAttribute[color, phantom]{\{определение=прил., определение\}}} & \rsAttribute[color, phantom]{определение=прил., определение} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды определения.}
+\end{table}
+\endgroup
+
+
 \subsection{Обстоятельство}
 \begin{tcolorbox}
     \rsTypeAux:\rsCodeAux{rsAdverbarial[\rsOptionsAux]\{\rsArgAux[clist][[=, +]]\}} \\
     \hspace*{1cm} \rsOptionsAux: \rsCodeAux{color:bool=false, phantom:bool=false}.
 \end{tcolorbox}
+
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[h!]
+    \centering
+    \small
+    \begin{tabular}{|l|l|}
+        \hline
+        \rsCodeAux*{rsAdverbarial{\{обстоятельство\}}} & \rsAdverbarial{обстоятельство} \\
+        \rsCodeAux*{rsAdverbarial[color]{\{обстоятельство\}}} & \rsAdverbarial[color]{обстоятельство} \\
+        \rsCodeAux*{rsAdverbarial[phantom, color]{\{обстоятельство\}}} & \rsAdverbarial[phantom, color]{обстоятельство} \\
+        \rsCodeAux*{rsAdverbarial[phantom, color]{\{обстоятельство=глаг.\}}} & \rsAdverbarial[color]{обстоятельство=сущ. + им.п.} \\
+        \hline
+    \end{tabular}
+    \caption{Использование команды обстоятельства.}
+\end{table}
+\endgroup
 
 
 
@@ -452,10 +534,10 @@
             linenos
         ]{latex}
 \rsAttribute[color, phantom]{Уставшая} \rsSubject[phantom, color]{мама}
-\rsPredicate[phanto, color]{мыла} \rsObject[phantom, color]{раму}
+\rsPredicate[phantom, color]{мыла} \rsObject[phantom, color]{раму}
 \rsAdverbarial[phantom, color]{вечером}.
         \end{minted}
-    \caption{Код без использованием окружения \rsCodeAux{rslingu}.}
+    \caption{Код без использования окружения \rsCodeAux{rslingu}.}
     \end{subfigure}\vspace*{.75cm}
     \begin{subfigure}{.9\textwidth}
         \centering
@@ -464,5 +546,5 @@
         \end{rslingu}
     \caption{Результат (одинаков) выполнения каждого из частей кода выше.}
     \end{subfigure}
-    \caption{Демонстрация возможностей окружения \rsCodeAux{rslingu} c параметрами и \rsCodeAux{phantom}.}
+    \caption{Демонстрация возможностей окружения \rsCodeAux{rslingu} c параметрами \rsCodeAux{color} и \rsCodeAux{phantom}.}
 \end{figure}
