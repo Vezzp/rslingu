@@ -1,99 +1,69 @@
-\definecolor{RSSuffixColor}{HTML}{7fdb6a}
-\definecolor{RSPrefixColor}{HTML}{f44747}
-\definecolor{RSRootColor}{HTML}{eedc31}
-\definecolor{RSPostfixColor}{HTML}{966842}
-\definecolor{RSEndingColor}{HTML}{0e68ce}
-\definecolor{RSBaseColor}{HTML}{990066}
+% Цвета знаков морфем.
+\definecolor{rsSuffixColor}{HTML}{7fdb6a}
+\definecolor{rsPrefixColor}{HTML}{f44747}
+\definecolor{rsRootColor}{HTML}{eedc31}
+\definecolor{rsPostfixColor}{HTML}{966842}
+\definecolor{rsEndingColor}{HTML}{0e68ce}
+\definecolor{rsBaseColor}{HTML}{990066}
 
 
-\newcommand{\RSMorphemeSignHeight}{4}
-\newcommand{\RSMorphemeSignXPad}{1.5}
-\newcommand{\RSMorphemeSignYPad}{1}
-\newcommand{\RSMorphemeSignLineWidth}{1.5}
+\ExplSyntaxOn
+% Цвет морфем.
+    \tl_new:N \l__rslingu_morpheme_color_tl
+    \cs_new_protected:Nn \l__rslingu_morpheme_set_color_cs:n {
+        \tl_set:Nn \l__rslingu_morpheme_color_tl {
+            \bool_if:nTF
+                { \l__rslingu_morpheme_color_bool || \l__rslingu_color_bool }
+                { #1 } 
+                { black }
+        }
+    }
+ 
+% Высота знаков морфем (за исключением основы).
+\dim_const:Nn \c__rslingu_morpheme_sign_height_dim {3pt}
 
-\newcommand{\RSBaseSignXPad}{1}
-\newcommand{\RSBaseSignYPad}{1}
-\newcommand{\RSBaseSignHeight}{2.5}
+% Ограничение длины знака морфемы по сравнению с длиной морфемы (за исключением основы).
+% NB: Необходимо для избегания наложения знака одной морфемы на знак другой.
+\dim_const:Nn \c__rslingu_morpheme_sign_x_pad_dim {1pt}
 
-\newcommand{\RSPhantomBool}{0}
-\newcommand{\RSColorBool}{0}
+% Расстояние от нижней части знака морфем до высшей части морфемы (за исключением основы).
+% NB: Расстояние считается как если бы в морфеме была буква «б».
+\dim_const:Nn \c__rslingu_morpheme_sign_y_pad_dim {0pt}
 
-\newlength{\RSLenTallAux}
-\newlength{\RSLenNormalAux}
-\settoheight\RSLenNormalAux{о}    
-\getlength{\RSLenNormal}{\RSLenNormalAux}
+% Толщина линий знака морфем (включая основу).
+\dim_const:Nn \c__rslingu_morpheme_sign_line_width_dim {1.25pt}
 
-\FPset\RSMorphemeSignYPadAux{0}%
+% Высота знака основы слова.
+\dim_const:Nn \c__rslingu_morpheme_base_sign_height_dim {2pt}
 
-\tikzset{%
-    RSMorphemeLine/.style={%
-        line width=\RSMorphemeSignLineWidth pt,
-    },
-    RSMorphemeLineShifted/.style={%
-        RSMorphemeLine,
-        transform canvas={%
-            yshift=\RSMorphemeSignYPad - \RSMorphemeSignYPadAux pt,
-        },
+% Ограничение длины знака основы слова по сравнению с длиной морфемы.
+% NB: Необходимо для избегания наложения знака одной морфемы на знак другой.
+\dim_const:Nn \c__rslingu_morpheme_base_sign_x_pad_dim {1pt}
+
+% Расстояние от нижней части основы до знака основы.
+\dim_const:Nn \c__rslingu_morpheme_base_sign_y_pad_dim {1pt}
+
+% TikZ-стиль для оформления знаков морфем.
+\tikzset{
+    rsMorphemeSign/.style={
+        line~width=\c__rslingu_morpheme_sign_line_width_dim,
     }
 }
 
-
-
-
-% +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-% +++++++++++++++++++++++++++++++++++ FUNCTIONAL ++++++++++++++++++++++++++++++++++++
-% +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-% Functional.
-\ExplSyntaxOn
-
-    % Calculate height difference between input phrase and «о» symbol.
-    \cs_new_protected:Nn \l__rs_get_morpheme_sign_shift:n {
-        \settoheight\RSLenTallAux{#1}
-        \getlength{\RSLenTall}{\RSLenTallAux}
-        \FPsub\RSMorphemeSignYPadAux\RSLenTall\RSLenNormal
-        \FPifneg\RSMorphemeSignYPadAux
-            \FPset\RSMorphemeSignYPadAux{0}
-        \else
-        \fi
+% Команда для правильного выбора содержимого морфемы в завимости от значения флага сокрытия
+% содержимого морфемы.
+\cs_new_protected:Nn \l__rslingu_morpheme_place_content_cs:n {
+    \bool_if:nTF { \l__rslingu_morpheme_phantom_bool || \l__rslingu_phantom_bool } {
+            \node[rsContentBox] (Baseline) { \phantom{#1} \c__rslingu_vmax_phantom_tl};
+            \node at (Baseline.center) { \textbullet };
+    } {
+        \node[rsContentBox] (Baseline) { #1 \c__rslingu_vmax_phantom_tl};
     }
-    \cs_generate_variant:Nn \l__rs_get_morpheme_sign_shift:n { N }
+}
 
-
-    % For `phantom` option.
-    \cs_new_protected:Nn \l__rs_choose_text:n {
-        \bool_if:nTF { \RSPhantomBool || \l_rs_morphemes_phantom_bool } {
-            \group_begin:
-                \StrLen{#1}[\l__tmp]
-                \node[RSCage] (Root) {\phantom{\dorepeate{\l__tmp}{о}}\RSUpperVPhantom};
-                \node at (Root.center) {\textbullet};
-            \group_end:
-        }{
-            \node[RSCage] (Root) {#1\RSUpperVPhantom};
-        }
-    }
-    \cs_generate_variant:Nn \l__rs_choose_text:n { N }
-    
-    % For `color` option.
-    \tl_new:N \l__rs_color
-    \cs_new_protected:Nn \l__rs_choose_color:n {
-        \tl_set:Nn \l__rs_color { \bool_if:nTF { \RSColorBool || \l_rs_morphemes_color_bool || \l_rs_syntax_color_bool }{#1}{black} }
-    }
-
-    % Environment.
-    \NewDocumentEnvironment{rslingu}{ O{} }
-    {
-        \keys_set:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
-        \bool_if:NTF \l_rs_morphemes_phantom_bool { \renewcommand{\RSPhantomBool}{1} }{}
-        \bool_if:NTF \l_rs_morphemes_color_bool { \renewcommand{\RSColorBool}{1} }{}
-    }
-    {
-        \renewcommand{\RSPhantomBool}{0}
-        \renewcommand{\RSColorBool}{0}
-    }
+\cs_generate_variant:Nn \l__rslingu_morpheme_place_content_cs:n { V }
 
 \ExplSyntaxOff
-
 
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -103,260 +73,286 @@
 % ======================================================
 % ================ Prefix (приставка) ==================
 % ======================================================
-
 \ExplSyntaxOn
-
-    \NewDocumentCommand{\rsPrefix}{ O{} m }{
+    \cs_new_protected:Nn \l__rslingu_morpheme_prefix_cs:n {
         \group_begin:
-        \IfNoValueTF{#2}{}{
-            \keys_set_known:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
-
-            \clist_map_variable:nNn { #2 } { \l__item } {
-                \tikz[baseline=(Root.base)]{
-                    \l__rs_choose_text:N \l__item
-                    
-                    \l__rs_get_morpheme_sign_shift:N \l__item
-                    \l__rs_choose_color:n { RSPrefixColor }
+            \clist_map_variable:nNn { #1 } { \l__item } {
+                \tikz[baseline=(Baseline.base)] {
+                    \l__rslingu_morpheme_place_content_cs:V \l__item
+                    \l__rslingu_morpheme_set_color_cs:n { rsPrefixColor }
                     \draw[
-                        RSMorphemeLineShifted,
-                        \l__rs_color,
+                        rsMorphemeSign,
+                        \l__rslingu_morpheme_color_tl,
+                        transform~canvas={
+                            yshift=\c__rslingu_morpheme_sign_y_pad_dim + \c__rslingu_morpheme_sign_height_dim
+                        }
                     ]
-                        let
-                            \p1 = (Root.north~west),
-                            \p2 = (Root.north~east)
-                        in
-                            (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignHeight) --
-                            (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignHeight) --
-                            ++(0, - \RSMorphemeSignHeight pt);
+                    let
+                        \p1 = (Baseline.north~west),
+                        \p2 = (Baseline.north~east)
+                    in
+                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                        ++(0, -\c__rslingu_morpheme_sign_height_dim);
                 }
             }
-        }
-       \group_end:
+        \group_end:
     }
 
+    \NewDocumentCommand{\rsPrefix} { O{} m } {
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        \tl_if_empty:nTF {#2} {
+            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+                \l__rslingu_morpheme_prefix_cs:n { o }
+            }
+        } {
+            \l__rslingu_morpheme_prefix_cs:n { #2 }
+        }
+    }
 \ExplSyntaxOff
-
-% -----------------------------------------------------
-% -----------------------------------------------------
-
-
+% ======================================================
+% ======================================================
 
 
 % ======================================================
 % ================== Root (корень) =====================
 % ======================================================
-
 \ExplSyntaxOn
-
-    \NewDocumentCommand{\rsRoot}{ O{} m }{
+    \cs_new_protected:Nn \l__rslingu_morpheme_root_cs:n {
         \group_begin:
-        \IfNoValueTF{#2}{}{
-            \keys_set_known:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
-
-            \clist_map_variable:nNn { #2 } { \l__item } {
-                \tikz[baseline=(Root.base)]{
-                    \l__rs_choose_text:N \l__item
-                    
-                    \l__rs_get_morpheme_sign_shift:N \l__item
-                    \l__rs_choose_color:n { RSRootColor }
+            \clist_map_variable:nNn { #1 } { \l__item } {
+                \tikz[baseline=(Baseline.base)] {
+                    \l__rslingu_morpheme_place_content_cs:V \l__item
+                    \l__rslingu_morpheme_set_color_cs:n { rsRootColor }
                     \draw[
-                        RSMorphemeLineShifted,
-                        \l__rs_color,
+                        rsMorphemeSign,
+                        \l__rslingu_morpheme_color_tl,
+                        transform~canvas={
+                            yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                        }
                     ]
-                        let
-                            \p1 = (Root.north~west),
-                            \p2 = (Root.north~east)
-                        in
-                            (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignYPad)
-                            parabola[bend~pos=.5] bend + (0, \RSMorphemeSignHeight pt)
-                            (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignYPad);
+                    let
+                        \p1 = (Baseline.north~west),
+                        \p2 = (Baseline.north~east)
+                    in
+                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim)
+                        parabola[bend~pos=.5] bend + (0, \c__rslingu_morpheme_sign_height_dim)
+                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim);
                 }
             }
-        }
        \group_end:
     }
 
+    \NewDocumentCommand{\rsRoot} { O{} m } {
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        \tl_if_empty:nTF {#2} {
+            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+                \l__rslingu_morpheme_root_cs:n { o }
+            }
+        } {
+            \l__rslingu_morpheme_root_cs:n { #2 }
+        }
+    }
 \ExplSyntaxOff
-% -----------------------------------------------------
-% -----------------------------------------------------
-
-
+% ======================================================
+% ======================================================
 
 
 % ======================================================
 % ================= Suffix (суффикс) ===================
 % ======================================================
 \ExplSyntaxOn
-
-    \NewDocumentCommand{\rsSuffix}{ O{} m }{
+    \cs_new_protected:Nn \l__rslingu_morpheme_suffix_cs:n {
         \group_begin:
-        \IfNoValueTF{#2}{}{
-            \keys_set_known:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
-
-            \clist_map_variable:nNn { #2 } { \l__item } {
-                \tikz[baseline=(Root.base)]{
-                    \l__rs_choose_text:N \l__item
-
-                    \l__rs_choose_color:n { RSSuffixColor }
-                    \draw[
-                        RSMorphemeLineShifted,
-                        \l__rs_color,
-                    ]
-                        let
-                            \p1 = (Root.north~west),
-                            \p2 = (Root.north~east)
-                        in
-                            (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignYPad) --
-                            (.5 * \x1 + .5 * \x2, \y2 + \RSMorphemeSignYPad + \RSMorphemeSignHeight) --
-                            (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignYPad);
-                }
+        \clist_map_variable:nNn { #1 } { \l__item } {
+            \tikz[baseline=(Baseline.base)] {
+                \l__rslingu_morpheme_place_content_cs:V \l__item
+                \l__rslingu_morpheme_set_color_cs:n { rsSuffixColor }
+                \draw[
+                    rsMorphemeSign,
+                    \l__rslingu_morpheme_color_tl,
+                    transform~canvas={
+                        yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                    }
+                ]
+                let
+                    \p1 = (Baseline.north~west),
+                    \p2 = (Baseline.north~east)
+                in
+                    (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                    (.5 *\x1 + .5 * \x2, \y2 + \c__rslingu_morpheme_sign_height_dim) --
+                    (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim);
             }
         }
-       \group_end:
+        \group_end:
     }
-
+    
+    \NewDocumentCommand{\rsSuffix} { O{} m } {
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        \IfNoValueTF {#2} {            
+            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+                \l__rslingu_morpheme_suffix_cs:n { o }
+            }
+        } {
+            \l__rslingu_morpheme_suffix_cs:n { #2 }
+        }
+    }
 \ExplSyntaxOff
-% -----------------------------------------------------
-% -----------------------------------------------------
+% ======================================================
+% ======================================================
 
 
-
-
+% ======================================================
 % ================= Postfix (постфикс) =================
 % ======================================================
 \ExplSyntaxOn
-
-    \NewDocumentCommand{\rsPostfix}{ O{} m }{
+    \cs_new_protected:Nn \l__rslingu_morpheme_postfix_cs:n {
         \group_begin:
-        \IfNoValueTF{#2}{}{
-            \keys_set_known:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
-
-            \clist_map_variable:nNn { #2 } { \l__item } {
-                \tikz[baseline=(Root.base)]{
-                    \l__rs_choose_text:N \l__item
-
-                    \l__rs_choose_color:n { RSPostfixColor }
+            \clist_map_variable:nNn { #1 } { \l__item } {
+                \tikz[baseline=(Baseline.base)] {
+                    \l__rslingu_morpheme_place_content_cs:V \l__item
+                    \l__rslingu_morpheme_set_color_cs:n { rsPostfixColor }
                     \draw[
-                        RSMorphemeLineShifted,
-                        \l__rs_color,
+                        rsMorphemeSign,
+                        \l__rslingu_morpheme_color_tl,
+                        transform~canvas={
+                            yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                        }
                     ]
-                        let
-                            \p1 = (Root.north~west),
-                            \p2 = (Root.north~east)
-                        in
-                            (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignYPad) --
-                            (.5 * \x1 + .5 * \x2, \y2 + \RSMorphemeSignYPad + \RSMorphemeSignHeight) --
-                            (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignYPad)
-                            (\x1 + \RSMorphemeSignXPad, \y1 + \RSMorphemeSignYPad + 3pt) --
-                            (.5 * \x1 + .5 * \x2, \y2 + \RSMorphemeSignYPad + \RSMorphemeSignHeight + 3pt) --
-                            (\x2 - \RSMorphemeSignXPad, \y2 + \RSMorphemeSignYPad + 3pt);
+                    let
+                        \p1 = (Baseline.north~west),
+                        \p2 = (Baseline.north~east)
+                    in
+                        % Первый знак суффикса.
+                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                        (.5 *\x1 + .5 * \x2, \y2 + \c__rslingu_morpheme_sign_height_dim) --
+                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim)
+                        % Второй знак суффикса.
+                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim + 3pt) --
+                        (.5 *\x1 + .5 * \x2, \y2 + \c__rslingu_morpheme_sign_height_dim + 3pt) --
+                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim + 3pt);
                 }
             }
-        }
-       \group_end:
+        \group_end:
     }
 
+    % Публичная команда для постфикса.
+    \NewDocumentCommand{\rsPostfix} { O{} m } {
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        \IfNoValueTF {#2} {
+            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+                \l__rslingu_morpheme_postfix_cs:n { o }
+            }
+        } {
+            \l__rslingu_morpheme_postfix_cs:n { #2 }
+        }
+    }
 \ExplSyntaxOff
 % -----------------------------------------------------
 % -----------------------------------------------------
-
-
 
 
 % ======================================================
 % ================= Ending (окончание) =================
 % ======================================================
 \ExplSyntaxOn
-
-    \NewDocumentCommand{\rsEnding}{ O{} m }{
+    \NewDocumentCommand{\rsEnding} { O{} m } {
         \group_begin:
-        \keys_set:nn { rs/morphemes/keys } { phantom=false, color=false, #1 }
+            \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+            % Чтобы знак оконачения не прилипал слева. 
+            \hspace{.75pt}
 
-        \tikz[baseline=(Root.base)]{
-            
-            \bool_if:nTF { \RSPhantomBool || \l_rs_morphemes_phantom_bool }
-            {
-                \node[RSCage] (Root) {\phantom{о}\RSFullVPhantom};
-                \node at (Root.center) {\textbullet};
-            }{
-                \node[RSCage] (Root) {\ifblank{#2}{\phantom{о}}{#2}\RSFullVPhantom};
+            \tikz[baseline=(Baseline.base)] {
+                \bool_if:nTF { \l__rslingu_phantom_bool } {
+                    \node[rsContentBox, outer~sep=1pt] (Baseline) { \phantom{о} \c__rslingu_vmax_phantom_tl};
+                    \node at (Baseline.center) {\textbullet};
+                } {
+                    \node[rsContentBox, outer~sep=1pt] (Baseline) { \ifblank{ #2 }{ \phantom{о} }{ #2 } \c__rslingu_vmax_phantom_tl };
+                }
+                \l__rslingu_morpheme_set_color_cs:n { rsEndingColor }
+                \draw[
+                    rsMorphemeSign,
+                    \l__rslingu_morpheme_color_tl,
+                    transform~canvas={
+                        yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                    },
+                ]
+                let
+                    \p1 = (Baseline.south~west),
+                    \p2 = (Baseline.north~east)
+                in
+                    % NOTE: Нет контроля типа шрифта, то есть наклонном шрифте будет некрасиво.
+                    % По-хорошему, .75 — это мусор, и нужно действовать как-то иначе.
+                    (\x1 - .75, \y1 - \c__rslingu_morpheme_base_sign_height_dim) |-
+                    (\x2 + .75, \y2 + \c__rslingu_morpheme_sign_y_pad_dim + \c__rslingu_morpheme_sign_height_dim) |-
+                    cycle;
             }
 
-            \l__rs_choose_color:n { RSEndingColor }
-            \draw[
-                RSMorphemeLine,
-                \l__rs_color,
-            ]
-                let
-                    \p1 = (Root.south~west),
-                    \p2 = (Root.north~east)
-                in
-                    (\x1 - 2, \y1 - \RSBaseSignYPad - \RSBaseSignHeight) |-%
-                    (\x2 + 2, \y2 + \RSMorphemeSignYPad + \RSMorphemeSignHeight pt ) |-%
-                    cycle;%
-        }
+            % Чтобы знак оконачения не прилипал слева.
+            \hspace{.75pt}
       \group_end:
     }
-
 \ExplSyntaxOff
 % -----------------------------------------------------
 % -----------------------------------------------------
-
-
 
 
 % ======================================================
 % =================== Base (основа) ====================
 % ======================================================
 \ExplSyntaxOn
-
     \NewDocumentCommand{\rsBase}{ O{} m }{
         \group_begin:
-        \IfNoValueTF{#2}{}{
-            \keys_set_known:nn { rs/morphemes/keys } { color=false, #1 }
-            \keys_set_known:nn { rs/morphemes/base/keys } { right=false, left=false, #1 }
-
-            \tikz[baseline=(Root.base)]{
-                \node[RSCage] (Root) {#2\RSDownVPhantom};
-
-                \l__rs_choose_color:n { RSBaseColor }
-                \FPdiv\RSAux\RSMorphemeSignLineWidth{2}
+            \keys_set_known:nn { rslingu/morphemes/keys } { color=false, #1 }
+            \keys_set_known:nn { rslingu/morphemes/base/keys } { right=false, left=false, #1 }
+            \tikz[baseline=(Baseline.base)] {
+                \node[rsContentBox] (Baseline) {#2 \c__rslingu_below_vmax_phantom_tl};
+                \l__rslingu_morpheme_set_color_cs:n { rsBaseColor }
+                % «Foreach» — это «костыли».
                 \foreach \n in {0}
                     \draw[
-                        RSMorphemeLine,
-                        \l__rs_color,
+                        rsMorphemeSign,
+                        \l__rslingu_morpheme_color_tl,,
                         transform~canvas={
-                            yshift=-\RSBaseSignYPad - \RSBaseSignHeight pt,
+                            yshift=-\c__rslingu_morpheme_base_sign_y_pad_dim - \c__rslingu_morpheme_base_sign_height_dim,
                         },
                     ]
                         let
-                            \p1 = ([xshift=\RSBaseSignXPad pt]Root.south~west),
-                            \p2 = ([xshift=-\RSBaseSignXPad - .5 pt]Root.south~east)
+                            \p1 = ([xshift=\c__rslingu_morpheme_base_sign_y_pad_dim]Baseline.south~west),
+                            \p2 = ([xshift=-\c__rslingu_morpheme_base_sign_y_pad_dim - .5pt]Baseline.south~east)
                         in
+                            % Правая часть основы.
+                            \bool_if:NF \l__rslingu_morpheme_base_right_bool {
+                                (\p1) -- ([yshift=\c__rslingu_morpheme_base_sign_height_dim]\p1) |-
+                            }
                             (\p1) -- (\p2)
-                            \bool_if:NTF \l_rs_base_right_bool {}
-                                {([yshift=-\RSAux pt]\p1) -- ([yshift=\RSBaseSignHeight pt]\p1)}
-                            \bool_if:NTF \l_rs_base_left_bool {}
-                                {([yshift=-\RSAux pt]\p2) -- ([yshift=\RSBaseSignHeight pt]\p2)};
+                            % Левая часть основы.
+                            \bool_if:NF \l__rslingu_morpheme_base_left_bool {
+                                -|
+                                (\p2) -- ([yshift=\c__rslingu_morpheme_base_sign_height_dim]\p2)
+                            };
             }
-        }
       \group_end:
     }
-
 \ExplSyntaxOff
 % -----------------------------------------------------
 % -----------------------------------------------------
 
 
-
-
 \ExplSyntaxOn
-
-    % Morphemic Analysis.
-    \NewDocumentCommand{\rsMorphemicAnalysis}{ O{} mmmmm }{
-        \begin{rslingu}[#1]
-            \rsBase{\rsPrefix{#2}\rsRoot{#3}\rsSuffix{#4}}\rsEnding{#5}\rsPostfix{#6}
-        \end{rslingu}
+    % Публичная команда для морфемного анализа слова без разрывной основы.
+    \NewDocumentCommand{\rsMorphemicAnalysis} { O{} m m m m m } {
+        \rsBase[#1]{
+            \rsPrefix[#1]{#2}
+            \rsRoot[#1]{#3}
+            \rsSuffix[#1]{#4}
+        }
+        \rsEnding[#1]{#5}
+        \rsPostfix[#1]{#6}
     }
 
+    % Сокращение для команды `rsMorphemicAnalysis`.
+    \NewDocumentCommand{\rsMA} { O{} m m m m m } {
+        \rsMorphemicAnalysis[#1]{#2}{#3}{#4}{#5}{#6}
+    }
 \ExplSyntaxOff

@@ -4,7 +4,7 @@
 
 \vspace*{7cm}
 \begin{center}
-    { \huge \rsCodeAux{RSLingu}. } \\[1cm]
+    { \huge \rsCodeAux{rslingu} } \\[1cm]
     { \Large \LaTeX-пакет для \rsMorphemicAnalysis[color]{}{школь}{н}{ой}{} \rsObject{лингвистики}}\\
 \end{center}
 
@@ -12,9 +12,9 @@
 \vspace*{7cm}
 \begin{flushright}
     \begin{tabular}{@{}r@{\hskip .75cm}l@{}}
-        Автор &  Шлёнский Владислав \\
-        E-mail & \texttt{vladislav.shlyonskiy@yandex.ru} \\
-        Обновлено & 04.09.2019
+        Автор       &  Шлёнский Владислав \\
+        E-mail      & \texttt{vladislav.shlenskii@yandex.ru} \\
+        Обновлено   & 25.06.2020
     \end{tabular}
 \end{flushright}
 
@@ -24,8 +24,6 @@
 \tableofcontents
 
 \newpage
-
-
 
 
 \section{Условные обозначения}
@@ -47,7 +45,7 @@
     \item \rsOptionsAux. Означает, что в данное место передать дополнительные параметры, которые меняют поведение команды по умолчанию. То, какие дополнительные параметры можно передавать, а так же значения по умолчанию, описывается на следующих строчках.
     \item \rsArgAux[tl]\space (от англ. \textit{token list}). Означает, что весь передаваемый текст будет обработан целиком.
     \item \rsArgAux\space (от англ. \textit{comma list}). Означает, что при наличии в передаваемом тексте запятых, каждая часть переданной строки, находящаяся между запятыми (либо началом строчки и запятой или запятой и концом строчки), будет обработана отдельно.
-    \item В некоторых командах, предназначенных, например, для синтаксического разбора предложений, происходит, вообще говоря, разбиение, или парсинг (от англ. \textit{parse}), входной строчки по нескольким разделителям. Например, если парсинг возможен сначала по запятой, потом по знаку <<\texttt{=}>> и, наконец, скажем, по знаку <<\texttt{+}>>, это будет указано следующим образом\footnote{Для наглядной демонстрации написанного смотрите в пункте \rsNameref{sec:SyntaxAnalysis}.}:
+    \item В некоторых командах, предназначенных, например, для синтаксического разбора предложений, происходит, вообще говоря, разбиение, или парсинг (от англ. \textit{parse}), входной строчки по нескольким разделителям. Например, если парсинг возможен сначала по запятой, потом по знаку <<\texttt{=}>> и, наконец, скажем, по знаку <<\texttt{+}>>, это будет указано следующим образом:\footnote{Для наглядной демонстрации написанного смотрите пункт \rsNameref{sec:SyntaxAnalysis}.}
     \begin{center}
         \rsArgAux[clist][[=, +]].
     \end{center}
@@ -75,7 +73,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -104,7 +102,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -133,7 +131,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -162,7 +160,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -190,7 +188,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -219,7 +217,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -246,7 +244,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -271,7 +269,7 @@
     \rsTypeAux:\rsCodeAux{<name>\{\rsArgAux[tl]\}[\rsArgAux[tl]]}
 \end{tcolorbox}
 где \rsCodeAux{<name>} может принимать одно из следующих значений:
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|l|l|}
         \hline
@@ -283,7 +281,7 @@
     \caption{Команды для частей речи.}
 \end{table}
 
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \begin{tabular}{|l|l|}
         \hline
@@ -318,7 +316,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \small
     \begin{tabular}{|l|l|}
@@ -345,7 +343,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \small
     \begin{tabular}{|l|l|}
@@ -372,7 +370,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \small
     \begin{tabular}{|l|l|}
@@ -400,7 +398,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \small
     \begin{tabular}{|l|l|}
@@ -428,7 +426,7 @@
 
 \begingroup
 \renewcommand{\arraystretch}{1.125}
-\begin{table}[h!]
+\begin{table}[ht!]
     \centering
     \small
     \begin{tabular}{|l|l|}
@@ -436,7 +434,7 @@
         \rsCodeAux*{rsAdverbarial{\{обстоятельство\}}} & \rsAdverbarial{обстоятельство} \\
         \rsCodeAux*{rsAdverbarial[color]{\{обстоятельство\}}} & \rsAdverbarial[color]{обстоятельство} \\
         \rsCodeAux*{rsAdverbarial[phantom, color]{\{обстоятельство\}}} & \rsAdverbarial[phantom, color]{обстоятельство} \\
-        \rsCodeAux*{rsAdverbarial[phantom, color]{\{обстоятельство=глаг.\}}} & \rsAdverbarial[color]{обстоятельство=сущ. + им.п.} \\
+        \rsCodeAux*{rsAdverbarial[phantom, color]{\{обстоятельство=сущ. + им.п.\}}} & \rsAdverbarial[color]{обстоятельство=сущ. + им.п.} \\
         \hline
     \end{tabular}
     \caption{Использование команды обстоятельства.}
@@ -447,7 +445,7 @@
 
 \section{Прочее}
 
-\subsection{Окружение \rsCodeAux{rslingu}}
+\subsection{Окружение rslingu}
 
 \begin{tcolorbox}
     \noindent\rsTypeAux[env]:\rsCodeAux{rslingu[\rsOptionsAux]} \\
@@ -492,14 +490,14 @@
 \rsAttribute[color]{Уставшая} \rsSubject[color]{мама} \rsPredicate[color]{мыла}
 \rsObject[color]{раму} \rsAdverbarial[color]{вечером}.
         \end{minted}
-    \caption{Код без использованием окружения \rsCodeAux{rslingu}.}
+    \caption{Код без использования окружения \rsCodeAux{rslingu}.}
     \end{subfigure}\vspace*{.75cm}
     \begin{subfigure}{.9\textwidth}
         \centering
         \begin{rslingu}[color]
             \rsAttribute{Уставшая} \rsSubject{мама} \rsPredicate{мыла} \rsObject{раму} \rsAdverbarial{вечером}.
         \end{rslingu}
-    \caption{Результат (одинаков) выполнения каждого из частей кода выше.}
+    \caption{Результат выполнения каждого из частей кода выше.}
     \end{subfigure}
     \caption{Демонстрация возможностей окружения \rsCodeAux{rslingu} c параметром \rsCodeAux{color}.}
 \end{figure}
@@ -544,7 +542,7 @@
         \begin{rslingu}[color, phantom]
             \rsAttribute{Уставшая} \rsSubject{мама} \rsPredicate{мыла} \rsObject{раму} \rsAdverbarial{вечером}.
         \end{rslingu}
-    \caption{Результат (одинаков) выполнения каждого из частей кода выше.}
+    \caption{Результат выполнения каждого из частей кода выше.}
     \end{subfigure}
     \caption{Демонстрация возможностей окружения \rsCodeAux{rslingu} c параметрами \rsCodeAux{color} и \rsCodeAux{phantom}.}
 \end{figure}
