@@ -1,0 +1,111 @@
+\usepackage{ifxetex}
+\ifxetex
+    \usepackage{fontspec}
+    \usepackage{polyglossia}
+    \setdefaultlanguage{russian}
+    \setmainfont[Ligatures = TeX]{Noto Serif}[
+        ItalicFont = Noto Serif,
+    ]
+    \newfontfamily\cyrillicfont{Noto Serif}
+    \newfontfamily\cyrillicfontit{Noto Serif}
+    \newfontfamily\cyrillicfonttt{Noto Mono}
+\else
+    \usepackage[T1, T2A]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage[russian]{babel}
+\fi
+
+\usepackage[bottom=2cm,left=3cm,right=1cm,top=2cm]{geometry}
+
+\linespread{1.5}
+
+\usepackage{bookmark}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{subcaption}
+\usepackage{tcolorbox}
+
+\usepackage{../rslingu}
+
+\ExplSyntaxOn
+
+\NewDocumentCommand {\rsCode} {m} { \texttt{#1} }
+
+\NewDocumentCommand \rsSpace {} { \hspace*{.5em} }
+
+\NewDocumentCommand \rsTab {} { \hspace*{2em} }
+
+\NewDocumentCommand \rsReq {m} { \{#1 \} }
+
+\NewDocumentCommand \rsOpt {m} { [ #1 ] }
+
+\NewDocumentCommand {\rsKwargs} {s O{kwargs}} {
+   \texttt{
+        \IfBooleanTF{#1}{\textbackslash}{}
+        \textcolor{red!75}{#2}
+    }
+}
+
+\NewDocumentCommand {\rsArg} {s O{arg} O{}} {
+   \texttt{
+        \IfBooleanTF{#1}{\textbackslash}{}
+        \textcolor{blue!75}{#2}\textcolor{blue!75}
+        #3
+}
+}
+
+\NewDocumentCommand{\rsModifier} {s O{modifier} O{}} {
+   \texttt{
+        \IfBooleanTF{#1}{\textbackslash}{}
+        \textcolor{ForestGreen!75}{#2}
+        #3
+}
+}
+
+\NewDocumentCommand \rsColon {} {:}
+
+\ExplSyntaxOff
+
+\usepackage{minted}
+
+\newminted[Latexcode]{latex}{
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=black!5!white,
+    fontsize=\small,
+    linenos=true,
+    obeytabs=true,
+    autogobble,
+}
+
+% https://tex.stackexchange.com/a/159770/185741
+\usepackage[toc,page]{appendix}
+\renewcommand{\appendixtocname}{Приложения}
+\renewcommand{\appendixpagename}{Приложения}
+
+
+\newtcolorbox{tnote}[1][]
+{
+    colframe = yellow!25,
+    colback  = yellow!10,
+    coltitle = yellow!20!black,  
+    title    = {Замечание},
+    #1,
+}
+
+% Если версия черновая
+\usepackage{background}
+
+\ExplSyntaxOn
+
+\backgroundsetup{
+    position=current~page.west,
+    angle=90,
+    vshift=-5mm,
+    opacity=1,
+    scale=3,
+    contents=Черновик~версии~0.02,
+}
+
+\ExplSyntaxOff

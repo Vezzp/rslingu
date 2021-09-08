@@ -1,33 +1,35 @@
-% Package for Russian school linguistics.
-% 
-% (c) Vladislav Shlenskii (vladislav.shlenskii@yandex.ru).
-%
+% Package for school linguistics.
+% (c) Vladislav Shlenskii (vladislav.shlenskii@gmail.com).
 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
-\ProvidesPackage{rslingu/rslingu}[2019/07/08 v0.01]
+\ProvidesPackage{rslingu}[2021/08/20 v0.02]
 
+\RequirePackage{etoolbox}
 \RequirePackage{expl3}
+\RequirePackage{pgf}
 \RequirePackage{tikz}
-    \usetikzlibrary{calc}
-    \usetikzlibrary{decorations.pathmorphing}
-    \usetikzlibrary{decorations.shapes}
-
-\RequirePackage{xstring}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.shapes}
 \RequirePackage{xparse}
 \RequirePackage{xcolor}
-\RequirePackage{pgf}
+
+\ExplSyntaxOn
+
+% Версия пакета.
+
+\tl_const:Nn \c_rslingu_version_tl { 0.02 }
+
+\NewDocumentCommand{\rsVersion}{}{ \c_rslingu_version_tl }
+
 
 % TikZ-стиль для обёртки содержимого.
 \tikzset{
     rsContentBox/.style={
-        inner sep=0pt,
-        outer sep=0pt,
+        inner~sep=0pt,
+        outer~sep=0pt,
     },
 }
-
-
-
-\ExplSyntaxOn
 
 % Вертикальные фантомы.
 \tl_const:Nn \c__rslingu_above_vmax_phantom_tl {\vphantom{б}}
@@ -44,7 +46,6 @@
     color .default:n = true,
 }
     
-    
 % Множество ключей-аргументов для публичных морфемных команд (включая основу).
 \keys_define:nn { rslingu/morphemes/keys }{
     % Скрывать ли содержимое морфемы.
@@ -55,7 +56,6 @@
     color .default:n = true,
 }
 
-
 % Дополнительное множество ключей-аргументов для публичных команд основы слова.
 \keys_define:nn { rslingu/morphemes/base/keys } {
     % Является ли основа правой основой.
@@ -65,7 +65,6 @@
     right .bool_set:N = \l__rslingu_morpheme_base_right_bool,
     right .default:n = true
 }
-
 
 \keys_define:nn { rslingu/keys }{
     % Скрывать ли содержимое морфемы.
@@ -80,13 +79,37 @@
 \NewDocumentEnvironment{ rslingu } { O{} } {
     \keys_set_known:nn { rslingu/keys } { phantom=false, color=false, #1 }
 } {
-    \keys_set_known:nn { rslingu/keys } { phantom=false, color=false, #1 }
+    \keys_set_known:nn { rslingu/keys } { phantom=false, color=false }
 }
+
+
+% Выбор языка.
+% Используется для сокращений в синтаксическом разборе.
+\tl_const:Nn \c__rslingu_default_lang_tl { russian }
+
+\seq_const_from_clist:Nn \c__rslingu_supported_lang_seq { russian,ukranian }
+
+\tl_new:N \g__rslingu_current_lang_tl
+\tl_set_eq:NN \g__rslingu_current_lang_tl \c__rslingu_default_lang_tl
+
+\NewDocumentCommand{\rsSetLanguage}{ m }{
+    \seq_if_in:NnTF \c__rslingu_supported_lang_seq { #1 }
+    {
+        \tl_set:Nn \g__rslingu_current_lang_tl { #1 }
+    }
+    {
+        \PackageWarning { rslingu } {
+            Language~option~' #1 '~is~not~known,~choose~one~of~
+            [\seq_use:Nn \c__rslingu_supported_lang_seq {,~}].~
+            Using~' \c__rslingu_default_lang_tl '~option~as~the~default
+        }
+    }
+}
+
 \ExplSyntaxOff
 
-
-\input{rslingu/misc.tex}
-\input{rslingu/morphemes.tex}
-\input{rslingu/syntax.tex}
+\input{utils.tex}
+\input{morphology.tex}
+\input{syntax.tex}
 
 \endinput
