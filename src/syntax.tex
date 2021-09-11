@@ -2,7 +2,7 @@
 \definecolor{rsSubjectColor}{HTML}{673ab7}
 \definecolor{rsPredicateColor}{HTML}{e81e62}
 \definecolor{rsAttributeColor}{HTML}{2196f3}
-\definecolor{rsAdverbarialColor}{HTML}{009688}
+\definecolor{rsAdverbialColor}{HTML}{009688}
 \definecolor{rsObjectColor}{HTML}{ffa500}
 
 
@@ -196,19 +196,19 @@
 
 
 % % ==============================================
-% % ======== Adverbarial (обстоятельство) ========
+% % ======== Adverbial (обстоятельство) ========
 % % ==============================================
 
 \ExplSyntaxOn
 
-\NewDocumentCommand \rsAdverbarial { O{} m } {
+\NewDocumentCommand \rsAdverbial { O{} m } {
     \group_begin:
         \keys_set_known:nn
             { rslingu/syntax/keys }
             { color=false, phantom=false, #1 }
 
         \tikz[baseline=(Baseline.base)] {
-            \l__rslingu_syntax_set_color_cs:n { rsAdverbarialColor }
+            \l__rslingu_syntax_set_color_cs:n { rsAdverbialColor }
 
             \node[rsContentBox] (Baseline)
             { #2 \c__rslingu_below_vmax_phantom_tl };
@@ -484,14 +484,14 @@
 % Причастие
 
 \l_set_pos_acr_tl_cs:nnn { participle } { russian } { прич. }
-\l_set_pos_acr_tl_cs:nnn { participle } { ukranian } { ??? }
+\l_set_pos_acr_tl_cs:nnn { participle } { ukranian } { дієприкм. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Participle }
 
 
 % Деепричастие
 
 \l_set_pos_acr_tl_cs:nnn { transgressive } { russian } { дееприч. }
-\l_set_pos_acr_tl_cs:nnn { transgressive } { ukranian } { ??? }
+\l_set_pos_acr_tl_cs:nnn { transgressive } { ukranian } { дієприсл. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Transgressive }
 
 
