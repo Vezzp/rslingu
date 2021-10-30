@@ -1,0 +1,1195 @@
+% Package for school linguistics.
+
+% (c) Vladislav Shlenskii (vladislav.shlenskii@gmail.com).
+
+
+
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+
+\ProvidesPackage{rslingu}[2021/08/20 v0.02]
+
+
+
+\RequirePackage{etoolbox}
+
+\RequirePackage{expl3}
+
+\RequirePackage{pgf}
+
+\RequirePackage{tikz}
+
+\usetikzlibrary{calc}
+
+\usetikzlibrary{decorations.pathmorphing}
+
+\usetikzlibrary{decorations.shapes}
+
+\RequirePackage{xparse}
+
+\RequirePackage{xcolor}
+
+
+
+\ExplSyntaxOn
+
+
+
+% Версия пакета.
+
+
+
+\tl_const:Nn \c_rslingu_version_tl { 0.02 }
+
+
+
+\NewDocumentCommand{\rsVersion}{}{ \c_rslingu_version_tl }
+
+
+
+
+
+% TikZ-стиль для обёртки содержимого.
+
+\tikzset{
+
+    rsContentBox/.style={
+
+        inner~sep=0pt,
+
+        outer~sep=0pt,
+
+    },
+
+}
+
+
+
+% Вертикальные фантомы.
+
+\tl_const:Nn \c__rslingu_above_vmax_phantom_tl {\vphantom{б}}
+
+\tl_const:Nn \c__rslingu_below_vmax_phantom_tl {\vphantom{у}}
+
+\tl_const:Nn \c__rslingu_vmax_phantom_tl {\vphantom{бу}}
+
+
+
+% Множество ключей-аргументов для публичных синтаксических команд.
+
+\keys_define:nn { rslingu/syntax/keys } {
+
+    % Скрывать ли содержимое синтаксического разбора.
+
+    phantom .bool_set:N = \l__rslingu_syntax_phantom_bool,
+
+    phantom .default:n = true,
+
+    % Раскрашивать ли знак подчёркивания.
+
+    color .bool_set:N = \l__rslingu_syntax_color_bool,
+
+    color .default:n = true,
+
+}
+
+    
+
+% Множество ключей-аргументов для публичных морфемных команд (включая основу).
+
+\keys_define:nn { rslingu/morphemes/keys }{
+
+    % Скрывать ли содержимое морфемы.
+
+    phantom .bool_set:N = \l__rslingu_morpheme_phantom_bool,
+
+    phantom .default:n = true,
+
+    % Раскрашивать ли знак морфемы.
+
+    color .bool_set:N = \l__rslingu_morpheme_color_bool,
+
+    color .default:n = true,
+
+}
+
+
+
+% Дополнительное множество ключей-аргументов для публичных команд основы слова.
+
+\keys_define:nn { rslingu/morphemes/base/keys } {
+
+    % Является ли основа правой основой.
+
+    left .bool_set:N = \l__rslingu_morpheme_base_left_bool,
+
+    left .default:n = true,
+
+    % Является ли основа левой основой.
+
+    right .bool_set:N = \l__rslingu_morpheme_base_right_bool,
+
+    right .default:n = true
+
+}
+
+
+
+\keys_define:nn { rslingu/keys }{
+
+    % Скрывать ли содержимое морфемы.
+
+    phantom .bool_set:N = \l__rslingu_phantom_bool,
+
+    phantom .default:n = true,
+
+    % Раскрашивать ли знак морфемы.
+
+    color .bool_set:N = \l__rslingu_color_bool,
+
+    color .default:n = true,
+
+}
+
+
+
+% Окружение.
+
+\NewDocumentEnvironment{ rslingu } { O{} } {
+
+    \keys_set_known:nn { rslingu/keys } { phantom=false, color=false, #1 }
+
+} {
+
+    \keys_set_known:nn { rslingu/keys } { phantom=false, color=false }
+
+}
+
+
+
+
+
+% Выбор языка.
+
+% Используется для сокращений в синтаксическом разборе.
+
+\tl_const:Nn \c__rslingu_default_lang_tl { russian }
+
+
+
+\seq_const_from_clist:Nn \c__rslingu_supported_lang_seq { russian,ukranian }
+
+
+
+\tl_new:N \g__rslingu_current_lang_tl
+
+\tl_set_eq:NN \g__rslingu_current_lang_tl \c__rslingu_default_lang_tl
+
+
+
+\NewDocumentCommand{\rsSetLanguage}{ m }{
+
+    \seq_if_in:NnTF \c__rslingu_supported_lang_seq { #1 }
+
+    {
+
+        \tl_set:Nn \g__rslingu_current_lang_tl { #1 }
+
+    }
+
+    {
+
+        \PackageWarning { rslingu } {
+
+            Language~option~' #1 '~is~not~known,~choose~one~of~
+
+            [\seq_use:Nn \c__rslingu_supported_lang_seq {,~}].~
+
+            Using~' \c__rslingu_default_lang_tl '~option~as~the~default
+
+        }
+
+    }
+
+}
+
+
+
+\ExplSyntaxOff
+
+
+
+% Правильное подчёркивание-змейка для определений.
+% https://tex.stackexchange.com/a/60757/185741
+\newif\ifstartcompletesineup
+\newif\ifendcompletesineup
+\pgfkeys{
+    /pgf/decoration/.cd,
+    start up/.is if=startcompletesineup,
+    start up=true,
+    start up/.default=true,
+    start down/.style={/pgf/decoration/start up=false},
+    end up/.is if=endcompletesineup,
+    end up=true,
+    end up/.default=true,
+    end down/.style={/pgf/decoration/end up=false}
+}
+
+\pgfdeclaredecoration{complete sines}{initial}
+{
+    \state{initial}[
+        width=+0pt,
+        next state=upsine,
+        persistent precomputation={
+                \ifstartcompletesineup
+                    \pgfkeys{/pgf/decoration automaton/next state=upsine}
+                    \ifendcompletesineup
+                        \pgfmathsetmacro\matchinglength{
+                            0.5*\pgfdecoratedinputsegmentlength / (ceil(0.5* \pgfdecoratedinputsegmentlength / \pgfdecorationsegmentlength) )
+                        }
+                    \else
+                        \pgfmathsetmacro\matchinglength{
+                            0.5 * \pgfdecoratedinputsegmentlength / (ceil(0.5 * \pgfdecoratedinputsegmentlength / \pgfdecorationsegmentlength ) - 0.499)
+                        }
+                    \fi
+                \else
+                    \pgfkeys{/pgf/decoration automaton/next state=downsine}
+                    \ifendcompletesineup
+                        \pgfmathsetmacro\matchinglength{
+                            0.5* \pgfdecoratedinputsegmentlength / (ceil(0.5 * \pgfdecoratedinputsegmentlength / \pgfdecorationsegmentlength ) - 0.4999)
+                        }
+                    \else
+                        \pgfmathsetmacro\matchinglength{
+                            0.5 * \pgfdecoratedinputsegmentlength / (ceil(0.5 * \pgfdecoratedinputsegmentlength / \pgfdecorationsegmentlength ) )
+                        }
+                    \fi
+                \fi
+                \setlength{\pgfdecorationsegmentlength}{\matchinglength pt}
+            }] {}
+    \state{downsine}[width=\pgfdecorationsegmentlength,next state=upsine]{
+        \pgfpathsine{\pgfpoint{0.5\pgfdecorationsegmentlength}{0.5\pgfdecorationsegmentamplitude}}
+        \pgfpathcosine{\pgfpoint{0.5\pgfdecorationsegmentlength}{-0.5\pgfdecorationsegmentamplitude}}
+    }
+    \state{upsine}[width=\pgfdecorationsegmentlength,next state=downsine]{
+        \pgfpathsine{\pgfpoint{0.5\pgfdecorationsegmentlength}{-0.5\pgfdecorationsegmentamplitude}}
+        \pgfpathcosine{\pgfpoint{0.5\pgfdecorationsegmentlength}{0.5\pgfdecorationsegmentamplitude}}
+    }
+    \state{final}{}
+}
+
+
+\ExplSyntaxOn
+
+% `textoverset`, аналог `overset`.
+\NewDocumentCommand{\textoverset}{ O{.5pt} m m }{
+    \tikz[baseline=(Baseline.base)]{
+        \node[
+            rsContentBox,
+            label={
+                    [
+                            rsContentBox,
+                            font=\tiny\itshape,
+                            yshift=#1
+                        ] #3
+                }
+        ] (Baseline) { #2 \c__rslingu_above_vmax_phantom_tl };
+
+    }
+}
+
+\ExplSyntaxOff
+% Цвета знаков морфем.
+
+\definecolor{rsSuffixColor}{HTML}{7fdb6a}
+\definecolor{rsPrefixColor}{HTML}{f44747}
+\definecolor{rsRootColor}{HTML}{eedc31}
+\definecolor{rsPostfixColor}{HTML}{966842}
+\definecolor{rsEndingColor}{HTML}{0e68ce}
+\definecolor{rsBaseColor}{HTML}{990066}
+
+
+\ExplSyntaxOn
+% Цвет морфем.
+    \tl_new:N \l__rslingu_morpheme_color_tl
+    \cs_new_protected:Nn \l__rslingu_morpheme_set_color_cs:n {
+        \tl_set:Nn \l__rslingu_morpheme_color_tl {
+            \bool_if:nTF
+                { \l__rslingu_morpheme_color_bool || \l__rslingu_color_bool }
+                { #1 } 
+                { black }
+        }
+    }
+ 
+% Высота знаков морфем (за исключением основы).
+\dim_const:Nn \c__rslingu_morpheme_sign_height_dim {3pt}
+
+% Ограничение длины знака морфемы по сравнению с длиной морфемы (за исключением основы).
+% NB: Необходимо для избегания наложения знака одной морфемы на знак другой.
+\dim_const:Nn \c__rslingu_morpheme_sign_x_pad_dim {1pt}
+
+% Расстояние от нижней части знака морфем до высшей части морфемы (за исключением основы).
+% NB: Расстояние считается как если бы в морфеме была буква «б».
+\dim_const:Nn \c__rslingu_morpheme_sign_y_pad_dim {0pt}
+
+% Толщина линий знака морфем (включая основу).
+\dim_const:Nn \c__rslingu_morpheme_sign_line_width_dim {1.25pt}
+
+% Высота знака основы слова.
+\dim_const:Nn \c__rslingu_morpheme_base_sign_height_dim {2pt}
+
+% Ограничение длины знака основы слова по сравнению с длиной морфемы.
+% NB: Необходимо для избегания наложения знака одной морфемы на знак другой.
+\dim_const:Nn \c__rslingu_morpheme_base_sign_x_pad_dim {1pt}
+
+% Расстояние от нижней части основы до знака основы.
+\dim_const:Nn \c__rslingu_morpheme_base_sign_y_pad_dim {1pt}
+
+% TikZ-стиль для оформления знаков морфем.
+\tikzset{
+    rsMorphemeSign/.style={
+        line~width=\c__rslingu_morpheme_sign_line_width_dim,
+    }
+}
+
+% Команда для выбора содержимого морфемы в завимости от значения флага сокрытия `phantom`.
+\cs_new_protected:Nn \l__rslingu_morpheme_place_content_cs:n {
+    \bool_if:nTF
+    {
+        \l__rslingu_morpheme_phantom_bool
+        ||
+        \l__rslingu_phantom_bool
+    }
+    {
+        \node[rsContentBox] (Baseline) {
+            \phantom{#1} \c__rslingu_vmax_phantom_tl
+        };
+        \node at (Baseline.center) { \textbullet };
+    }
+    {
+        \node[rsContentBox] (Baseline) { #1 \c__rslingu_vmax_phantom_tl };
+    }
+}
+
+\cs_generate_variant:Nn \l__rslingu_morpheme_place_content_cs:n { V }
+
+\ExplSyntaxOff
+
+
+% +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% ++++++++++++++++++++++++++++++++ MORPHEME COMMANDS ++++++++++++++++++++++++++++++++
+% +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+% ======================================================
+% ================ Prefix (приставка) ==================
+% ======================================================
+\ExplSyntaxOn
+
+\cs_new_protected:Nn \l__rslingu_morpheme_prefix_cs:n {
+    \group_begin:
+        \clist_map_variable:nNn { #1 } { \l__item } {
+            \tikz[baseline=(Baseline.base)] {
+                \l__rslingu_morpheme_place_content_cs:V \l__item
+                \l__rslingu_morpheme_set_color_cs:n { rsPrefixColor }
+                
+                \draw[
+                    rsMorphemeSign,
+                    \l__rslingu_morpheme_color_tl,
+                    transform~canvas={
+                        yshift=\c__rslingu_morpheme_sign_y_pad_dim + \c__rslingu_morpheme_sign_height_dim
+                    }
+                ]
+                let
+                    \p1 = (Baseline.north~west),
+                    \p2 = (Baseline.north~east)
+                in
+                    (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                    (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                    ++(0, -\c__rslingu_morpheme_sign_height_dim);
+            }
+        }
+    \group_end:
+}
+
+\NewDocumentCommand{\rsPrefix} { O{} m } {
+    \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+    \tl_if_empty:nTF {#2} {
+        \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+            \l__rslingu_morpheme_prefix_cs:n { o }
+        }
+    } {
+        \l__rslingu_morpheme_prefix_cs:n { #2 }
+    }
+}
+\ExplSyntaxOff
+% ======================================================
+% ======================================================
+
+
+% ======================================================
+% ================== Root (корень) =====================
+% ======================================================
+\ExplSyntaxOn
+    \cs_new_protected:Nn \l__rslingu_morpheme_root_cs:n {
+        \group_begin:
+            \clist_map_variable:nNn { #1 } { \l__item } {
+                \tikz[baseline=(Baseline.base)] {
+                    \l__rslingu_morpheme_place_content_cs:V \l__item
+                    \l__rslingu_morpheme_set_color_cs:n { rsRootColor }
+                    \draw[
+                        rsMorphemeSign,
+                        \l__rslingu_morpheme_color_tl,
+                        transform~canvas={
+                            yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                        }
+                    ]
+                    let
+                        \p1 = (Baseline.north~west),
+                        \p2 = (Baseline.north~east)
+                    in
+                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim)
+                        parabola[bend~pos=.5] bend + (0, \c__rslingu_morpheme_sign_height_dim)
+                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim);
+                }
+            }
+       \group_end:
+    }
+
+    \NewDocumentCommand{\rsRoot} { O{} m } {
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        \tl_if_empty:nTF {#2} {
+            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+                \l__rslingu_morpheme_root_cs:n { o }
+            }
+        } {
+            \l__rslingu_morpheme_root_cs:n { #2 }
+        }
+    }
+\ExplSyntaxOff
+% ======================================================
+% ======================================================
+
+
+% ======================================================
+% ================= Suffix (суффикс) ===================
+% ======================================================
+\ExplSyntaxOn
+    \cs_new_protected:Nn \l__rslingu_morpheme_suffix_cs:n {
+        \group_begin:
+        \clist_map_variable:nNn { #1 } { \l__item } {
+            \tikz[baseline=(Baseline.base)] {
+                \l__rslingu_morpheme_place_content_cs:V \l__item
+                \l__rslingu_morpheme_set_color_cs:n { rsSuffixColor }
+                \draw[
+                    rsMorphemeSign,
+                    \l__rslingu_morpheme_color_tl,
+                    transform~canvas={
+                        yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                    }
+                ]
+                let
+                    \p1 = (Baseline.north~west),
+                    \p2 = (Baseline.north~east)
+                in
+                    (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                    (.5 *\x1 + .5 * \x2, \y2 + \c__rslingu_morpheme_sign_height_dim) --
+                    (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim);
+            }
+        }
+        \group_end:
+    }
+    
+    \NewDocumentCommand{\rsSuffix} { O{} m } {
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        \IfNoValueTF {#2} {            
+            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+                \l__rslingu_morpheme_suffix_cs:n { o }
+            }
+        } {
+            \l__rslingu_morpheme_suffix_cs:n { #2 }
+        }
+    }
+\ExplSyntaxOff
+% ======================================================
+% ======================================================
+
+
+% ======================================================
+% ================= Postfix (постфикс) =================
+% ======================================================
+\ExplSyntaxOn
+    \cs_new_protected:Nn \l__rslingu_morpheme_postfix_cs:n {
+        \group_begin:
+            \clist_map_variable:nNn { #1 } { \l__item } {
+                \tikz[baseline=(Baseline.base)] {
+                    \l__rslingu_morpheme_place_content_cs:V \l__item
+                    \l__rslingu_morpheme_set_color_cs:n { rsPostfixColor }
+                    \draw[
+                        rsMorphemeSign,
+                        \l__rslingu_morpheme_color_tl,
+                        transform~canvas={
+                            yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                        }
+                    ]
+                    let
+                        \p1 = (Baseline.north~west),
+                        \p2 = (Baseline.north~east)
+                    in
+                        % Первый знак суффикса.
+                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                        (.5 *\x1 + .5 * \x2, \y2 + \c__rslingu_morpheme_sign_height_dim) --
+                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim)
+                        % Второй знак суффикса.
+                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim + 3pt) --
+                        (.5 *\x1 + .5 * \x2, \y2 + \c__rslingu_morpheme_sign_height_dim + 3pt) --
+                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim + 3pt);
+                }
+            }
+        \group_end:
+    }
+
+    % Публичная команда для постфикса.
+    \NewDocumentCommand{\rsPostfix} { O{} m } {
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        \IfNoValueTF {#2} {
+            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+                \l__rslingu_morpheme_postfix_cs:n { o }
+            }
+        } {
+            \l__rslingu_morpheme_postfix_cs:n { #2 }
+        }
+    }
+\ExplSyntaxOff
+% -----------------------------------------------------
+% -----------------------------------------------------
+
+
+% ======================================================
+% ================= Ending (окончание) =================
+% ======================================================
+\ExplSyntaxOn
+    \NewDocumentCommand{\rsEnding} { O{} m } {
+    \group_begin:
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        % Чтобы знак оконачения не прилипал слева. 
+        \hspace{.75pt}
+
+        \tikz[baseline=(Baseline.base)] {
+        
+            \bool_if:nTF
+            {
+                \l__rslingu_morpheme_phantom_bool
+                ||
+                \l__rslingu_phantom_bool
+            }
+            {
+                \node[rsContentBox, outer~sep=1pt] (Baseline)
+                {
+                    \phantom{o} \c__rslingu_vmax_phantom_tl
+                };
+                \node at (Baseline.center) { \textbullet };
+            }
+            {
+                \node[rsContentBox, outer~sep=1pt] (Baseline)
+                {
+                    \tl_if_blank:nTF
+                    { #2 }
+                    { \phantom{o} }
+                    { #2 }
+                    \c__rslingu_vmax_phantom_tl
+                };
+            }        
+        
+            \l__rslingu_morpheme_set_color_cs:n { rsEndingColor }
+
+            \draw[
+                rsMorphemeSign,
+                \l__rslingu_morpheme_color_tl,
+                transform~canvas={
+                    yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                },
+            ]
+            let
+                \p1 = (Baseline.south~west),
+                \p2 = (Baseline.north~east)
+            in
+                % NOTE: Нет контроля типа шрифта, то есть наклонном шрифте будет некрасиво.
+                % По-хорошему, .75 — это мусор, и нужно действовать как-то иначе.
+                (
+                    \x1 - .75,
+                    \y1 - \c__rslingu_morpheme_base_sign_height_dim
+                )
+                |-
+                (
+                    \x2 + .75,
+                    \y2
+                        + \c__rslingu_morpheme_sign_y_pad_dim
+                        + \c__rslingu_morpheme_sign_height_dim
+                )
+                |-
+                cycle;
+        }
+
+        % Чтобы знак оконачения не прилипал слева.
+        \hspace{.75pt}
+  \group_end:
+    }
+\ExplSyntaxOff
+% -----------------------------------------------------
+% -----------------------------------------------------
+
+
+% ======================================================
+% =================== Base (основа) ====================
+% ======================================================
+\ExplSyntaxOn
+    \NewDocumentCommand{\rsBase}{ O{} m }{
+        \group_begin:
+            \keys_set_known:nn { rslingu/morphemes/keys } { color=false, #1 }
+            \keys_set_known:nn { rslingu/morphemes/base/keys } { right=false, left=false, #1 }
+            \tikz[baseline=(Baseline.base)] {
+                \node[rsContentBox] (Baseline) {#2 \c__rslingu_below_vmax_phantom_tl};
+                \l__rslingu_morpheme_set_color_cs:n { rsBaseColor }
+                % «Foreach» — это «костыли».
+                \foreach \n in {0}
+                    \draw[
+                        rsMorphemeSign,
+                        \l__rslingu_morpheme_color_tl,,
+                        transform~canvas={
+                            yshift=-\c__rslingu_morpheme_base_sign_y_pad_dim - \c__rslingu_morpheme_base_sign_height_dim,
+                        },
+                    ]
+                        let
+                            \p1 = ([xshift=\c__rslingu_morpheme_base_sign_y_pad_dim]Baseline.south~west),
+                            \p2 = ([xshift=-\c__rslingu_morpheme_base_sign_y_pad_dim - .5pt]Baseline.south~east)
+                        in
+                            % Правая часть основы.
+                            \bool_if:NF \l__rslingu_morpheme_base_right_bool {
+                                (\p1) -- ([yshift=\c__rslingu_morpheme_base_sign_height_dim]\p1) |-
+                            }
+                            (\p1) -- (\p2)
+                            % Левая часть основы.
+                            \bool_if:NF \l__rslingu_morpheme_base_left_bool {
+                                -|
+                                (\p2) -- ([yshift=\c__rslingu_morpheme_base_sign_height_dim]\p2)
+                            };
+            }
+      \group_end:
+    }
+\ExplSyntaxOff
+% -----------------------------------------------------
+% -----------------------------------------------------
+
+
+\ExplSyntaxOn
+    % Публичная команда для морфемного анализа слова без разрывной основы.
+    \NewDocumentCommand{\rsMorphemicAnalysis} { O{} m m m m m } {
+        \rsBase[#1] {
+            \rsPrefix[#1]{#2}
+            \rsRoot[#1]{#3}
+            \rsSuffix[#1]{#4}
+        }
+        \rsEnding[#1]{#5}
+        \rsPostfix[#1]{#6}
+    }
+\ExplSyntaxOff
+% Цвета синтаксических подчёркиваний.
+\definecolor{rsSubjectColor}{HTML}{673ab7}
+\definecolor{rsPredicateColor}{HTML}{e81e62}
+\definecolor{rsAttributeColor}{HTML}{2196f3}
+\definecolor{rsAdverbialColor}{HTML}{009688}
+\definecolor{rsObjectColor}{HTML}{ffa500}
+
+
+\ExplSyntaxOn
+
+% Цвет синтаксических подчёркиваний.
+\tl_new:N \l__rslingu_syntax_color_tl
+
+\cs_new_protected:Nn \l__rslingu_syntax_set_color_cs:n
+{
+    \tl_set:Nn \l__rslingu_syntax_color_tl
+    {
+        \bool_if:nTF
+            { \l__rslingu_syntax_color_bool || \l__rslingu_color_bool}
+            { #1 } 
+            { black }
+    }
+}
+
+\dim_const:Nn \c__rslingu_syntax_uline_shift_dim { 2pt }
+\dim_const:Nn \c__rslingu_syntax_uline_width_dim { 1.25pt }
+
+\tikzset{
+    rsUline/.style={
+        line~width=\c__rslingu_syntax_uline_width_dim,
+    },
+}
+
+\ExplSyntaxOff
+
+
+\ExplSyntaxOn
+\cs_generate_variant:Nn \seq_set_split:Nnn { NnV }
+
+% Флаг для постановки пробела между однородными членами, если они есть.
+\bool_new:N \l__place_spacing_bool
+
+\cs_new_protected:Nn \l__rslingu_syntax_place_content_cs:n
+{
+    \group_begin:
+
+    \node[rsContentBox] (Baseline) {
+
+        % Разделяем строку по запятым.
+        \clist_map_variable:nNn { #1 } \l__homogeneous_item_tl {
+
+            % Проверяем, нужно ли ставить пробел между однородными членами.
+            \bool_if:nTF \l__place_spacing_bool {
+                {~}
+            } {
+                \bool_set_true:N \l__place_spacing_bool
+            }
+
+            % Разделяем по знаку равно.
+            \StrCut{ \l__homogeneous_item_tl } { = } \l__word_tl \l__aux_info_tl
+
+            % Разделяем по знаку плюса.
+            \seq_set_split:NnV \l__aux_info_seq { + } { \l__aux_info_tl }
+            
+            % Нужно ли использовать фантомный вариант.
+            \bool_set:Nn \l_tmpa_bool {
+                (
+                    \l__rslingu_syntax_phantom_bool
+                    ||
+                    \l__rslingu_phantom_bool
+                )
+            }
+
+            \tikz[baseline=(Aux.base)] {
+                \node[
+                    rsContentBox,
+                    label={
+                        [
+                            inner~sep=0pt,
+                            outer~sep=0pt,
+                            font=\tiny\itshape,
+                            yshift=.5pt
+                        ]
+                        % Печать дополнительной информации, содержащейся в `l__aux_info_seq`, если та непуста.
+                        \seq_if_empty:NTF \l__aux_info_seq
+                            { }
+                            {
+                                \seq_use:Nn \l__aux_info_seq {,~}
+                            }
+                    }
+                ] (Aux) {
+                    \bool_if:nTF { \l_tmpa_bool }
+                    {
+                        \phantom{\l__word_tl}
+                    }
+                    {
+                        \l__word_tl
+                    }
+
+                    \c__rslingu_above_vmax_phantom_tl
+                };
+
+                \bool_if:nTF { \l_tmpa_bool } {
+                    \node[rsContentBox] at (Aux.center) {\textbullet};
+                } {}
+            }
+        }
+
+        % Выравнивание по высоте внутри блока `Baseline`.
+        \c__rslingu_below_vmax_phantom_tl
+    };
+
+    \bool_set_false:N \l__place_spacing_bool
+    \group_end:
+}
+
+\ExplSyntaxOff
+
+
+
+
+% ==============================================
+% =========== Subject (подлежащее) =============
+% ==============================================
+
+\ExplSyntaxOn
+
+\NewDocumentCommand \rsSubject { O{} m }
+{
+    \group_begin:
+        \keys_set_known:nn
+            { rslingu/syntax/keys }
+            { color=false, phantom=false, #1 }
+        
+        \tikz[baseline=(Baseline.base)] {
+            \l__rslingu_syntax_set_color_cs:n { rsSubjectColor }
+            
+            \node[rsContentBox] (Baseline)
+            { #2 \c__rslingu_below_vmax_phantom_tl };
+            
+            \draw
+            [
+                rsUline,
+                \l__rslingu_syntax_color_tl
+            ]
+            ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~west)
+            --
+            ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~east);
+        }
+    \group_end:
+}
+\ExplSyntaxOff
+
+
+
+
+% % ==============================================
+% % =========== Predicate (сказуемое) ============
+% % ==============================================
+
+\ExplSyntaxOn
+
+\NewDocumentCommand \rsPredicate { O{} m } {
+    \group_begin:
+        \keys_set_known:nn
+            { rslingu/syntax/keys }
+            { color=false, phantom=false, #1 }
+
+        \tikz[baseline=(Baseline.base)] {
+            \l__rslingu_syntax_set_color_cs:n { rsPredicateColor }
+
+            \node[rsContentBox] (Baseline)
+            { #2 \c__rslingu_below_vmax_phantom_tl };
+
+            \draw[
+                rsUline,
+                \l__rslingu_syntax_color_tl
+            ]
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~west) --
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~east);
+
+            \draw[
+                rsUline,
+                \l__rslingu_syntax_color_tl
+            ]
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim - 2pt]Baseline.south~west) --
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim - 2pt]Baseline.south~east);
+        }
+    \group_end:
+}
+
+\ExplSyntaxOff
+
+
+
+
+
+% % ==============================================
+% % ======== Adverbial (обстоятельство) ========
+% % ==============================================
+
+\ExplSyntaxOn
+
+\NewDocumentCommand \rsAdverbial { O{} m } {
+    \group_begin:
+        \keys_set_known:nn
+            { rslingu/syntax/keys }
+            { color=false, phantom=false, #1 }
+
+        \tikz[baseline=(Baseline.base)] {
+            \l__rslingu_syntax_set_color_cs:n { rsAdverbialColor }
+
+            \node[rsContentBox] (Baseline)
+            { #2 \c__rslingu_below_vmax_phantom_tl };
+            
+            \draw[
+                rsUline,
+                \l__rslingu_syntax_color_tl,
+                dash~pattern={on 5pt off 2pt on 1.5pt off 2pt},
+            ]
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~west) --
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~east);
+        }
+    \group_end:
+}
+
+\ExplSyntaxOff
+
+
+
+
+% % ==============================================
+% % ======== Attribute (определение) =============
+% % ==============================================
+
+\ExplSyntaxOn
+
+\NewDocumentCommand{\rsAttribute} { O{} m } {
+    \group_begin:
+        \keys_set_known:nn { rslingu/syntax/keys } { color=false, phantom=false, #1 }
+
+        \tikz[baseline=(Baseline.base)] {
+            \l__rslingu_syntax_set_color_cs:n { rsAttributeColor }
+
+            \node[rsContentBox] (Baseline)
+            { #2 \c__rslingu_below_vmax_phantom_tl };
+
+            \draw[
+                rsUline,
+                \l__rslingu_syntax_color_tl,
+                decorate,
+                decoration={
+                    complete~sines,
+                    segment~length=2.75pt,
+                    amplitude=1.75,
+                    mirror,
+                    start~up,
+                    end~down
+                }
+            ]
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~west) --
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~east);
+        }
+    \group_end:
+}
+
+\ExplSyntaxOff
+
+
+
+
+% % ==============================================
+% % ========== Object (обстоятельство) ===========
+% % ==============================================
+
+\ExplSyntaxOn
+
+\NewDocumentCommand \rsObject { O{} m } {
+    \group_begin:
+        \keys_set_known:nn { rslingu/syntax/keys } { color=false, phantom=false, #1 }
+
+        \tikz[baseline=(Baseline.base)] {
+            \l__rslingu_syntax_set_color_cs:n { rsObjectColor }
+
+            \node[rsContentBox] (Baseline)
+            { #2 \c__rslingu_below_vmax_phantom_tl };
+
+            \draw[
+                rsUline,
+                \l__rslingu_syntax_color_tl,
+                dash~pattern={on 5pt off 2pt on 1pt off 0pt},
+            ]
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~west) --
+                ([yshift=-\c__rslingu_syntax_uline_shift_dim]Baseline.south~east);
+        }
+    \group_end:
+}
+
+\ExplSyntaxOff
+
+
+
+
+% % ==============================================
+% % =============== Части речи ===================
+% % ==============================================
+
+\ExplSyntaxOn
+
+
+\cs_new_protected:Nn \l__rslingu_syntax_make_speech_part_cmd_cs:n {
+
+    % Сокращённое имя части речи. Например, если #1 == Noun, то сгенирируется
+    % команда \rsNounAcrS
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w rs #1 Acr \cs_end:
+    { }
+    {
+        \use:c {
+            l__rslingu_syntax_
+            \str_lowercase:f #1
+            _short_
+            \tl_use:N \g__rslingu_current_lang_tl
+            _tl
+        }
+    }
+    
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w rs Set #1 Acr \cs_end: 
+    { }
+    {
+        \tl_set:cn 
+        {
+            l__rslingu_syntax_
+            \str_lowercase:f #1
+            _short_
+            \tl_use:N \g__rslingu_current_lang_tl
+            _tl
+        }
+    }
+    
+    % Обёртка для частей речи. Например, если #1 == Noun, то сгенирируется
+    % команда \rsNoun
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w rs #1 \cs_end:
+    { s m O{} }
+    {
+    \group_begin:
+        \textoverset
+        {
+            \tikz[baseline=(Aux.base)]
+            {
+                \node[rsContentBox] (Aux)
+                {
+                    \bool_if:nTF
+                        {
+                           (
+                                \l__rslingu_phantom_bool
+                                ||
+                                \l__rslingu_syntax_phantom_bool
+                            )
+                        }
+                        {
+                            \phantom{##2}
+                        }
+                        {
+                            ##2
+                        }
+                };
+                
+                \bool_if:nTF
+                {
+                    (
+                        \l__rslingu_phantom_bool
+                        ||
+                        \l__rslingu_syntax_phantom_bool
+                    )
+                }
+                { \node[rsContentBox] at (Aux.center) {\textbullet}; }
+                { }
+            }
+        }
+        {   
+            \IfBooleanTF { ##1 } { } { \cs:w rs #1 Acr \cs_end: }
+            \tl_if_blank:nTF { ##3 } {  }
+            {
+                \IfBooleanTF{ ##1 } { } {,~}
+                ##3            
+            }
+        }
+        
+    \group_end:
+    }
+}
+
+
+% Команды для сокращений для различных по умолчанию и те, которые
+% можно менять
+\cs_new_protected:Nn \l_set_pos_acr_tl_cs:nnn {
+    \tl_const:cn
+    { c__rslingu_syntax_ #1 _default_short_ #2 _tl }
+    { #3 }  
+    
+    \tl_set_eq:cc
+    { l__rslingu_syntax_ #1 _short_ #2 _tl }
+    { c__rslingu_syntax_ #1 _default_short_ #2 _tl }
+}
+
+
+% Существительное
+
+
+\l_set_pos_acr_tl_cs:nnn { noun } { russian } { сущ. } 
+\l_set_pos_acr_tl_cs:nnn { noun } { ukranian } { ім. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Noun }
+
+
+% Глагол
+
+\l_set_pos_acr_tl_cs:nnn { verb } { russian } { глаг. }
+\l_set_pos_acr_tl_cs:nnn { verb } { ukranian } { дієсл. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Verb }
+
+
+% Прилагательное
+
+\l_set_pos_acr_tl_cs:nnn { adjective } { russian } { прил. }
+\l_set_pos_acr_tl_cs:nnn { adjective } { ukranian } { прикм. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Adjective }
+
+
+% Наречие
+
+\l_set_pos_acr_tl_cs:nnn { adverb } { russian } { нареч. }
+\l_set_pos_acr_tl_cs:nnn { adverb } { ukranian } { присл. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Adverb }
+
+
+% Предлог
+
+\l_set_pos_acr_tl_cs:nnn { preposition } { russian } { предлог }
+\l_set_pos_acr_tl_cs:nnn { preposition } { ukranian } { прийм. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Preposition }
+
+
+% Союз
+
+\l_set_pos_acr_tl_cs:nnn { conjunction } { russian } { союз }
+\l_set_pos_acr_tl_cs:nnn { conjunction } { ukranian } { спол. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Conjunction }
+
+
+% Местоимение
+
+\l_set_pos_acr_tl_cs:nnn { pronoun } { russian } { мест. }
+\l_set_pos_acr_tl_cs:nnn { pronoun } { ukranian } { займ. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Pronoun }
+
+
+% Чатица
+
+\l_set_pos_acr_tl_cs:nnn { particle } { russian } { част. }
+\l_set_pos_acr_tl_cs:nnn { particle } { ukranian } { част. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Particle }
+
+
+% Числительное
+
+\l_set_pos_acr_tl_cs:nnn { numeral } { russian } { числ. }
+\l_set_pos_acr_tl_cs:nnn { numeral } { ukranian } { числ. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Numeral }
+
+
+% Междометие
+
+\l_set_pos_acr_tl_cs:nnn { interjection } { russian } { междом. }
+\l_set_pos_acr_tl_cs:nnn { interjection } { ukranian } { вигук }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Interjection }
+
+
+% Причастие
+
+\l_set_pos_acr_tl_cs:nnn { participle } { russian } { прич. }
+\l_set_pos_acr_tl_cs:nnn { participle } { ukranian } { дієприкм. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Participle }
+
+
+% Деепричастие
+
+\l_set_pos_acr_tl_cs:nnn { transgressive } { russian } { дееприч. }
+\l_set_pos_acr_tl_cs:nnn { transgressive } { ukranian } { дієприсл. }
+\l__rslingu_syntax_make_speech_part_cmd_cs:n { Transgressive }
+
+
+\ExplSyntaxOff
+
+
+
+\endinput

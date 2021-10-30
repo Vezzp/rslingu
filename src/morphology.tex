@@ -1,4 +1,5 @@
 % Цвета знаков морфем.
+
 \definecolor{rsSuffixColor}{HTML}{7fdb6a}
 \definecolor{rsPrefixColor}{HTML}{f44747}
 \definecolor{rsRootColor}{HTML}{eedc31}
@@ -50,14 +51,22 @@
     }
 }
 
-% Команда для правильного выбора содержимого морфемы в завимости от значения флага сокрытия
-% содержимого морфемы.
+% Команда для выбора содержимого морфемы в завимости от значения флага сокрытия `phantom`.
 \cs_new_protected:Nn \l__rslingu_morpheme_place_content_cs:n {
-    \bool_if:nTF { \l__rslingu_morpheme_phantom_bool || \l__rslingu_phantom_bool } {
-            \node[rsContentBox] (Baseline) { \phantom{#1} \c__rslingu_vmax_phantom_tl};
-            \node at (Baseline.center) { \textbullet };
-    } {
-        \node[rsContentBox] (Baseline) { #1 \c__rslingu_vmax_phantom_tl};
+    \bool_if:nTF
+    {
+        \l__rslingu_morpheme_phantom_bool
+        ||
+        \l__rslingu_phantom_bool
+    }
+    {
+        \node[rsContentBox] (Baseline) {
+            \phantom{#1} \c__rslingu_vmax_phantom_tl
+        };
+        \node at (Baseline.center) { \textbullet };
+    }
+    {
+        \node[rsContentBox] (Baseline) { #1 \c__rslingu_vmax_phantom_tl };
     }
 }
 
@@ -74,41 +83,43 @@
 % ================ Prefix (приставка) ==================
 % ======================================================
 \ExplSyntaxOn
-    \cs_new_protected:Nn \l__rslingu_morpheme_prefix_cs:n {
-        \group_begin:
-            \clist_map_variable:nNn { #1 } { \l__item } {
-                \tikz[baseline=(Baseline.base)] {
-                    \l__rslingu_morpheme_place_content_cs:V \l__item
-                    \l__rslingu_morpheme_set_color_cs:n { rsPrefixColor }
-                    \draw[
-                        rsMorphemeSign,
-                        \l__rslingu_morpheme_color_tl,
-                        transform~canvas={
-                            yshift=\c__rslingu_morpheme_sign_y_pad_dim + \c__rslingu_morpheme_sign_height_dim
-                        }
-                    ]
-                    let
-                        \p1 = (Baseline.north~west),
-                        \p2 = (Baseline.north~east)
-                    in
-                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
-                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim) --
-                        ++(0, -\c__rslingu_morpheme_sign_height_dim);
-                }
-            }
-        \group_end:
-    }
 
-    \NewDocumentCommand{\rsPrefix} { O{} m } {
-        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
-        \tl_if_empty:nTF {#2} {
-            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
-                \l__rslingu_morpheme_prefix_cs:n { o }
+\cs_new_protected:Nn \l__rslingu_morpheme_prefix_cs:n {
+    \group_begin:
+        \clist_map_variable:nNn { #1 } { \l__item } {
+            \tikz[baseline=(Baseline.base)] {
+                \l__rslingu_morpheme_place_content_cs:V \l__item
+                \l__rslingu_morpheme_set_color_cs:n { rsPrefixColor }
+                
+                \draw[
+                    rsMorphemeSign,
+                    \l__rslingu_morpheme_color_tl,
+                    transform~canvas={
+                        yshift=\c__rslingu_morpheme_sign_y_pad_dim + \c__rslingu_morpheme_sign_height_dim
+                    }
+                ]
+                let
+                    \p1 = (Baseline.north~west),
+                    \p2 = (Baseline.north~east)
+                in
+                    (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                    (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                    ++(0, -\c__rslingu_morpheme_sign_height_dim);
             }
-        } {
-            \l__rslingu_morpheme_prefix_cs:n { #2 }
         }
+    \group_end:
+}
+
+\NewDocumentCommand{\rsPrefix} { O{} m } {
+    \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+    \tl_if_empty:nTF {#2} {
+        \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+            \l__rslingu_morpheme_prefix_cs:n { o }
+        }
+    } {
+        \l__rslingu_morpheme_prefix_cs:n { #2 }
     }
+}
 \ExplSyntaxOff
 % ======================================================
 % ======================================================
@@ -257,40 +268,70 @@
 % ======================================================
 \ExplSyntaxOn
     \NewDocumentCommand{\rsEnding} { O{} m } {
-        \group_begin:
-            \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
-            % Чтобы знак оконачения не прилипал слева. 
-            \hspace{.75pt}
+    \group_begin:
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
+        % Чтобы знак оконачения не прилипал слева. 
+        \hspace{.75pt}
 
-            \tikz[baseline=(Baseline.base)] {
-                \bool_if:nTF { \l__rslingu_phantom_bool } {
-                    \node[rsContentBox, outer~sep=1pt] (Baseline) { \phantom{о} \c__rslingu_vmax_phantom_tl};
-                    \node at (Baseline.center) {\textbullet};
-                } {
-                    \node[rsContentBox, outer~sep=1pt] (Baseline) { \ifblank{ #2 }{ \phantom{о} }{ #2 } \c__rslingu_vmax_phantom_tl };
-                }
-                \l__rslingu_morpheme_set_color_cs:n { rsEndingColor }
-                \draw[
-                    rsMorphemeSign,
-                    \l__rslingu_morpheme_color_tl,
-                    transform~canvas={
-                        yshift=\c__rslingu_morpheme_sign_y_pad_dim
-                    },
-                ]
-                let
-                    \p1 = (Baseline.south~west),
-                    \p2 = (Baseline.north~east)
-                in
-                    % NOTE: Нет контроля типа шрифта, то есть наклонном шрифте будет некрасиво.
-                    % По-хорошему, .75 — это мусор, и нужно действовать как-то иначе.
-                    (\x1 - .75, \y1 - \c__rslingu_morpheme_base_sign_height_dim) |-
-                    (\x2 + .75, \y2 + \c__rslingu_morpheme_sign_y_pad_dim + \c__rslingu_morpheme_sign_height_dim) |-
-                    cycle;
+        \tikz[baseline=(Baseline.base)] {
+        
+            \bool_if:nTF
+            {
+                \l__rslingu_morpheme_phantom_bool
+                ||
+                \l__rslingu_phantom_bool
             }
+            {
+                \node[rsContentBox, outer~sep=1pt] (Baseline)
+                {
+                    \phantom{o} \c__rslingu_vmax_phantom_tl
+                };
+                \node at (Baseline.center) { \textbullet };
+            }
+            {
+                \node[rsContentBox, outer~sep=1pt] (Baseline)
+                {
+                    \tl_if_blank:nTF
+                    { #2 }
+                    { \phantom{o} }
+                    { #2 }
+                    \c__rslingu_vmax_phantom_tl
+                };
+            }        
+        
+            \l__rslingu_morpheme_set_color_cs:n { rsEndingColor }
 
-            % Чтобы знак оконачения не прилипал слева.
-            \hspace{.75pt}
-      \group_end:
+            \draw[
+                rsMorphemeSign,
+                \l__rslingu_morpheme_color_tl,
+                transform~canvas={
+                    yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                },
+            ]
+            let
+                \p1 = (Baseline.south~west),
+                \p2 = (Baseline.north~east)
+            in
+                % NOTE: Нет контроля типа шрифта, то есть наклонном шрифте будет некрасиво.
+                % По-хорошему, .75 — это мусор, и нужно действовать как-то иначе.
+                (
+                    \x1 - .75,
+                    \y1 - \c__rslingu_morpheme_base_sign_height_dim
+                )
+                |-
+                (
+                    \x2 + .75,
+                    \y2
+                        + \c__rslingu_morpheme_sign_y_pad_dim
+                        + \c__rslingu_morpheme_sign_height_dim
+                )
+                |-
+                cycle;
+        }
+
+        % Чтобы знак оконачения не прилипал слева.
+        \hspace{.75pt}
+  \group_end:
     }
 \ExplSyntaxOff
 % -----------------------------------------------------
@@ -342,17 +383,12 @@
 \ExplSyntaxOn
     % Публичная команда для морфемного анализа слова без разрывной основы.
     \NewDocumentCommand{\rsMorphemicAnalysis} { O{} m m m m m } {
-        \rsBase[#1]{
+        \rsBase[#1] {
             \rsPrefix[#1]{#2}
             \rsRoot[#1]{#3}
             \rsSuffix[#1]{#4}
         }
         \rsEnding[#1]{#5}
         \rsPostfix[#1]{#6}
-    }
-
-    % Сокращение для команды `rsMorphemicAnalysis`.
-    \NewDocumentCommand{\rsMA} { O{} m m m m m } {
-        \rsMorphemicAnalysis[#1]{#2}{#3}{#4}{#5}{#6}
     }
 \ExplSyntaxOff
