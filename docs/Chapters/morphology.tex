@@ -1,0 +1,252 @@
+\section{Морфемный анализ слов}
+
+
+\ExplSyntaxOn
+
+\bool_set_true:N \l_tmpa_bool
+
+\cs_new:Npn \l_tmpa_cs:nnn #1#2#3 {
+    \rsModifier*[ #1 ]
+    \tl_if_blank:nTF { #2 } {  } { \rsOpt{\rsKwargs[ #2 ]} }
+    \rsReq{\rsArg[ #3 ]}
+    &
+    \cs:w #1 \cs_end: [ #2 ] { #3 }
+}
+
+
+\cs_new:Npn \l_tmp_cs:nnn #1
+
+\ExplSyntaxOff
+
+\subsection{Приставка}
+
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd] \rsColon rsPrefix \rsOpt\rsKwargs
+        \rsReq{ \rsArg[приставки:clist] } \\
+        \rsTab \rsKwargs \rsSpace{} color:bool=false, \rsSpace phantom:bool=false
+    }
+\end{tcolorbox}
+
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \l_tmpa_cs:nnn { rsPrefix } {} { }                            \\ \midrule
+        \l_tmpa_cs:nnn { rsPrefix } {} { приставка }                  \\ \midrule
+        \l_tmpa_cs:nnn { rsPrefix } {} { при, став, ка }              \\ \midrule
+        \l_tmpa_cs:nnn { rsPrefix } {color} { при, став, ка }         \\ \midrule
+        \l_tmpa_cs:nnn { rsPrefix } {phantom} { при, став, ка }       \\ \midrule
+        \l_tmpa_cs:nnn { rsPrefix } {color,phantom} { при, став, ка } \\ \midrule
+        \bottomrule
+    \end{tabular}
+    \caption{Использование~команды~приставки}
+\end{table}
+
+\ExplSyntaxOff
+
+
+\subsection{Корень}
+
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd] \rsColon rsRoot \rsOpt\rsKwargs \rsReq{\rsArg[clist]} \\
+        \rsTab \rsKwargs \rsColon \rsSpace color=false, \rsSpace phantom=false
+    }
+\end{tcolorbox}
+
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \l_tmpa_cs:nnn { rsRoot } {} { }                      \\ \midrule
+        \l_tmpa_cs:nnn { rsRoot } {} { корень }               \\ \midrule
+        \l_tmpa_cs:nnn { rsRoot } {} { кор,ень }              \\ \midrule
+        \l_tmpa_cs:nnn { rsRoot } {color} { кор,ень }         \\ \midrule
+        \l_tmpa_cs:nnn { rsRoot } {phantom} { кор,ень }       \\ \midrule
+        \l_tmpa_cs:nnn { rsRoot } {color,phantom} { кор,ень } \\ \midrule
+        \bottomrule
+    \end{tabular}
+    \caption{Использование~команды~корня}
+\end{table}
+
+\ExplSyntaxOff
+
+
+
+\subsection{Суффикс}
+
+
+\ExplSyntaxOn
+
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd] \rsColon rsSuffix \rsOpt\rsKwargs \rsReq{\rsArg[clist]} \\
+        \rsTab \rsKwargs \rsColon \rsSpace color=false, \rsSpace phantom=false
+    }
+\end{tcolorbox}
+
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \l_tmpa_cs:nnn { rsSuffix } {} { }                       \\ \midrule
+        \l_tmpa_cs:nnn { rsSuffix } {} { суффикс }               \\ \midrule
+        \l_tmpa_cs:nnn { rsSuffix } {} { суф,фикс }              \\ \midrule
+        \l_tmpa_cs:nnn { rsSuffix } {color} { суф,фикс }         \\ \midrule
+        \l_tmpa_cs:nnn { rsSuffix } {phantom} { суф,фикс }       \\ \midrule
+        \l_tmpa_cs:nnn { rsSuffix } {color,phantom} { суф,фикс } \\ \midrule
+        \bottomrule
+    \end{tabular}
+    \caption{Использование~команды~суффикса}
+\end{table}
+
+\ExplSyntaxOff
+
+
+\subsection{Окончание}
+
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd] \rsColon rsEnding \rsOpt\rsKwargs \rsReq{\rsArg[clist]} \\
+        \rsTab \rsKwargs \rsColon \rsSpace color=false, \rsSpace phantom=false
+    }
+\end{tcolorbox}
+
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \l_tmpa_cs:nnn { rsEnding } {} { }                        \\ \midrule
+        \l_tmpa_cs:nnn { rsEnding } {} { окончание }              \\ \midrule
+        \l_tmpa_cs:nnn { rsEnding } {} { окончание }              \\ \midrule
+        \l_tmpa_cs:nnn { rsEnding } {color} { окончание }         \\ \midrule
+        \l_tmpa_cs:nnn { rsEnding } {phantom} { окончание }       \\ \midrule
+        \l_tmpa_cs:nnn { rsEnding } {color,phantom} { окончание } \\ \midrule
+        \bottomrule
+    \end{tabular}
+    \caption{Использование~команды~окончания}
+\end{table}
+
+\ExplSyntaxOff
+
+
+\subsection{Постфикc}
+
+\ExplSyntaxOn
+
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd] \rsColon rsPostfix \rsOpt\rsKwargs \rsReq{\rsArg[clist]} \\
+        \rsTab \rsKwargs \rsColon \rsSpace color=false, \rsSpace phantom=false
+    }
+\end{tcolorbox}
+
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \l_tmpa_cs:nnn { rsPostfix } {} { }                          \\ \midrule
+        \l_tmpa_cs:nnn { rsPostfix } {} { приставка }                \\ \midrule
+        \l_tmpa_cs:nnn { rsPostfix } {} { при,став,ка }              \\ \midrule
+        \l_tmpa_cs:nnn { rsPostfix } {color} { при,став,ка }         \\ \midrule
+        \l_tmpa_cs:nnn { rsPostfix } {phantom} { при,став,ка }       \\ \midrule
+        \l_tmpa_cs:nnn { rsPostfix } {color,phantom} { при,став,ка } \\ \midrule
+        \bottomrule
+    \end{tabular}
+    \caption{Использование~команды~префикса}
+\end{table}
+
+\ExplSyntaxOff
+
+
+
+\subsection{Основа}
+
+\ExplSyntaxOn
+
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd] \rsColon rsBase \rsOpt\rsKwargs \rsReq{\rsArg[tl]} \\
+        \rsTab \rsKwargs \rsColon \rsSpace color=false, \rsSpace left=false,
+        \rsSpace right=false
+    }
+\end{tcolorbox}
+
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \l_tmpa_cs:nnn { rsBase } {} { основа }            \\ \midrule
+        \l_tmpa_cs:nnn { rsBase } {color} { основа }       \\ \midrule
+        \l_tmpa_cs:nnn { rsBase } {left} { основа }        \\ \midrule
+        \l_tmpa_cs:nnn { rsBase } {color,right} { основа } \\ \midrule
+        \bottomrule
+    \end{tabular}
+    \caption{Использование~команды~префикса}
+\end{table}
+
+\ExplSyntaxOff
+
+
+\subsection{Морфемный разбор слова}
+
+\subsubsection{Разбор слова с непрерывной основой}
+
+\ExplSyntaxOn
+
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd] \rsColon rsMorphemicAnalysis
+        \rsOpt\rsKwargs \\
+        \rsReq{ \rsArg[приставки:clist] }
+        \rsReq{ \rsArg[корни:clist] }
+        \rsReq{ \rsArg[суффикс:clist] }
+        \rsReq{ \rsArg[окончание:clist] }
+        \rsReq{ \rsArg[постфикс:clist] }
+        \\
+        \rsTab \rsKwargs \rsColon \rsSpace color=false, \rsSpace phantom=false
+    }
+\end{tcolorbox}
+
+
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+
+        \rsModifier*[rsMorphemicAnalysis]
+        \{ \rsArg[бес,при] \}
+        \{ \rsArg[дан] \}
+        \{ \rsArg[н,ниц] \}
+        \{ \rsArg[а] \}
+        \{ \rsArg[] \}
+         &
+        \rsMorphemicAnalysis{бес,при}{дан}{н,ниц}{а}{}  \\\midrule
+
+        \rsModifier*[rsMorphemicAnalysis]
+        \rsOpt{ \rsKwargs[color] }
+        \rsReq{ \rsArg[вне] }
+        \rsReq{ \rsArg[штат] }
+        \rsReq{ \rsArg[н] }
+        \rsReq{ \rsArg[ый] }
+        \rsReq{ \rsArg[] }
+         &
+        \rsMorphemicAnalysis[color]{вне}{штат}{н}{ый}{} \\\midrule
+
+        \bottomrule
+    \end{tabular}
+    \caption{Использование~команды~морфемного~разбора~слова~с~непрерывной~основой}
+\end{table}
+
+\ExplSyntaxOff

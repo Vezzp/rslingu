@@ -1,0 +1,180 @@
+\section{Прочее}
+
+\subsection{Окружение rslingu}
+
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \rsModifier[env] \rsColon{}
+    \rsCode{rslingu}
+    \rsCode{[\rsKwargs{}]}
+    \\
+    \rsTab{} \rsKwargs{} \rsColon{} \rsCode{color=false}, \rsSpace{} \rsCode{phantom=false}
+\end{tcolorbox}
+\ExplSyntaxOff
+
+Иногда может возникать необходимость, например, морфемного разбора слов с <<разрывной>> основой. Для таких случаев нет специально
+определённых команд, подобно команде \rsCode{rsMorphemicAnalysis}, так что единственный способ отобразить такие слова --- это
+последовательное использование команд для каждой из морфем. При передаче параметров \rsCode{phantom} и \rsCode{color} в каждую из
+команд возникает многократное дублирование кода, что ухудшает его читаемость.
+
+Решить эту проблему призвано окружение \rsCode{rslingu}, которое указании какого-либо дополнительного аргумента, <<активирует>> его для всех команд, принимающий данный аргумент, внутри окружения.
+\begin{figure}[htp!]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \begin{Latexcode}
+            \begin{rslingu}[color]
+                \rsAttribute{Уставшая} \rsSubject{\rsNoun{мама}} \rsPredicate{\rsVerb*{мыла}}
+                \rsObject{раму} \rsAdverbial{вечером}.
+            \end{rslingu}
+        \end{Latexcode}
+        \caption{Код с использованием окружения \rsCode{rslingu}.}
+    \end{subfigure}\vspace*{.75cm}
+    \begin{subfigure}{\textwidth}
+        \begin{Latexcode}
+            \rsAttribute[color]{Уставшая} \rsSubject[color]{\rsNoun{мама}}
+            \rsPredicate[color]{\rsVerb*{мыла}} \rsObject[color]{раму}
+            \rsAdverbial[color]{вечером}.
+        \end{Latexcode}
+        \caption{Код без использования окружения \rsCode{rslingu}.}
+    \end{subfigure}\vspace*{.75cm}
+    \begin{subfigure}{.9\textwidth}
+        \centering
+        \begin{rslingu}[color]
+            \rsAttribute{Уставшая} \rsSubject{\rsNoun{мама}} \rsPredicate{\rsVerb*{мыла}}
+            \rsObject{раму} \rsAdverbial{вечером}.
+        \end{rslingu}
+        \caption{Результат выполнения каждого из частей кода выше.}
+    \end{subfigure}
+    \caption{Демонстрация возможностей окружения \rsCode{rslingu} c параметром \rsCode{color}.}
+\end{figure}
+
+
+
+\begin{figure}[htp!]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \begin{Latexcode}
+            \begin{rslingu}[color,phantom]
+                \rsAttribute{Уставшая} \rsSubject{\rsNoun{мама}} \rsPredicate{\rsVerb*{мыла}}
+                \rsObject{раму} \rsAdverbial{вечером}.
+            \end{rslingu}
+        \end{Latexcode}
+        \caption{Код с использованием окружения \rsCode{rslingu}.}
+    \end{subfigure}\vspace*{.75cm}
+    \begin{subfigure}{\textwidth}
+        \begin{Latexcode}
+            \rsAttribute[color,phantom]{Уставшая} \rsSubject[color,phantom]{\rsNoun{мама}}
+            \rsPredicate[color,phantom]{\rsVerb*{мыла}} \rsObject[color,phantom]{раму}
+            \rsAdverbial[color,phantom]{вечером}.
+        \end{Latexcode}
+        \caption{Код без использования окружения \rsCode{rslingu}.}
+    \end{subfigure}\vspace*{.75cm}
+    \begin{subfigure}{.9\textwidth}
+        \centering
+        \begin{rslingu}[color,phantom]
+            \rsAttribute{Уставшая} \rsSubject{\rsNoun{мама}} \rsPredicate{\rsVerb*{мыла}}
+            \rsObject{раму} \rsAdverbial{вечером}.
+        \end{rslingu}
+        \caption{Результат выполнения каждого из частей кода выше.}
+    \end{subfigure}
+    \caption{Демонстрация возможностей окружения \rsCode{rslingu} c параметрами \rsCode{color} и \rsCode{phantom}.}
+\end{figure}
+
+
+
+\clearpage
+
+\begin{appendices}
+
+    \section{Сокращения частеречных команд}\label{appendix:pos-contractions}
+
+    \subsection{Русский язык}
+
+    \ExplSyntaxOn
+
+    \group_begin:
+
+    \cs_new:Npn \l_tmpa_cs:nn #1#2 {
+        \rsModifier*[ #1 ]\rsReq{\rsArg[ #2 ]} &
+        \cs:w #1 \cs_end: { #2 }
+    }
+
+    \rsSetLanguage{russian}
+
+    \begin{table}[ht!]
+        \footnotesize\centering
+        \begin{tabular}{@{}llll@{}}
+            \toprule
+
+            \l_tmpa_cs:nn { rsNoun } { существительное }     &
+            \l_tmpa_cs:nn { rsVerb } { глагол }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsAdjective } { прилагательное } &
+            \l_tmpa_cs:nn { rsAdverb } { наречие }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsPronoun } { местоимение }      &
+            \l_tmpa_cs:nn { rsPreposition } { предлог }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsConjunction } { союз }         &
+            \l_tmpa_cs:nn { rsParticle } { частица }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsNumeral } { числительное }     &
+            \l_tmpa_cs:nn { rsInterjection } { междометие }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsParticiple } { причастие }     &
+            \l_tmpa_cs:nn { rsTransgressive } { деепричастие }
+            \\
+            \bottomrule
+        \end{tabular}
+        \caption{Частеречные~сокращения~для~русского~языка}
+    \end{table}
+
+    \group_end:
+
+    \ExplSyntaxOff
+
+
+    \subsection{Украинский язык}
+
+    \ExplSyntaxOn
+
+    \group_begin:
+
+    \rsSetLanguage{ukranian}
+
+    \begin{table}[ht!]
+        \footnotesize\centering
+        \begin{tabular}{@{}llll@{}}
+            \toprule
+
+            \l_tmpa_cs:nn { rsNoun } { іменник }          &
+            \l_tmpa_cs:nn { rsVerb } { дієслово }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsAdjective } { прикметник }  &
+            \l_tmpa_cs:nn { rsAdverb } { прислівник }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsPronoun } { займенник }     &
+            \l_tmpa_cs:nn { rsPreposition } { прийменник }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsConjunction } { сполучник } &
+            \l_tmpa_cs:nn { rsParticle } { частка }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsNumeral } { числівник }     &
+            \l_tmpa_cs:nn { rsInterjection } { вигук }
+            \\ \midrule
+            \l_tmpa_cs:nn { rsParticiple } { дієприкметник }  &
+            \l_tmpa_cs:nn { rsTransgressive } { дієприслівник }
+            \\
+            \bottomrule
+        \end{tabular}
+        \caption{Частеречные~сокращения~для~украинского~языка}
+    \end{table}
+
+
+    \cs_undefine:N \l_tmpa_cs:nn
+
+    \group_end:
+
+    \ExplSyntaxOff
+
+\end{appendices}

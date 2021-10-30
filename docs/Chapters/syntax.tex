@@ -1,0 +1,194 @@
+\section{Синтаксический разбор предложений}\label{sec:SyntaxAnalysis}
+
+
+Все команды данной группы имеют следующую сигнатуру:
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \rsModifier[cmd] \rsColon{} \rsCode{<name>}
+    \rsOpt{ \rsKwargs{} }
+    \rsReq{ \rsArg[текст:tl] } \\
+
+    \rsTab{} \rsKwargs{} \rsColon{} \rsCode{color=false, \rsSpace{} phantom=false}
+\end{tcolorbox}
+\ExplSyntaxOff
+где \rsCode{<name>} может быть одним из следующих \rsModifier[значений]:
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}llll@{}}
+        \toprule
+
+        \rsModifier[rsSubject]     & подлежащее
+                                   &
+        \rsModifier[rsPredicate]   & сказуемое
+        \\\midrule
+
+        \rsModifier[rsObject]      & дополнение
+                                   &
+        \rsModifier[rsAttribute]   & определение
+        \\\midrule
+
+        \rsModifier[rsAdverbial] & обстоятельство
+                                   &
+        \\\midrule
+
+        \bottomrule
+    \end{tabular}
+    \caption{Синтаксические~команды}
+\end{table}
+
+\subsection{Подлежащее}
+
+
+\ExplSyntaxOn
+
+\begingroup
+\renewcommand{\arraystretch}{1.125}
+\begin{table}[ht!]
+    \centering
+    \small
+    \begin{tabular}{@{}ll@{}}
+        \hline
+
+        \rsModifier*[rsSubject]
+        \rsReq{ \rsArg[подлежащее] }
+         &
+        \rsSubject{подлежащее}
+
+        \\\midrule
+
+        \rsModifier*[rsSubject]
+        \rsOpt{ \rsKwargs[color] }
+        \rsReq{ \rsArg[подлежащее] }
+         &
+        \rsSubject[color]{подлежащее}
+
+        \\\midrule
+
+        \rsModifier*[rsSubject]
+        \rsOpt{ \rsKwargs[color] }
+        \rsReq{
+            \rsModifier*[rsNoun] \rsReq{ \rsArg[подлежащее] }
+            \rsSpace{}
+            и
+            \rsSpace{}
+            \rsModifier*[rsNoun] \rsReq{ \rsArg[подлежащее] }
+        }
+         &
+        \rsSubject[color]{\rsNoun{подлежащее}[им.п]~и~\rsNoun{подлежащее}[ср.р.]}
+
+        \\\midrule
+
+        \rsModifier*[rsSubject]
+        \rsOpt{ \rsKwargs[color,phantom] }
+        \rsReq{ \rsModifier*[rsNoun] \rsReq{ \rsArg[подлежащее] } }
+         &
+        \rsSubject[color,phantom]{\rsNoun{подлежащее}}
+
+        \\\midrule
+
+        \rsModifier*[rsSubject]
+        \rsOpt{ \rsKwargs[color,phantom] }
+        \rsReq{ \rsArg[подлежащее] }
+         &
+        \rsSubject[color,phantom]{подлежащее}
+
+        \\\bottomrule
+    \end{tabular}
+    \caption{Использование~команды~подлежащего.}
+\end{table}
+\endgroup
+
+
+\ExplSyntaxOff
+
+
+% \subsection{Сказуемое}
+
+
+% \begingroup
+% \renewcommand{\arraystretch}{1.125}
+% \begin{table}[ht!]
+%     \centering
+%     \small
+%     \begin{tabular}{|l|l|}
+%         \hline
+%         \rsCode*{rsPredicate{\{сказуемое\}}}                                  & \rsPredicate{сказуемое}                                      \\
+%         \rsCode*{rsPredicate[color]{\{сказуемое\}}}                           & \rsPredicate[color]{сказуемое}                               \\
+%         \rsCode*{rsPredicate[phantom, color]{\{сказуемое\}}}                  & \rsPredicate[phantom, color]{сказуемое}                      \\
+%         \rsCode*{rsPredicate[phantom, color]{\{сказуемое=глаг.\}}}            & \rsPredicate[color]{сказуемое=глаг.}                         \\
+%         \rsCode*{rsPredicate{\{сказуемое, сказуемое\}}}                       & \rsPredicate{сказуемое, сказуемое}                           \\
+%         \rsCode*{rsPredicate{\{сказуемое=глаг. + н.в., сказуемое=пр.в.\}}}    & \rsPredicate{сказуемое=глаг. + н.в. + пр.в., сказуемое=б.в.} \\
+%         \rsCode*{rsPredicate[color, phantom]{\{сказуемое, сказуемое=пр.в.\}}} & \rsPredicate[color, phantom]{сказуемое, сказуемое=пр.в.}     \\
+%         \hline
+%     \end{tabular}
+%     \caption{Использование команды сказуемого.}
+% \end{table}
+% \endgroup
+
+
+% \subsection{Дополнение}
+
+% \begingroup
+% \renewcommand{\arraystretch}{1.125}
+% \begin{table}[ht!]
+%     \centering
+%     \small
+%     \begin{tabular}{|l|l|}
+%         \hline
+%         \rsCode*{rsObject{\{дополнение\}}}                                  & \rsObject{дополнение}                                  \\
+%         \rsCode*{rsObject[color]{\{дополнение\}}}                           & \rsObject[color]{дополнение}                           \\
+%         \rsCode*{rsObject[phantom, color]{\{дополнение\}}}                  & \rsObject[phantom, color]{дополнение}                  \\
+%         \rsCode*{rsObject[phantom, color]{\{дополнение=сущ.\}}}             & \rsObject[color]{дополнение=сущ.}                      \\
+%         \rsCode*{rsObject{\{дополнение, дополнение\}}}                      & \rsObject{дополнение, дополнение}                      \\
+%         \rsCode*{rsObject{\{дополнение=сущ., дополнение=сущ. + им.п.\}}}    & \rsObject{дополнение=сущ., дополнение=сущ. + им.п.}    \\
+%         \rsCode*{rsObject[color, phantom]{\{дополнение, дополнение=сущ.\}}} & \rsObject[color, phantom]{дополнение, дополнение=сущ.} \\
+%         \hline
+%     \end{tabular}
+%     \caption{Использование команды дополнения.}
+% \end{table}
+% \endgroup
+
+
+
+% \subsection{Определение}
+
+% \begingroup
+% \renewcommand{\arraystretch}{1.125}
+% \begin{table}[ht!]
+%     \centering
+%     \small
+%     \begin{tabular}{|l|l|}
+%         \hline
+%         \rsCode*{rsAttribute{\{определение\}}}                                    & \rsAttribute{определение}                                    \\
+%         \rsCode*{rsAttribute[color]{\{определение\}}}                             & \rsAttribute[color]{определение}                             \\
+%         \rsCode*{rsAttribute[phantom, color]{\{определение\}}}                    & \rsAttribute[phantom, color]{определение}                    \\
+%         \rsCode*{rsAttribute[phantom, color]{\{определение=прил.\}}}              & \rsAttribute[color]{определение=прил.}                       \\
+%         \rsCode*{rsAttribute{\{определение, определение\}}}                       & \rsAttribute{определение, определение}                       \\
+%         \rsCode*{rsAttribute{\{определение=прил., определение=прил. + согл.\}}}   & \rsAttribute{определение=прил., определение=прил. + согл.}   \\
+%         \rsCode*{rsAttribute[color, phantom]{\{определение=прил., определение\}}} & \rsAttribute[color, phantom]{определение=прил., определение} \\
+%         \hline
+%     \end{tabular}
+%     \caption{Использование команды определения.}
+% \end{table}
+% \endgroup
+
+
+% \subsection{Обстоятельство}
+
+% \begingroup
+% \renewcommand{\arraystretch}{1.125}
+% \begin{table}[ht!]
+%     \centering
+%     \small
+%     \begin{tabular}{|l|l|}
+%         \hline
+%         \rsCode*{rsAdverbial{\{обстоятельство\}}}                              & \rsAdverbial{обстоятельство}                     \\
+%         \rsCode*{rsAdverbial[color]{\{обстоятельство\}}}                       & \rsAdverbial[color]{обстоятельство}              \\
+%         \rsCode*{rsAdverbial[phantom, color]{\{обстоятельство\}}}              & \rsAdverbial[phantom, color]{обстоятельство}     \\
+%         \rsCode*{rsAdverbial[phantom, color]{\{обстоятельство=сущ. + им.п.\}}} & \rsAdverbial[color]{обстоятельство=сущ. + им.п.} \\
+%         \hline
+%     \end{tabular}
+%     \caption{Использование команды обстоятельства.}
+% \end{table}
+% \endgroup

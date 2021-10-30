@@ -1,0 +1,192 @@
+\section{Части речи}\label{sec:speech_parts}
+
+
+\subsection{Базовое использование}
+
+Все команды данной группы имеют следующую сигнатуру:
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \rsModifier[cmd] \rsColon{} \rsCode{<name>}
+    \rsKwargs[\textasteriskcentered]
+    \rsReq{ \rsArg[<слово:tl>] }
+    \rsOpt{ \rsArg[<анализ:tl>] }
+\end{tcolorbox}
+\ExplSyntaxOff
+где \rsCode{<name>} может быть одним из следующих \rsModifier[значений]:
+
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}llll@{}}
+        \toprule
+
+        \rsModifier[rsNoun]          & существительное
+                                     &
+        \rsModifier[rsVerb]          & глагол
+        \\\midrule
+
+        \rsModifier[rsAdverb]        & наречие
+                                     &
+        \rsModifier[rsProposition]   & предлог
+        \\\midrule
+
+        \rsModifier[rsConjunction]   & союз
+                                     &
+        \rsModifier[rsPronoun]       & местоимение
+        \\\midrule
+
+        \rsModifier[rsAdjective]     & прилагательное
+                                     &
+        \rsModifier[rsParticle]      & частица
+        \\\midrule
+
+        \rsModifier[rsInterjection]  & междометие
+                                     &
+        \rsModifier[rsNumeral]       & числительное
+        \\\midrule
+
+
+        \rsModifier[rsParticiple]    & причастие
+                                     &
+        \rsModifier[rsTransgressive] & деепричастие
+
+        \\\bottomrule
+    \end{tabular}
+    \caption{Команды для частей речи}
+    \label{tab:pos-commands}
+\end{table}
+
+\begin{tnote}
+    Команды данного раздела чувствительны к опции \rsCode{phantom}.
+\end{tnote}
+
+Базовые сценарии использования команд для частей речи на примере \rsModifier[rsNoun] представлены в таблице ниже.
+
+\ExplSyntaxOn
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+
+        \rsModifier*[rsNoun]
+        \rsReq{ \rsArg[существительное] }
+         &
+        \rsNoun{существительное}
+        \\\midrule
+
+        \rsModifier*[rsNoun]
+        \rsReq{ \rsArg[существительное] }
+        \rsOpt{ \rsArg[ср.р., им.п.] }
+         &
+        \rsNoun{существительное}[ ср.р., им.п. ]
+        \\\midrule
+
+        \rsModifier*[rsNoun]
+        \textasteriskcentered{}
+        \rsReq{ \rsArg[существительное] }
+         &
+        \rsNoun*{существительное}
+        \\\midrule
+
+        \rsModifier*[rsNoun]
+        \textasteriskcentered{}
+        \rsReq{ \rsArg[существительное] }
+        \rsOpt{ \rsArg[СУЩ.] }
+         &
+        \rsNoun*{существительное}[СУЩ.]
+        \\\midrule
+
+        \rsModifier*[rsNoun]
+        \textasteriskcentered{}
+        \rsReq{ \rsArg[существительное] }
+        \rsOpt{ \rsArg[СУЩ., ср.р., им.п] }
+         &
+        \rsNoun*{существительное}[СУЩ., ср.р., им.п]
+        \\\midrule
+        \bottomrule
+    \end{tabular}
+    \caption{Использование~команд~частей~речи}
+\end{table}
+\ExplSyntaxOff
+
+
+\subsection{Сокращённые названия частей речи}
+
+
+\subsubsection{Базовое использование}\label{subsubsec:pos-basic}
+
+Для отображения сокращённых названий частей речи в тексте предназначены команды со следующей сигнатурой:
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \rsModifier[cmd] \rsColon{} \rsCode{<name> Acr}
+\end{tcolorbox}
+\ExplSyntaxOff
+где \rsCode{<name>} принимает значения команд из таблицы «\nameref{tab:pos-commands}».
+
+Например, \rsCode{\rsModifier*[rsNounAcr]\rsReq{}} даст «\rsNounAcr{}», использование фигурных скобок необходимо для установки пробела после сокращения.
+
+
+\subsubsection{Локализация стандартных сокращений частеречных команд}
+
+Пакет \rsCode{rslingu} поддерживает локализацию для сокращений частей речи во всех командах из
+таблицы «\nameref{tab:pos-commands}» через модификатор \rsModifier[rsSetLanguage]:
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd] \rsColon rsSetLanguage
+        \rsReq{ \rsArg[<язык: tl>] }
+    }
+\end{tcolorbox}
+\ExplSyntaxOff
+
+На данный момент доступны следующие языки:
+\begin{table}[ht!]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+
+        Язык       & \rsArg[язык] \\
+        \midrule
+
+        русский    & russian      \\
+        украинский & ukranian     \\
+
+        \bottomrule
+    \end{tabular}
+    \caption{Доступные языки для локализации частеречных команд}
+\end{table}
+
+Языком по умолчанию является русский. Со списком стандартных сокращений для разных языков
+можно ознакомиться в приложении \ref{appendix:pos-contractions}
+«\nameref{appendix:pos-contractions}».
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{Latexcode}
+            \rsSetLanguage{russian}  % По умолчанию.
+            \rsParticiple{Уставшая} \rsNoun{мама}
+            \rsVerb{мыла} \rsNoun{раму}
+            \rsNoun{вечером}.
+
+            \rsSetLanguage{ukranian}
+            \rsVerb{Мріють} \rsNoun{крилами}
+            \rsPreposition{з} \rsNoun{туману}
+            \rsNoun{лебеді} \rsAdjective{рожеві}.
+        \end{Latexcode}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.4\textwidth}
+        \small
+        \rsSetLanguage{russian}  % Язык по умолчанию.
+        \rsParticiple{Уставшая}
+        \rsNoun{мама} \rsVerb{мыла} \rsNoun{раму} \rsNoun{вечером}.
+        \vspace*{\baselineskip}
+
+        \rsSetLanguage{ukranian}
+        \rsVerb{Мріють} \rsNoun{крилами} \rsPreposition{з}
+        \rsNoun{туману} \rsNoun{лебеді} \rsAdjective{рожеві}.
+    \end{minipage}
+
+    \caption{Пример смены языка частеречных сокращений}
+\end{figure}
