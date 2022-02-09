@@ -1,3 +1,35 @@
+\ExplSyntaxOn
+
+% Кодогенерация команд для изменения цветов.
+\cs_new_protected:Nn \l_rslingu_color_cmd_gen:nn {
+    \tl_const:cn
+    { c__rslingu_ #1 _default_color_tl }
+    { #2 }
+
+    \tl_set_eq:cc
+    { l__rslingu_ #1 _color_tl }
+    { c__rslingu_ #1 _default_color_tl }
+}
+
+% `textoverset`, аналог `overset`.
+\NewDocumentCommand{\textoverset}{ O{.5pt} m m }{
+    \tikz[baseline=(Baseline.base)]{
+        \node[
+            rsContentBox,
+            label={
+                    [
+                            rsContentBox,
+                            font=\tiny\itshape,
+                            yshift=#1
+                        ] #3
+                }
+        ] (Baseline) { #2 \c__rslingu_above_vmax_phantom_tl };
+
+    }
+}
+
+\ExplSyntaxOff
+
 % Правильное подчёркивание-змейка для определений.
 % https://tex.stackexchange.com/a/60757/185741
 \newif\ifstartcompletesineup
@@ -57,23 +89,3 @@
 }
 
 
-\ExplSyntaxOn
-
-% `textoverset`, аналог `overset`.
-\NewDocumentCommand{\textoverset}{ O{.5pt} m m }{
-    \tikz[baseline=(Baseline.base)]{
-        \node[
-            rsContentBox,
-            label={
-                    [
-                            rsContentBox,
-                            font=\tiny\itshape,
-                            yshift=#1
-                        ] #3
-                }
-        ] (Baseline) { #2 \c__rslingu_above_vmax_phantom_tl };
-
-    }
-}
-
-\ExplSyntaxOff

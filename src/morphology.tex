@@ -1,24 +1,24 @@
 % Цвета знаков морфем.
 
-\definecolor{rsSuffixColor}{HTML}{7fdb6a}
-\definecolor{rsPrefixColor}{HTML}{f44747}
-\definecolor{rsRootColor}{HTML}{eedc31}
-\definecolor{rsPostfixColor}{HTML}{966842}
-\definecolor{rsEndingColor}{HTML}{0e68ce}
-\definecolor{rsBaseColor}{HTML}{990066}
-
-
 \ExplSyntaxOn
-% Цвет морфем.
-    \tl_new:N \l__rslingu_morpheme_color_tl
-    \cs_new_protected:Nn \l__rslingu_morpheme_set_color_cs:n {
-        \tl_set:Nn \l__rslingu_morpheme_color_tl {
-            \bool_if:nTF
-                { \l__rslingu_morpheme_color_bool || \l__rslingu_color_bool }
-                { #1 } 
-                { black }
-        }
+
+\l_rslingu_color_cmd_gen:nn { suffix } { 7fdb6a }
+\l_rslingu_color_cmd_gen:nn { prefix } { f44747 }
+\l_rslingu_color_cmd_gen:nn { root } { eedc31 }
+\l_rslingu_color_cmd_gen:nn { postfix } { 966842 }
+\l_rslingu_color_cmd_gen:nn { ending } { 0e68ce }
+\l_rslingu_color_cmd_gen:nn { base } { 990066 }
+
+% Цвет морфем, задаваемый внутри команд.
+\tl_new:N \l__rslingu_morpheme_color_tl
+\cs_new_protected:Nn \l__rslingu_morpheme_set_color_cs:n {
+    \tl_set:Nn \l__rslingu_morpheme_color_tl {
+        \bool_if:nTF
+            { \l__rslingu_morpheme_color_bool || \l__rslingu_color_bool }
+            { \tl_use:c { l__rslingu_ #1 _color_tl } }
+            { black }
     }
+}
  
 % Высота знаков морфем (за исключением основы).
 \dim_const:Nn \c__rslingu_morpheme_sign_height_dim {3pt}
@@ -89,7 +89,7 @@
         \clist_map_variable:nNn { #1 } { \l__item } {
             \tikz[baseline=(Baseline.base)] {
                 \l__rslingu_morpheme_place_content_cs:V \l__item
-                \l__rslingu_morpheme_set_color_cs:n { rsPrefixColor }
+                \l__rslingu_morpheme_set_color_cs:n { prefix }
                 
                 \draw[
                     rsMorphemeSign,
@@ -134,7 +134,7 @@
             \clist_map_variable:nNn { #1 } { \l__item } {
                 \tikz[baseline=(Baseline.base)] {
                     \l__rslingu_morpheme_place_content_cs:V \l__item
-                    \l__rslingu_morpheme_set_color_cs:n { rsRootColor }
+                    \l__rslingu_morpheme_set_color_cs:n { root }
                     \draw[
                         rsMorphemeSign,
                         \l__rslingu_morpheme_color_tl,
@@ -178,7 +178,7 @@
         \clist_map_variable:nNn { #1 } { \l__item } {
             \tikz[baseline=(Baseline.base)] {
                 \l__rslingu_morpheme_place_content_cs:V \l__item
-                \l__rslingu_morpheme_set_color_cs:n { rsSuffixColor }
+                \l__rslingu_morpheme_set_color_cs:n { suffix }
                 \draw[
                     rsMorphemeSign,
                     \l__rslingu_morpheme_color_tl,
@@ -222,7 +222,7 @@
             \clist_map_variable:nNn { #1 } { \l__item } {
                 \tikz[baseline=(Baseline.base)] {
                     \l__rslingu_morpheme_place_content_cs:V \l__item
-                    \l__rslingu_morpheme_set_color_cs:n { rsPostfixColor }
+                    \l__rslingu_morpheme_set_color_cs:n { postfix }
                     \draw[
                         rsMorphemeSign,
                         \l__rslingu_morpheme_color_tl,
@@ -299,7 +299,7 @@
                 };
             }        
         
-            \l__rslingu_morpheme_set_color_cs:n { rsEndingColor }
+            \l__rslingu_morpheme_set_color_cs:n { ending }
 
             \draw[
                 rsMorphemeSign,
@@ -348,7 +348,7 @@
             \keys_set_known:nn { rslingu/morphemes/base/keys } { right=false, left=false, #1 }
             \tikz[baseline=(Baseline.base)] {
                 \node[rsContentBox] (Baseline) {#2 \c__rslingu_below_vmax_phantom_tl};
-                \l__rslingu_morpheme_set_color_cs:n { rsBaseColor }
+                \l__rslingu_morpheme_set_color_cs:n { base }
                 % «Foreach» — это «костыли».
                 \foreach \n in {0}
                     \draw[
