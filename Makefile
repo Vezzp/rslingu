@@ -1,10 +1,14 @@
-all: gensty gendoc
+.PHONY: all dev package manual manual-dev
 
-gensty:
-	python -m bin.gensty
+all: package manual
 
-gendoc:
-	cd docs \
-		&& latexmk -pdflatex -halt-on-error -interaction=batchmode -shell-escape -output-directory="../build" manual.tex \
-		&& mv ../build/manual.pdf .. \
-		&& latexmk -C manual.tex
+dev: package manual-dev
+
+package:
+	python -m bin package build
+
+manual:
+	python -m bin manual build --no-dev
+
+manual-dev:
+	python -m bin manual build --dev
