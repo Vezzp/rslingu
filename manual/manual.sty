@@ -1,18 +1,19 @@
 \usepackage{ifxetex}
-\ifxetex
-    \usepackage{fontspec}
-    \usepackage{polyglossia}
-    \setdefaultlanguage{russian}
-    \setmainfont[Ligatures = TeX]{Noto Serif}[
-        ItalicFont = Noto Serif,
-    ]
-    \newfontfamily\cyrillicfont{Noto Serif}
-    \newfontfamily\cyrillicfontit{Noto Serif}
-    \newfontfamily\cyrillicfonttt{Noto Mono}
+
+\ifxetex{}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setmainfont[Ligatures = TeX]{Noto Serif}[
+    ItalicFont = Noto Serif,
+]
+\newfontfamily\cyrillicfont{Noto Serif}
+\newfontfamily\cyrillicfontit{Noto Serif}
+\newfontfamily\cyrillicfonttt{Noto Mono}
 \else
-    \usepackage[T1, T2A]{fontenc}
-    \usepackage[utf8]{inputenc}
-    \usepackage[russian]{babel}
+\usepackage[T1, T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
 \fi
 
 \usepackage[bottom=2cm,left=3cm,right=1cm,top=2cm]{geometry}
@@ -29,42 +30,42 @@
 
 \ExplSyntaxOn
 
-\NewDocumentCommand {\rsCode} {m} { \texttt{#1} }
+\NewDocumentCommand\rsCode{m}{ \texttt{#1} }
 
-\NewDocumentCommand \rsSpace {} { \hspace*{.5em} }
+\NewDocumentCommand\rsSpace{} { \hspace*{.5em} }
 
-\NewDocumentCommand \rsTab {} { \hspace*{2em} }
+\NewDocumentCommand\rsTab{} { \hspace*{2em} }
 
-\NewDocumentCommand \rsReq {m} { \{#1 \} }
+\NewDocumentCommand\rsReq{m} { \{#1 \} }
 
-\NewDocumentCommand \rsOpt {m} { [ #1 ] }
+\NewDocumentCommand\rsOpt{m} { [ #1 ] }
 
-\NewDocumentCommand {\rsKwargs} {s O{kwargs}} {
-   \texttt{
+\NewDocumentCommand\rsKwargs{s O{kwargs}} {
+    \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{red!75}{#2}
     }
 }
 
-\NewDocumentCommand {\rsArg} {s O{arg} O{}} {
-   \texttt{
+\NewDocumentCommand\rsArg{s O{arg} O{}} {
+    \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{blue!75}{#2}\textcolor{blue!75}
         #3
-}
+    }
 }
 
 \NewDocumentCommand{\rsModifier} {s O{modifier} O{}} {
-   \texttt{
+    \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{ForestGreen!75}{#2}
         #3
-}
+    }
 }
 
-\NewDocumentCommand \rsColon {} {:}
+\NewDocumentCommand\rsColon{} {:}
 
-\ExplSyntaxOff
+\ExplSyntaxOff{}
 
 \usepackage{minted}
 
@@ -89,23 +90,15 @@
 {
     colframe = yellow!25,
     colback  = yellow!10,
-    coltitle = yellow!20!black,  
+    coltitle = yellow!20!black,
     title    = {Замечание},
     #1,
 }
 
-% Если версия черновая
-\usepackage{background}
+\ExplSyntaxOn{}
 
-\ExplSyntaxOn
 
-\backgroundsetup{
-    position=current~page.west,
-    angle=90,
-    vshift=-5mm,
-    opacity=1,
-    scale=3,
-    contents=Черновик~версии~0.02,
-}
+% template: {{ dev_watermark }}
 
-\ExplSyntaxOff
+
+\ExplSyntaxOff{}
