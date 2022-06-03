@@ -1,14 +1,138 @@
-\ExplSyntaxOn
-
 % Кодогенерация команд для изменения цветов.
-\cs_new_protected:Nn \l_rslingu_color_cmd_gen:nn {
-    \tl_const:cn
-    { c__rslingu_ #1 _default_color_tl }
-    { #2 }
+\cs_new_protected:Nn \g__rslingu_color_codegen_cs:nn {
 
-    \tl_set_eq:cc
-    { l__rslingu_ #1 _color_tl }
-    { c__rslingu_ #1 _default_color_tl }
+    \tl_const:cn
+        { c__rslingu_ #1 _default_color_tl }
+        { #2 }
+
+    \tl_gset_eq:cc
+        { g__rslingu_ #1 _color_tl }
+        { c__rslingu_ #1 _default_color_tl }
+
+    \definecolor
+        { rs #1 default color }
+        { HTML }
+        { \tl_use:c { c__rslingu_ #1 _default_color_tl } }
+
+    \definecolor
+        { rs #1 color }
+        { HTML }
+        { \tl_use:c { g__rslingu_ #1 _color_tl } }
+
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w
+        rsSet
+        \text_titlecase_first:n { #1 }
+        Color
+    \cs_end:
+    { m }
+    {
+        \tl_set:co { g__rslingu_ #1 _color_tl } { ##1 }
+
+        \definecolor
+            { rs #1 color }
+            { HTML }
+            { \tl_use:c { g__rslingu_ #1 _color_tl } }
+    }
+
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w
+        rsReset
+        \text_titlecase_first:n { #1 }
+        Color
+    \cs_end:
+    { }
+    {
+         \tl_gset_eq:cc
+            { g__rslingu_ #1 _color_tl }
+            { c__rslingu_ #1 _default_color_tl }
+
+        \definecolor
+            { rs #1 color }
+            { HTML }
+            { \tl_use:c { g__rslingu_ #1 _color_tl } }
+    }
+
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w
+        rsDefault
+        \text_titlecase_first:n { #1 }
+        Color
+    \cs_end:
+    { }
+    {
+        \tl_use:c { c__rslingu_ #1 _default_color_tl }
+    }
+
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w
+        rsCurrent
+        \text_titlecase_first:n { #1 }
+        Color
+    \cs_end:
+    { }
+    {
+        \tl_use:c { g__rslingu_ #1 _color_tl }
+    }
+}
+
+% Кодогенерация приватных команд для морфем.
+\cs_new_protected:Nn \g__rslingu_morphology_private_codegen_cs:nn {
+    \exp_after:wN
+    \cs_new_protected:Nn
+    \cs:w
+        l__rslingu_morpheme_ #1 _cs:n 
+    \cd_end:
+    {
+        \group_begin:
+        \clist_map_variable:nNn { ##1 } { \l__item } {
+            \tikz[baseline=(Baseline.base)] {
+                \l__rslingu_morpheme_place_content_cs:V \l__item
+                \l__rslingu_morpheme_set_color_cs:n { #1 }
+                \draw[
+                    rsMorphemeSign,
+                    \l__rslingu_morpheme_color_tl,
+                    transform~canvas={
+                        yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                    }
+                ]
+                let
+                    \p1 = (Baseline.north~west),
+                    \p2 = (Baseline.north~east)
+                in
+                    % Код для отрисовки.
+                    #2
+            }
+        }
+        \group_end:
+    }
+}
+
+% Кодогенерация публичных команд для морфем.
+% #1 — имя морфемы.
+\cs_new_protected:Nn \g__rslingu_morphology_public_codegen_cs:n {
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w
+        rs
+        \text_titlecase_first:n { #1 }
+    \cs_end:
+    { O{} m }
+    {
+        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, ##1 }
+
+        \tl_if_empty:nTF { ##2 } {
+            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
+                \use:c { l__rslingu_morpheme_ #1 _cs:n } { o }
+            }
+        } {
+            \use:c { l__rslingu_morpheme_ #1 _cs:n } { ##2 }
+        }
+    }
 }
 
 % `textoverset`, аналог `overset`.
@@ -88,4 +212,4 @@
     \state{final}{}
 }
 
-
+\ExplSyntaxOn

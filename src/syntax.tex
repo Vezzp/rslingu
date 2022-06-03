@@ -6,11 +6,10 @@
 \definecolor{rsObjectColor}{HTML}{ffa500}
 
 
-\ExplSyntaxOn
+
 
 % Цвет синтаксических подчёркиваний.
 \tl_new:N \l__rslingu_syntax_color_tl
-
 \cs_new_protected:Nn \l__rslingu_syntax_set_color_cs:n
 {
     \tl_set:Nn \l__rslingu_syntax_color_tl
@@ -31,10 +30,10 @@
     },
 }
 
-\ExplSyntaxOff
 
 
-\ExplSyntaxOn
+
+
 \cs_generate_variant:Nn \seq_set_split:Nnn { NnV }
 
 % Флаг для постановки пробела между однородными членами, если они есть.
@@ -114,7 +113,7 @@
     \group_end:
 }
 
-\ExplSyntaxOff
+
 
 
 
@@ -123,7 +122,7 @@
 % =========== Subject (подлежащее) =============
 % ==============================================
 
-\ExplSyntaxOn
+
 
 \NewDocumentCommand \rsSubject { O{} m }
 {
@@ -149,7 +148,7 @@
         }
     \group_end:
 }
-\ExplSyntaxOff
+
 
 
 
@@ -158,7 +157,7 @@
 % % =========== Predicate (сказуемое) ============
 % % ==============================================
 
-\ExplSyntaxOn
+
 
 \NewDocumentCommand \rsPredicate { O{} m } {
     \group_begin:
@@ -189,7 +188,7 @@
     \group_end:
 }
 
-\ExplSyntaxOff
+
 
 
 
@@ -199,7 +198,7 @@
 % % ======== Adverbial (обстоятельство) ========
 % % ==============================================
 
-\ExplSyntaxOn
+
 
 \NewDocumentCommand \rsAdverbial { O{} m } {
     \group_begin:
@@ -224,7 +223,7 @@
     \group_end:
 }
 
-\ExplSyntaxOff
+
 
 
 
@@ -233,7 +232,7 @@
 % % ======== Attribute (определение) =============
 % % ==============================================
 
-\ExplSyntaxOn
+
 
 \NewDocumentCommand{\rsAttribute} { O{} m } {
     \group_begin:
@@ -264,7 +263,7 @@
     \group_end:
 }
 
-\ExplSyntaxOff
+
 
 
 
@@ -273,7 +272,7 @@
 % % ========== Object (обстоятельство) ===========
 % % ==============================================
 
-\ExplSyntaxOn
+
 
 \NewDocumentCommand \rsObject { O{} m } {
     \group_begin:
@@ -296,7 +295,7 @@
     \group_end:
 }
 
-\ExplSyntaxOff
+
 
 
 
@@ -305,7 +304,7 @@
 % % =============== Части речи ===================
 % % ==============================================
 
-\ExplSyntaxOn
+
 
 
 \cs_new_protected:Nn \l__rslingu_syntax_make_speech_part_cmd_cs:n {
@@ -399,7 +398,7 @@
 
 % Команды для сокращений для различных по умолчанию и те, которые
 % можно менять
-\cs_new_protected:Nn \l_set_pos_acr_tl_cs:nnn {
+\cs_new_protected:Nn \l_set_pos_acr_code_gen_cs:nnn {
     \tl_const:cn
     { c__rslingu_syntax_ #1 _default_short_ #2 _tl }
     { #3 }  
@@ -413,86 +412,86 @@
 % Существительное
 
 
-\l_set_pos_acr_tl_cs:nnn { noun } { russian } { сущ. } 
-\l_set_pos_acr_tl_cs:nnn { noun } { ukranian } { ім. }
+\l_set_pos_acr_code_gen_cs:nnn { noun } { russian } { сущ. } 
+\l_set_pos_acr_code_gen_cs:nnn { noun } { ukranian } { ім. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Noun }
 
 
 % Глагол
 
-\l_set_pos_acr_tl_cs:nnn { verb } { russian } { глаг. }
-\l_set_pos_acr_tl_cs:nnn { verb } { ukranian } { дієсл. }
+\l_set_pos_acr_code_gen_cs:nnn { verb } { russian } { глаг. }
+\l_set_pos_acr_code_gen_cs:nnn { verb } { ukranian } { дієсл. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Verb }
 
 
 % Прилагательное
 
-\l_set_pos_acr_tl_cs:nnn { adjective } { russian } { прил. }
-\l_set_pos_acr_tl_cs:nnn { adjective } { ukranian } { прикм. }
+\l_set_pos_acr_code_gen_cs:nnn { adjective } { russian } { прил. }
+\l_set_pos_acr_code_gen_cs:nnn { adjective } { ukranian } { прикм. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Adjective }
 
 
 % Наречие
 
-\l_set_pos_acr_tl_cs:nnn { adverb } { russian } { нареч. }
-\l_set_pos_acr_tl_cs:nnn { adverb } { ukranian } { присл. }
+\l_set_pos_acr_code_gen_cs:nnn { adverb } { russian } { нареч. }
+\l_set_pos_acr_code_gen_cs:nnn { adverb } { ukranian } { присл. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Adverb }
 
 
 % Предлог
 
-\l_set_pos_acr_tl_cs:nnn { preposition } { russian } { предлог }
-\l_set_pos_acr_tl_cs:nnn { preposition } { ukranian } { прийм. }
+\l_set_pos_acr_code_gen_cs:nnn { preposition } { russian } { предлог }
+\l_set_pos_acr_code_gen_cs:nnn { preposition } { ukranian } { прийм. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Preposition }
 
 
 % Союз
 
-\l_set_pos_acr_tl_cs:nnn { conjunction } { russian } { союз }
-\l_set_pos_acr_tl_cs:nnn { conjunction } { ukranian } { спол. }
+\l_set_pos_acr_code_gen_cs:nnn { conjunction } { russian } { союз }
+\l_set_pos_acr_code_gen_cs:nnn { conjunction } { ukranian } { спол. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Conjunction }
 
 
 % Местоимение
 
-\l_set_pos_acr_tl_cs:nnn { pronoun } { russian } { мест. }
-\l_set_pos_acr_tl_cs:nnn { pronoun } { ukranian } { займ. }
+\l_set_pos_acr_code_gen_cs:nnn { pronoun } { russian } { мест. }
+\l_set_pos_acr_code_gen_cs:nnn { pronoun } { ukranian } { займ. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Pronoun }
 
 
 % Чатица
 
-\l_set_pos_acr_tl_cs:nnn { particle } { russian } { част. }
-\l_set_pos_acr_tl_cs:nnn { particle } { ukranian } { част. }
+\l_set_pos_acr_code_gen_cs:nnn { particle } { russian } { част. }
+\l_set_pos_acr_code_gen_cs:nnn { particle } { ukranian } { част. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Particle }
 
 
 % Числительное
 
-\l_set_pos_acr_tl_cs:nnn { numeral } { russian } { числ. }
-\l_set_pos_acr_tl_cs:nnn { numeral } { ukranian } { числ. }
+\l_set_pos_acr_code_gen_cs:nnn { numeral } { russian } { числ. }
+\l_set_pos_acr_code_gen_cs:nnn { numeral } { ukranian } { числ. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Numeral }
 
 
 % Междометие
 
-\l_set_pos_acr_tl_cs:nnn { interjection } { russian } { междом. }
-\l_set_pos_acr_tl_cs:nnn { interjection } { ukranian } { вигук }
+\l_set_pos_acr_code_gen_cs:nnn { interjection } { russian } { междом. }
+\l_set_pos_acr_code_gen_cs:nnn { interjection } { ukranian } { вигук }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Interjection }
 
 
 % Причастие
 
-\l_set_pos_acr_tl_cs:nnn { participle } { russian } { прич. }
-\l_set_pos_acr_tl_cs:nnn { participle } { ukranian } { дієприкм. }
+\l_set_pos_acr_code_gen_cs:nnn { participle } { russian } { прич. }
+\l_set_pos_acr_code_gen_cs:nnn { participle } { ukranian } { дієприкм. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Participle }
 
 
 % Деепричастие
 
-\l_set_pos_acr_tl_cs:nnn { transgressive } { russian } { дееприч. }
-\l_set_pos_acr_tl_cs:nnn { transgressive } { ukranian } { дієприсл. }
+\l_set_pos_acr_code_gen_cs:nnn { transgressive } { russian } { дееприч. }
+\l_set_pos_acr_code_gen_cs:nnn { transgressive } { ukranian } { дієприсл. }
 \l__rslingu_syntax_make_speech_part_cmd_cs:n { Transgressive }
 
 
-\ExplSyntaxOff
+

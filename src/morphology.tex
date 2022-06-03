@@ -1,13 +1,13 @@
 % Цвета знаков морфем.
 
-\ExplSyntaxOn
 
-\l_rslingu_color_cmd_gen:nn { suffix } { 7fdb6a }
-\l_rslingu_color_cmd_gen:nn { prefix } { f44747 }
-\l_rslingu_color_cmd_gen:nn { root } { eedc31 }
-\l_rslingu_color_cmd_gen:nn { postfix } { 966842 }
-\l_rslingu_color_cmd_gen:nn { ending } { 0e68ce }
-\l_rslingu_color_cmd_gen:nn { base } { 990066 }
+
+\g__rslingu_color_codegen_cs:nn { suffix } { 7fdb6a }
+\g__rslingu_color_codegen_cs:nn { prefix } { f44747 }
+\g__rslingu_color_codegen_cs:nn { root } { eedc31 }
+\g__rslingu_color_codegen_cs:nn { postfix } { 966842 }
+\g__rslingu_color_codegen_cs:nn { ending } { 0e68ce }
+\g__rslingu_color_codegen_cs:nn { base } { 990066 }
 
 % Цвет морфем, задаваемый внутри команд.
 \tl_new:N \l__rslingu_morpheme_color_tl
@@ -15,7 +15,7 @@
     \tl_set:Nn \l__rslingu_morpheme_color_tl {
         \bool_if:nTF
             { \l__rslingu_morpheme_color_bool || \l__rslingu_color_bool }
-            { \tl_use:c { l__rslingu_ #1 _color_tl } }
+            { rs #1 color }
             { black }
     }
 }
@@ -72,7 +72,7 @@
 
 \cs_generate_variant:Nn \l__rslingu_morpheme_place_content_cs:n { V }
 
-\ExplSyntaxOff
+
 
 
 % +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -82,7 +82,7 @@
 % ======================================================
 % ================ Prefix (приставка) ==================
 % ======================================================
-\ExplSyntaxOn
+
 
 \cs_new_protected:Nn \l__rslingu_morpheme_prefix_cs:n {
     \group_begin:
@@ -110,17 +110,9 @@
     \group_end:
 }
 
-\NewDocumentCommand{\rsPrefix} { O{} m } {
-    \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
-    \tl_if_empty:nTF {#2} {
-        \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
-            \l__rslingu_morpheme_prefix_cs:n { o }
-        }
-    } {
-        \l__rslingu_morpheme_prefix_cs:n { #2 }
-    }
-}
-\ExplSyntaxOff
+\g__rslingu_morphology_public_codegen_cs:n { prefix }
+
+
 % ======================================================
 % ======================================================
 
@@ -128,57 +120,14 @@
 % ======================================================
 % ================== Root (корень) =====================
 % ======================================================
-\ExplSyntaxOn
-    \cs_new_protected:Nn \l__rslingu_morpheme_root_cs:n {
-        \group_begin:
-            \clist_map_variable:nNn { #1 } { \l__item } {
-                \tikz[baseline=(Baseline.base)] {
-                    \l__rslingu_morpheme_place_content_cs:V \l__item
-                    \l__rslingu_morpheme_set_color_cs:n { root }
-                    \draw[
-                        rsMorphemeSign,
-                        \l__rslingu_morpheme_color_tl,
-                        transform~canvas={
-                            yshift=\c__rslingu_morpheme_sign_y_pad_dim
-                        }
-                    ]
-                    let
-                        \p1 = (Baseline.north~west),
-                        \p2 = (Baseline.north~east)
-                    in
-                        (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim)
-                        parabola[bend~pos=.5] bend + (0, \c__rslingu_morpheme_sign_height_dim)
-                        (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim);
-                }
-            }
-       \group_end:
-    }
-
-    \NewDocumentCommand{\rsRoot} { O{} m } {
-        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
-        \tl_if_empty:nTF {#2} {
-            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
-                \l__rslingu_morpheme_root_cs:n { o }
-            }
-        } {
-            \l__rslingu_morpheme_root_cs:n { #2 }
-        }
-    }
-\ExplSyntaxOff
-% ======================================================
-% ======================================================
 
 
-% ======================================================
-% ================= Suffix (суффикс) ===================
-% ======================================================
-\ExplSyntaxOn
-    \cs_new_protected:Nn \l__rslingu_morpheme_suffix_cs:n {
-        \group_begin:
+\cs_new_protected:Nn \l__rslingu_morpheme_root_cs:n {
+    \group_begin:
         \clist_map_variable:nNn { #1 } { \l__item } {
             \tikz[baseline=(Baseline.base)] {
                 \l__rslingu_morpheme_place_content_cs:V \l__item
-                \l__rslingu_morpheme_set_color_cs:n { suffix }
+                \l__rslingu_morpheme_set_color_cs:n { root }
                 \draw[
                     rsMorphemeSign,
                     \l__rslingu_morpheme_color_tl,
@@ -190,25 +139,54 @@
                     \p1 = (Baseline.north~west),
                     \p2 = (Baseline.north~east)
                 in
-                    (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
-                    (.5 *\x1 + .5 * \x2, \y2 + \c__rslingu_morpheme_sign_height_dim) --
+                    (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim)
+                    parabola[bend~pos=.5] bend + (0, \c__rslingu_morpheme_sign_height_dim)
                     (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim);
             }
         }
-        \group_end:
-    }
-    
-    \NewDocumentCommand{\rsSuffix} { O{} m } {
-        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
-        \IfNoValueTF {#2} {            
-            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
-                \l__rslingu_morpheme_suffix_cs:n { o }
-            }
-        } {
-            \l__rslingu_morpheme_suffix_cs:n { #2 }
+    \group_end:
+}
+
+\g__rslingu_morphology_public_codegen_cs:n { root }
+
+
+% ======================================================
+% ======================================================
+
+
+% ======================================================
+% ================= Suffix (суффикс) ===================
+% ======================================================
+
+
+\cs_new_protected:Nn \l__rslingu_morpheme_suffix_cs:n {
+    \group_begin:
+    \clist_map_variable:nNn { #1 } { \l__item } {
+        \tikz[baseline=(Baseline.base)] {
+            \l__rslingu_morpheme_place_content_cs:V \l__item
+            \l__rslingu_morpheme_set_color_cs:n { suffix }
+            \draw[
+                rsMorphemeSign,
+                \l__rslingu_morpheme_color_tl,
+                transform~canvas={
+                    yshift=\c__rslingu_morpheme_sign_y_pad_dim
+                }
+            ]
+            let
+                \p1 = (Baseline.north~west),
+                \p2 = (Baseline.north~east)
+            in
+                (\x1 + \c__rslingu_morpheme_sign_x_pad_dim, \y1 + \c__rslingu_morpheme_sign_y_pad_dim) --
+                (.5 *\x1 + .5 * \x2, \y2 + \c__rslingu_morpheme_sign_height_dim) --
+                (\x2 - \c__rslingu_morpheme_sign_x_pad_dim, \y2 + \c__rslingu_morpheme_sign_y_pad_dim);
         }
     }
-\ExplSyntaxOff
+    \group_end:
+}
+
+\g__rslingu_morphology_public_codegen_cs:n { suffix }
+
+
 % ======================================================
 % ======================================================
 
@@ -216,7 +194,8 @@
 % ======================================================
 % ================= Postfix (постфикс) =================
 % ======================================================
-\ExplSyntaxOn
+
+
     \cs_new_protected:Nn \l__rslingu_morpheme_postfix_cs:n {
         \group_begin:
             \clist_map_variable:nNn { #1 } { \l__item } {
@@ -247,18 +226,9 @@
         \group_end:
     }
 
-    % Публичная команда для постфикса.
-    \NewDocumentCommand{\rsPostfix} { O{} m } {
-        \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
-        \IfNoValueTF {#2} {
-            \bool_if:NT { \l__rslingu_morpheme_phantom_bool } {
-                \l__rslingu_morpheme_postfix_cs:n { o }
-            }
-        } {
-            \l__rslingu_morpheme_postfix_cs:n { #2 }
-        }
-    }
-\ExplSyntaxOff
+    \g__rslingu_morphology_public_codegen_cs:n { postfix }
+
+
 % -----------------------------------------------------
 % -----------------------------------------------------
 
@@ -266,7 +236,7 @@
 % ======================================================
 % ================= Ending (окончание) =================
 % ======================================================
-\ExplSyntaxOn
+
     \NewDocumentCommand{\rsEnding} { O{} m } {
     \group_begin:
         \keys_set_known:nn { rslingu/morphemes/keys } { phantom=false, color=false, #1 }
@@ -333,7 +303,7 @@
         \hspace{.75pt}
   \group_end:
     }
-\ExplSyntaxOff
+
 % -----------------------------------------------------
 % -----------------------------------------------------
 
@@ -341,7 +311,7 @@
 % ======================================================
 % =================== Base (основа) ====================
 % ======================================================
-\ExplSyntaxOn
+
     \NewDocumentCommand{\rsBase}{ O{} m }{
         \group_begin:
             \keys_set_known:nn { rslingu/morphemes/keys } { color=false, #1 }
@@ -375,12 +345,12 @@
             }
       \group_end:
     }
-\ExplSyntaxOff
+
 % -----------------------------------------------------
 % -----------------------------------------------------
 
 
-\ExplSyntaxOn
+
     % Публичная команда для морфемного анализа слова без разрывной основы.
     \NewDocumentCommand{\rsMorphemicAnalysis} { O{} m m m m m } {
         \rsBase[#1] {
@@ -391,4 +361,3 @@
         \rsEnding[#1]{#5}
         \rsPostfix[#1]{#6}
     }
-\ExplSyntaxOff
