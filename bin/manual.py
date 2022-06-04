@@ -1,13 +1,13 @@
-import contextlib
 import re
 import subprocess
-from pathlib import Path
 import textwrap
-from typing import Final, Optional
+from pathlib import Path
+from typing import Final
 
 import typer
 
 from .package import find_version
+from .utils import chcontent
 
 __here__ = Path(__file__).resolve()
 
@@ -58,31 +58,11 @@ def build_handler(dev: bool = True) -> None:
             # "-interaction=batchmode",
             "-shell-escape",
             "manual.tex",
-            "&&",
-            "mv",
-            "manual.pdf",
-            "..",
         ]
     )
 
     with chcontent(PACKAGE_MANUAL_FPATH, new_package_manual_content):
         subprocess.call(command, shell=True, cwd=MANUAL_DPATH)
-
-
-@contextlib.contextmanager
-def chcontent(fpath: Path, new_package_manual_content: Optional[str] = None):
-    """"""
-    if new_package_manual_content is None:
-        yield
-
-    else:
-        old_content = fpath.read_text()
-        try:
-            fpath.write_text(new_package_manual_content)
-            yield
-
-        finally:
-            fpath.write_text(old_content)
 
 
 if __name__ == "__main__":

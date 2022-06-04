@@ -1,8 +1,12 @@
+import itertools
 import re
 from pathlib import Path
 from typing import Final, Optional
 
 import typer
+
+from . import defs
+from .utils import render_template
 
 __here__ = Path(__file__).resolve()
 
@@ -48,7 +52,11 @@ def build_handler(version: Optional[str] = None) -> None:
             fname = match.group(1)
             content_parts.append(SRC_DPATH.joinpath(fname).read_text())
 
-    DST_FPATH.write_text("\n".join(content_parts))
+    text = "\n".join(content_parts)
+    text = _render_color_codegen(text)
+    text = _render_pos_codegen(text)
+
+    DST_FPATH.write_text(text)
 
 
 def find_version() -> str:
@@ -62,6 +70,50 @@ def change_version(version: str) -> None:
     SRC_FPATH.write_text(
         VERSION_RE.sub(rf"\g<exp> {{ {version} }}", SRC_FPATH.read_text())
     )
+
+
+def _render_color_codegen(text: str) -> str:
+    """"""
+    out = render_template(
+        "color_codegen",
+        "\n".join(
+            (
+                rf"\\g__rslingu_color_codegen_cs:nn {{ {name:10} }} {{ {hexcolor:6} }}"
+                for name, hexcolor in itertools.chain(
+                    defs.SYNTAX_COLOR_MAPPING.items(),
+                    defs.MORPHOLOGY_COLOR_MAPPING.items(),
+                )
+            )
+        ),
+        text,
+    )
+    return out
+
+
+def _render_pos_codegen(text: str) -> str:
+    """"""
+    repl_parts = []
+    for pos_contraction in defs.POS_CONTRACTIONS:
+        en_full_name = pos_contraction["en_full_name"]
+
+        pos_parts = [f"% {pos_contraction['ru_full_name'].capitalize()}"]
+        for lang, contraction in pos_contraction["lang_mapping"].items():
+            pos_part = (
+                r"\\l_set_pos_acr_codegen_cs:nnn "
+                f"{{ {en_full_name:13} }} {{ {lang:8} }} {{ {contraction:10} }}"
+            )
+            pos_parts.append(pos_part)
+
+        pos_parts.append(
+            rf"\\l_rslingu_syntax_make_speech_part_cmd_cs:n {{ {en_full_name} }}"
+        )
+        pos_parts.append("")
+
+        repl_parts.append("\n".join(pos_parts))
+
+    out = render_template("pos_codegen", "\n".join(repl_parts), text)
+
+    return out
 
 
 if __name__ == "__main__":
