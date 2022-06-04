@@ -83,32 +83,17 @@
 }
 
 
-% Выбор языка.
-% Используется для сокращений в синтаксическом разборе.
-\tl_const:Nn \c__rslingu_default_lang_tl { russian }
 
-\seq_const_from_clist:Nn \c__rslingu_supported_lang_seq { russian,ukranian }
-
-\tl_new:N \g__rslingu_current_lang_tl
-\tl_set_eq:NN \g__rslingu_current_lang_tl \c__rslingu_default_lang_tl
-
-\NewDocumentCommand{\rsSetLanguage}{ m }{
-    \seq_if_in:NnTF \c__rslingu_supported_lang_seq { #1 }
-    {
-        \tl_set:Nn \g__rslingu_current_lang_tl { #1 }
-    }
-    {
-        \PackageWarning { rslingu } {
-            Language~option~' #1 '~is~not~known,~choose~one~of~
-            [\seq_use:Nn \c__rslingu_supported_lang_seq {,~}].~
-            Using~' \c__rslingu_default_lang_tl '~option~as~the~default
-        }
-    }
-}
 
 \input{utils.tex}
+
+% Генерация цветов для знаков морфем и синтаксических подчёркиваний.
+% \g__rslingu_color_codegen_cs:nn { <morpheme_name/syntax_name> } { <hex_color> }
+% template: {{ color_codegen }}
+
 \input{morphology.tex}
 \input{syntax.tex}
+\input{pos.tex}
 
 \ExplSyntaxOff
 

@@ -1,0 +1,149 @@
+\ExplSyntaxOn
+
+% Выбор языка.
+% Используется для сокращений в синтаксическом разборе через команды частей речи.
+\tl_const:Nn \c__rslingu_default_lang_tl { russian }
+
+\seq_const_from_clist:Nn \c__rslingu_supported_lang_seq { russian,ukranian }
+
+\tl_new:N \g__rslingu_current_lang_tl
+\tl_set_eq:NN \g__rslingu_current_lang_tl \c__rslingu_default_lang_tl
+
+\NewDocumentCommand{\rsSetLanguage}{ m }{
+    \seq_if_in:NnTF \c__rslingu_supported_lang_seq { #1 }
+    {
+        \tl_set:Nn \g__rslingu_current_lang_tl { #1 }
+    }
+    {
+        \PackageWarning { rslingu } {
+            Language~option~' #1 '~is~not~known,~choose~one~of~
+            [\seq_use:Nn \c__rslingu_supported_lang_seq {,~}].~
+            Using~' \c__rslingu_default_lang_tl '~option~as~the~default
+        }
+    }
+}
+
+\cs_new_protected:Nn \l_rslingu_syntax_make_speech_part_cmd_cs:n {
+
+    % Сокращённое имя части речи. Например, если #1 == Noun, то сгенирируется
+    % команда \rsNounAcrS
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w
+        rs
+        \text_titlecase_first:n
+        { #1 }
+        Acr
+    \cs_end:
+    { }
+    {
+        \use:c {
+            l__rslingu_syntax_
+            #1
+            _short_
+            \tl_use:N \g__rslingu_current_lang_tl
+            _tl
+        }
+    }
+    
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w
+        rsSet
+        \text_titlecase_first:n { #1 }
+        Acr
+    \cs_end: 
+    { }
+    {
+        \tl_set:cn 
+        {
+            l__rslingu_syntax_
+            #1
+            _short_
+            \tl_use:N \g__rslingu_current_lang_tl
+            _tl
+        }
+    }
+    
+    % Обёртка для частей речи. Например, если #1 == Noun, то сгенирируется
+    % команда \rsNoun
+    \exp_after:wN
+    \NewDocumentCommand
+    \cs:w
+        rs
+        \text_titlecase_first:n { #1 }
+    \cs_end:
+    { s m O{} }
+    {
+    \group_begin:
+        \textoverset
+        {
+            \tikz[baseline=(Aux.base)]
+            {
+                \node[rsContentBox] (Aux)
+                {
+                    \bool_if:nTF
+                        {
+                           (
+                               \l__rslingu_phantom_bool
+                                ||
+                                \l__rslingu_syntax_phantom_bool
+                            )
+                        }
+                        {
+                            \phantom{##2}
+                        }
+                        {
+                            ##2
+                        }
+                };
+                
+                \bool_if:nTF
+                {
+                    (
+                        \l__rslingu_phantom_bool
+                        ||
+                        \l__rslingu_syntax_phantom_bool
+                    )
+                }
+                { \node[rsContentBox] at (Aux.center) {\textbullet}; }
+                { }
+            }
+        }
+        {   
+            \IfBooleanTF
+            { ##1 }
+            { }
+            { \cs:w rs \text_titlecase_first:n { #1 } Acr \cs_end: }
+
+            \tl_if_blank:nTF { ##3 } {  }
+            {
+                \IfBooleanTF{ ##1 } { } {,~}
+                ##3            
+            }
+        }
+        
+    \group_end:
+    }
+}
+
+
+% Генерация констант для сокращений частей речи по умолчанию и пользовательских
+% переменных.
+% #1 — название части речи (`en_full_name`)
+% #2 — название языка
+% #3 — сокращение части речи
+\cs_new_protected:Nn \l_set_pos_acr_codegen_cs:nnn {
+    \tl_const:cn
+    { c__rslingu_syntax_ #1 _default_short_ #2 _tl }
+    { #3 }
+    
+    \tl_set_eq:cc
+    { l__rslingu_syntax_ #1 _short_ #2 _tl }
+    { c__rslingu_syntax_ #1 _default_short_ #2 _tl }
+}
+
+
+% template: {{ pos_codegen }}
+
+\ExplSyntaxOff
