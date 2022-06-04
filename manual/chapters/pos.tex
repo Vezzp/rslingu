@@ -6,48 +6,48 @@
 Все команды данной группы имеют следующую сигнатуру:
 \ExplSyntaxOn
 \begin{tcolorbox}
-    \rsModifier[cmd] \rsColon{} \rsCode{<name>}
-    \rsKwargs[\textasteriskcentered]
-    \rsReq{ \rsArg[<слово:tl>] }
-    \rsOpt{ \rsArg[<анализ:tl>] }
+    \manModifier[cmd] \manColon{} \manCode{<name>}
+    \manKwargs[\textasteriskcentered]
+    \manReq{ \manArg[<слово:tl>] }
+    \manOpt{ \manArg[<анализ:tl>] }
 \end{tcolorbox}
 \ExplSyntaxOff
-где \rsCode{<name>} может быть одним из следующих \rsModifier[значений]:
+где \manCode{<name>} может быть одним из следующих \manModifier[значений]:
 
 \begin{table}[ht!]
     \centering
     \begin{tabular}{@{}llll@{}}
         \toprule
 
-        \rsModifier[rsNoun]          & существительное
+        \manModifier[rsNoun]          & существительное
                                      &
-        \rsModifier[rsVerb]          & глагол
+        \manModifier[rsVerb]          & глагол
         \\\midrule
 
-        \rsModifier[rsAdverb]        & наречие
+        \manModifier[rsAdverb]        & наречие
                                      &
-        \rsModifier[rsProposition]   & предлог
+        \manModifier[rsProposition]   & предлог
         \\\midrule
 
-        \rsModifier[rsConjunction]   & союз
+        \manModifier[rsConjunction]   & союз
                                      &
-        \rsModifier[rsPronoun]       & местоимение
+        \manModifier[rsPronoun]       & местоимение
         \\\midrule
 
-        \rsModifier[rsAdjective]     & прилагательное
+        \manModifier[rsAdjective]     & прилагательное
                                      &
-        \rsModifier[rsParticle]      & частица
+        \manModifier[rsParticle]      & частица
         \\\midrule
 
-        \rsModifier[rsInterjection]  & междометие
+        \manModifier[rsInterjection]  & междометие
                                      &
-        \rsModifier[rsNumeral]       & числительное
+        \manModifier[rsNumeral]       & числительное
         \\\midrule
 
 
-        \rsModifier[rsParticiple]    & причастие
+        \manModifier[rsParticiple]    & причастие
                                      &
-        \rsModifier[rsTransgressive] & деепричастие
+        \manModifier[rsTransgressive] & деепричастие
 
         \\\bottomrule
     \end{tabular}
@@ -56,10 +56,10 @@
 \end{table}
 
 \begin{tnote}
-    Команды данного раздела чувствительны к опции \rsCode{phantom}.
+    Команды данного раздела чувствительны к опции \manCode{phantom}.
 \end{tnote}
 
-Базовые сценарии использования команд для частей речи на примере \rsModifier[rsNoun] представлены в таблице ниже.
+Базовые сценарии использования команд для частей речи на примере \manModifier[rsNoun] представлены в таблице ниже.
 
 \ExplSyntaxOn
 \begin{table}[ht!]
@@ -67,38 +67,38 @@
     \begin{tabular}{@{}ll@{}}
         \toprule
 
-        \rsModifier*[rsNoun]
-        \rsReq{ \rsArg[существительное] }
+        \manModifier*[rsNoun]
+        \manReq{ \manArg[существительное] }
          &
         \rsNoun{существительное}
         \\\midrule
 
-        \rsModifier*[rsNoun]
-        \rsReq{ \rsArg[существительное] }
-        \rsOpt{ \rsArg[ср.р., им.п.] }
+        \manModifier*[rsNoun]
+        \manReq{ \manArg[существительное] }
+        \manOpt{ \manArg[ср.р., им.п.] }
          &
         \rsNoun{существительное}[ ср.р., им.п. ]
         \\\midrule
 
-        \rsModifier*[rsNoun]
+        \manModifier*[rsNoun]
         \textasteriskcentered{}
-        \rsReq{ \rsArg[существительное] }
+        \manReq{ \manArg[существительное] }
          &
         \rsNoun*{существительное}
         \\\midrule
 
-        \rsModifier*[rsNoun]
+        \manModifier*[rsNoun]
         \textasteriskcentered{}
-        \rsReq{ \rsArg[существительное] }
-        \rsOpt{ \rsArg[СУЩ.] }
+        \manReq{ \manArg[существительное] }
+        \manOpt{ \manArg[СУЩ.] }
          &
         \rsNoun*{существительное}[СУЩ.]
         \\\midrule
 
-        \rsModifier*[rsNoun]
+        \manModifier*[rsNoun]
         \textasteriskcentered{}
-        \rsReq{ \rsArg[существительное] }
-        \rsOpt{ \rsArg[СУЩ., ср.р., им.п] }
+        \manReq{ \manArg[существительное] }
+        \manOpt{ \manArg[СУЩ., ср.р., им.п] }
          &
         \rsNoun*{существительное}[СУЩ., ср.р., им.п]
         \\\midrule
@@ -117,23 +117,23 @@
 Для отображения сокращённых названий частей речи в тексте предназначены команды со следующей сигнатурой:
 \ExplSyntaxOn
 \begin{tcolorbox}
-    \rsModifier[cmd] \rsColon{} \rsCode{<name> Acr}
+    \manModifier[cmd] \manColon{} \manCode{<name> Acr}
 \end{tcolorbox}
 \ExplSyntaxOff
-где \rsCode{<name>} принимает значения команд из таблицы «\nameref{tab:pos-commands}».
+где \manCode{<name>} принимает значения команд из таблицы «\nameref{tab:pos-commands}».
 
-Например, \rsCode{\rsModifier*[rsNounAcr]\rsReq{}} даст «\rsNounAcr{}», использование фигурных скобок необходимо для установки пробела после сокращения.
+Например, \manCode{\manModifier*[rsNounAcr]\manReq{}} даст «\rsNounAcr{}», использование фигурных скобок необходимо для установки пробела после сокращения.
 
 
 \subsubsection{Локализация стандартных сокращений частеречных команд}
 
-Пакет \rsCode{rslingu} поддерживает локализацию для сокращений частей речи во всех командах из
-таблицы «\nameref{tab:pos-commands}» через модификатор \rsModifier[rsSetLanguage]:
+Пакет \manCode{rslingu} поддерживает локализацию для сокращений частей речи во всех командах из
+таблицы «\nameref{tab:pos-commands}» через модификатор \manModifier[rsSetLanguage]:
 \ExplSyntaxOn
 \begin{tcolorbox}
-    \rsCode{
-        \rsModifier[cmd] \rsColon rsSetLanguage
-        \rsReq{ \rsArg[<язык: tl>] }
+    \manCode{
+        \manModifier[cmd] \manColon rsSetLanguage
+        \manReq{ \manArg[<язык: tl>] }
     }
 \end{tcolorbox}
 \ExplSyntaxOff
@@ -144,7 +144,7 @@
     \begin{tabular}{@{}ll@{}}
         \toprule
 
-        Язык       & \rsArg[язык] \\
+        Язык       & \manArg[язык] \\
         \midrule
 
         русский    & russian      \\

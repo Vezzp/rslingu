@@ -4,31 +4,31 @@
 Все команды данной группы имеют следующую сигнатуру:
 \ExplSyntaxOn
 \begin{tcolorbox}
-    \rsModifier[cmd] \rsColon{} \rsCode{<name>}
-    \rsOpt{ \rsKwargs{} }
-    \rsReq{ \rsArg[текст:tl] } \\
+    \manModifier[cmd] \manColon{} \manCode{<name>}
+    \manOpt{ \manKwargs{} }
+    \manReq{ \manArg[текст:tl] } \\
 
-    \rsTab{} \rsKwargs{} \rsColon{} \rsCode{color=false, \rsSpace{} phantom=false}
+    \manTab{} \manKwargs{} \manColon{} \manCode{color=false, \rsSpace{} phantom=false}
 \end{tcolorbox}
 \ExplSyntaxOff
-где \rsCode{<name>} может быть одним из следующих \rsModifier[значений]:
+где \manCode{<name>} может быть одним из следующих \manModifier[значений]:
 
 \begin{table}[ht!]
     \centering
     \begin{tabular}{@{}llll@{}}
         \toprule
 
-        \rsModifier[rsSubject]     & подлежащее
+        \manModifier[rsSubject]     & подлежащее
                                    &
-        \rsModifier[rsPredicate]   & сказуемое
+        \manModifier[rsPredicate]   & сказуемое
         \\\midrule
 
-        \rsModifier[rsObject]      & дополнение
+        \manModifier[rsObject]      & дополнение
                                    &
-        \rsModifier[rsAttribute]   & определение
+        \manModifier[rsAttribute]   & определение
         \\\midrule
 
-        \rsModifier[rsAdverbial] & обстоятельство
+        \manModifier[rsAdverbial] & обстоятельство
                                    &
         \\\midrule
 
@@ -50,46 +50,46 @@
     \begin{tabular}{@{}ll@{}}
         \hline
 
-        \rsModifier*[rsSubject]
-        \rsReq{ \rsArg[подлежащее] }
+        \manModifier*[rsSubject]
+        \manReq{ \manArg[подлежащее] }
          &
         \rsSubject{подлежащее}
 
         \\\midrule
 
-        \rsModifier*[rsSubject]
-        \rsOpt{ \rsKwargs[color] }
-        \rsReq{ \rsArg[подлежащее] }
+        \manModifier*[rsSubject]
+        \manOpt{ \manKwargs[color] }
+        \manReq{ \manArg[подлежащее] }
          &
         \rsSubject[color]{подлежащее}
 
         \\\midrule
 
-        \rsModifier*[rsSubject]
-        \rsOpt{ \rsKwargs[color] }
-        \rsReq{
-            \rsModifier*[rsNoun] \rsReq{ \rsArg[подлежащее] }
+        \manModifier*[rsSubject]
+        \manOpt{ \manKwargs[color] }
+        \manReq{
+            \manModifier*[rsNoun] \manReq{ \manArg[подлежащее] }
             \rsSpace{}
             и
             \rsSpace{}
-            \rsModifier*[rsNoun] \rsReq{ \rsArg[подлежащее] }
+            \manModifier*[rsNoun] \manReq{ \manArg[подлежащее] }
         }
          &
         \rsSubject[color]{\rsNoun{подлежащее}[им.п]~и~\rsNoun{подлежащее}[ср.р.]}
 
         \\\midrule
 
-        \rsModifier*[rsSubject]
-        \rsOpt{ \rsKwargs[color,phantom] }
-        \rsReq{ \rsModifier*[rsNoun] \rsReq{ \rsArg[подлежащее] } }
+        \manModifier*[rsSubject]
+        \manOpt{ \manKwargs[color,phantom] }
+        \manReq{ \manModifier*[rsNoun] \manReq{ \manArg[подлежащее] } }
          &
         \rsSubject[color,phantom]{\rsNoun{подлежащее}}
 
         \\\midrule
 
-        \rsModifier*[rsSubject]
-        \rsOpt{ \rsKwargs[color,phantom] }
-        \rsReq{ \rsArg[подлежащее] }
+        \manModifier*[rsSubject]
+        \manOpt{ \manKwargs[color,phantom] }
+        \manReq{ \manArg[подлежащее] }
          &
         \rsSubject[color,phantom]{подлежащее}
 
@@ -113,13 +113,13 @@
 %     \small
 %     \begin{tabular}{|l|l|}
 %         \hline
-%         \rsCode*{rsPredicate{\{сказуемое\}}}                                  & \rsPredicate{сказуемое}                                      \\
-%         \rsCode*{rsPredicate[color]{\{сказуемое\}}}                           & \rsPredicate[color]{сказуемое}                               \\
-%         \rsCode*{rsPredicate[phantom, color]{\{сказуемое\}}}                  & \rsPredicate[phantom, color]{сказуемое}                      \\
-%         \rsCode*{rsPredicate[phantom, color]{\{сказуемое=глаг.\}}}            & \rsPredicate[color]{сказуемое=глаг.}                         \\
-%         \rsCode*{rsPredicate{\{сказуемое, сказуемое\}}}                       & \rsPredicate{сказуемое, сказуемое}                           \\
-%         \rsCode*{rsPredicate{\{сказуемое=глаг. + н.в., сказуемое=пр.в.\}}}    & \rsPredicate{сказуемое=глаг. + н.в. + пр.в., сказуемое=б.в.} \\
-%         \rsCode*{rsPredicate[color, phantom]{\{сказуемое, сказуемое=пр.в.\}}} & \rsPredicate[color, phantom]{сказуемое, сказуемое=пр.в.}     \\
+%         \manCode*{rsPredicate{\{сказуемое\}}}                                  & \rsPredicate{сказуемое}                                      \\
+%         \manCode*{rsPredicate[color]{\{сказуемое\}}}                           & \rsPredicate[color]{сказуемое}                               \\
+%         \manCode*{rsPredicate[phantom, color]{\{сказуемое\}}}                  & \rsPredicate[phantom, color]{сказуемое}                      \\
+%         \manCode*{rsPredicate[phantom, color]{\{сказуемое=глаг.\}}}            & \rsPredicate[color]{сказуемое=глаг.}                         \\
+%         \manCode*{rsPredicate{\{сказуемое, сказуемое\}}}                       & \rsPredicate{сказуемое, сказуемое}                           \\
+%         \manCode*{rsPredicate{\{сказуемое=глаг. + н.в., сказуемое=пр.в.\}}}    & \rsPredicate{сказуемое=глаг. + н.в. + пр.в., сказуемое=б.в.} \\
+%         \manCode*{rsPredicate[color, phantom]{\{сказуемое, сказуемое=пр.в.\}}} & \rsPredicate[color, phantom]{сказуемое, сказуемое=пр.в.}     \\
 %         \hline
 %     \end{tabular}
 %     \caption{Использование команды сказуемого.}
@@ -136,13 +136,13 @@
 %     \small
 %     \begin{tabular}{|l|l|}
 %         \hline
-%         \rsCode*{rsObject{\{дополнение\}}}                                  & \rsObject{дополнение}                                  \\
-%         \rsCode*{rsObject[color]{\{дополнение\}}}                           & \rsObject[color]{дополнение}                           \\
-%         \rsCode*{rsObject[phantom, color]{\{дополнение\}}}                  & \rsObject[phantom, color]{дополнение}                  \\
-%         \rsCode*{rsObject[phantom, color]{\{дополнение=сущ.\}}}             & \rsObject[color]{дополнение=сущ.}                      \\
-%         \rsCode*{rsObject{\{дополнение, дополнение\}}}                      & \rsObject{дополнение, дополнение}                      \\
-%         \rsCode*{rsObject{\{дополнение=сущ., дополнение=сущ. + им.п.\}}}    & \rsObject{дополнение=сущ., дополнение=сущ. + им.п.}    \\
-%         \rsCode*{rsObject[color, phantom]{\{дополнение, дополнение=сущ.\}}} & \rsObject[color, phantom]{дополнение, дополнение=сущ.} \\
+%         \manCode*{rsObject{\{дополнение\}}}                                  & \rsObject{дополнение}                                  \\
+%         \manCode*{rsObject[color]{\{дополнение\}}}                           & \rsObject[color]{дополнение}                           \\
+%         \manCode*{rsObject[phantom, color]{\{дополнение\}}}                  & \rsObject[phantom, color]{дополнение}                  \\
+%         \manCode*{rsObject[phantom, color]{\{дополнение=сущ.\}}}             & \rsObject[color]{дополнение=сущ.}                      \\
+%         \manCode*{rsObject{\{дополнение, дополнение\}}}                      & \rsObject{дополнение, дополнение}                      \\
+%         \manCode*{rsObject{\{дополнение=сущ., дополнение=сущ. + им.п.\}}}    & \rsObject{дополнение=сущ., дополнение=сущ. + им.п.}    \\
+%         \manCode*{rsObject[color, phantom]{\{дополнение, дополнение=сущ.\}}} & \rsObject[color, phantom]{дополнение, дополнение=сущ.} \\
 %         \hline
 %     \end{tabular}
 %     \caption{Использование команды дополнения.}
@@ -160,13 +160,13 @@
 %     \small
 %     \begin{tabular}{|l|l|}
 %         \hline
-%         \rsCode*{rsAttribute{\{определение\}}}                                    & \rsAttribute{определение}                                    \\
-%         \rsCode*{rsAttribute[color]{\{определение\}}}                             & \rsAttribute[color]{определение}                             \\
-%         \rsCode*{rsAttribute[phantom, color]{\{определение\}}}                    & \rsAttribute[phantom, color]{определение}                    \\
-%         \rsCode*{rsAttribute[phantom, color]{\{определение=прил.\}}}              & \rsAttribute[color]{определение=прил.}                       \\
-%         \rsCode*{rsAttribute{\{определение, определение\}}}                       & \rsAttribute{определение, определение}                       \\
-%         \rsCode*{rsAttribute{\{определение=прил., определение=прил. + согл.\}}}   & \rsAttribute{определение=прил., определение=прил. + согл.}   \\
-%         \rsCode*{rsAttribute[color, phantom]{\{определение=прил., определение\}}} & \rsAttribute[color, phantom]{определение=прил., определение} \\
+%         \manCode*{rsAttribute{\{определение\}}}                                    & \rsAttribute{определение}                                    \\
+%         \manCode*{rsAttribute[color]{\{определение\}}}                             & \rsAttribute[color]{определение}                             \\
+%         \manCode*{rsAttribute[phantom, color]{\{определение\}}}                    & \rsAttribute[phantom, color]{определение}                    \\
+%         \manCode*{rsAttribute[phantom, color]{\{определение=прил.\}}}              & \rsAttribute[color]{определение=прил.}                       \\
+%         \manCode*{rsAttribute{\{определение, определение\}}}                       & \rsAttribute{определение, определение}                       \\
+%         \manCode*{rsAttribute{\{определение=прил., определение=прил. + согл.\}}}   & \rsAttribute{определение=прил., определение=прил. + согл.}   \\
+%         \manCode*{rsAttribute[color, phantom]{\{определение=прил., определение\}}} & \rsAttribute[color, phantom]{определение=прил., определение} \\
 %         \hline
 %     \end{tabular}
 %     \caption{Использование команды определения.}
@@ -183,10 +183,10 @@
 %     \small
 %     \begin{tabular}{|l|l|}
 %         \hline
-%         \rsCode*{rsAdverbial{\{обстоятельство\}}}                              & \rsAdverbial{обстоятельство}                     \\
-%         \rsCode*{rsAdverbial[color]{\{обстоятельство\}}}                       & \rsAdverbial[color]{обстоятельство}              \\
-%         \rsCode*{rsAdverbial[phantom, color]{\{обстоятельство\}}}              & \rsAdverbial[phantom, color]{обстоятельство}     \\
-%         \rsCode*{rsAdverbial[phantom, color]{\{обстоятельство=сущ. + им.п.\}}} & \rsAdverbial[color]{обстоятельство=сущ. + им.п.} \\
+%         \manCode*{rsAdverbial{\{обстоятельство\}}}                              & \rsAdverbial{обстоятельство}                     \\
+%         \manCode*{rsAdverbial[color]{\{обстоятельство\}}}                       & \rsAdverbial[color]{обстоятельство}              \\
+%         \manCode*{rsAdverbial[phantom, color]{\{обстоятельство\}}}              & \rsAdverbial[phantom, color]{обстоятельство}     \\
+%         \manCode*{rsAdverbial[phantom, color]{\{обстоятельство=сущ. + им.п.\}}} & \rsAdverbial[color]{обстоятельство=сущ. + им.п.} \\
 %         \hline
 %     \end{tabular}
 %     \caption{Использование команды обстоятельства.}

@@ -30,24 +30,24 @@
 
 \ExplSyntaxOn
 
-\NewDocumentCommand\rsCode{m}{ \texttt{#1} }
+\NewDocumentCommand\manCode{m}{ \texttt{#1} }
 
 \NewDocumentCommand\rsSpace{} { \hspace*{.5em} }
 
-\NewDocumentCommand\rsTab{} { \hspace*{2em} }
+\NewDocumentCommand\manTab{} { \hspace*{2em} }
 
-\NewDocumentCommand\rsReq{m} { \{#1 \} }
+\NewDocumentCommand\manReq{m} { \{#1 \} }
 
-\NewDocumentCommand\rsOpt{m} { [ #1 ] }
+\NewDocumentCommand\manOpt{m} { [ #1 ] }
 
-\NewDocumentCommand\rsKwargs{s O{kwargs}} {
+\NewDocumentCommand\manKwargs{s O{kwargs}} {
     \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{red!75}{#2}
     }
 }
 
-\NewDocumentCommand\rsArg{s O{arg} O{}} {
+\NewDocumentCommand\manArg{s O{arg} O{}} {
     \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{blue!75}{#2}\textcolor{blue!75}
@@ -55,7 +55,7 @@
     }
 }
 
-\NewDocumentCommand{\rsModifier} {s O{modifier} O{}} {
+\NewDocumentCommand{\manModifier} {s O{modifier} O{}} {
     \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{ForestGreen!75}{#2}
@@ -63,7 +63,7 @@
     }
 }
 
-\NewDocumentCommand\rsColon{} {:}
+\NewDocumentCommand\manColon{} {:}
 
 \ExplSyntaxOff{}
 

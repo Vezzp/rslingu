@@ -4,32 +4,32 @@
 задаются следующим образом:
 \ExplSyntaxOn
 \begin{tcolorbox}
-    \rsCode {
-        \rsModifier[mtype]
-        \rsSpace{}\rsColon{}\rsSpace{}
+    \manCode {
+        \manModifier[mtype]
+        \rsSpace{}\manColon{}\rsSpace{}
         mname
         \rsSpace{}
-        \rsOpt\rsKwargs
+        \manOpt\manKwargs
         \rsSpace{}
         < [, \{ >
                 \rsSpace{}
-                \rsArg{}:type_hint
+                \manArg{}:type_hint
                 \rsSpace{}< ], \} >
         \rsSpace{}... \\
 
-        \rsTab{} \rsKwargs<> \rsSpace{}
-        kwarg_name \rsSpace{} \rsColon{} \rsSpace{}type_hint = kwarg_default_value \rsSpace{} ...
+        \manTab{} \manKwargs<> \rsSpace{}
+        kwarg_name \rsSpace{} \manColon{} \rsSpace{}type_hint = kwarg_default_value \rsSpace{} ...
     }
 \end{tcolorbox}
 \ExplSyntaxOff
 
 \begin{itemize}
-    \item \rsModifier[modifier\_type] — тип текстового модификатора, команда (\rsModifier[cmd]) или окружение (\rsModifier[env]).
+    \item \manModifier[modifier\_type] — тип текстового модификатора, команда (\manModifier[cmd]) или окружение (\manModifier[env]).
 
-    \item \rsKwargs{} — ненулевое количество именованных необязательных аргументов.
+    \item \manKwargs{} — ненулевое количество именованных необязательных аргументов.
 
     \item
-          \rsArg{} — ненулевое количество обязательных и/или необязательных аргументов.
+          \manArg{} — ненулевое количество обязательных и/или необязательных аргументов.
 \end{itemize}
 
 По возможности, у каждого агрумента будут указаны подсказки об обозначении аргумента и
