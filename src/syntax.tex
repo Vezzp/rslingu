@@ -1,13 +1,3 @@
-% Цвета синтаксических подчёркиваний.
-\definecolor{rsSubjectColor}{HTML}{673ab7}
-\definecolor{rsPredicateColor}{HTML}{e81e62}
-\definecolor{rsAttributeColor}{HTML}{2196f3}
-\definecolor{rsAdverbialColor}{HTML}{009688}
-\definecolor{rsObjectColor}{HTML}{ffa500}
-
-
-
-
 % Цвет синтаксических подчёркиваний.
 \tl_new:N \l__rslingu_syntax_color_tl
 \cs_new_protected:Nn \l__rslingu_syntax_set_color_cs:n
@@ -16,7 +6,7 @@
     {
         \bool_if:nTF
             { \l__rslingu_syntax_color_bool || \l__rslingu_color_bool}
-            { #1 } 
+            { rs #1 color } 
             { black }
     }
 }
@@ -132,7 +122,7 @@
             { color=false, phantom=false, #1 }
         
         \tikz[baseline=(Baseline.base)] {
-            \l__rslingu_syntax_set_color_cs:n { rsSubjectColor }
+            \l__rslingu_syntax_set_color_cs:n { subject }
             
             \node[rsContentBox] (Baseline)
             { #2 \c__rslingu_below_vmax_phantom_tl };
@@ -166,7 +156,7 @@
             { color=false, phantom=false, #1 }
 
         \tikz[baseline=(Baseline.base)] {
-            \l__rslingu_syntax_set_color_cs:n { rsPredicateColor }
+            \l__rslingu_syntax_set_color_cs:n { predicate }
 
             \node[rsContentBox] (Baseline)
             { #2 \c__rslingu_below_vmax_phantom_tl };
@@ -207,7 +197,7 @@
             { color=false, phantom=false, #1 }
 
         \tikz[baseline=(Baseline.base)] {
-            \l__rslingu_syntax_set_color_cs:n { rsAdverbialColor }
+            \l__rslingu_syntax_set_color_cs:n { adverbial }
 
             \node[rsContentBox] (Baseline)
             { #2 \c__rslingu_below_vmax_phantom_tl };
@@ -239,7 +229,7 @@
         \keys_set_known:nn { rslingu/syntax/keys } { color=false, phantom=false, #1 }
 
         \tikz[baseline=(Baseline.base)] {
-            \l__rslingu_syntax_set_color_cs:n { rsAttributeColor }
+            \l__rslingu_syntax_set_color_cs:n { attribute }
 
             \node[rsContentBox] (Baseline)
             { #2 \c__rslingu_below_vmax_phantom_tl };
@@ -279,7 +269,7 @@
         \keys_set_known:nn { rslingu/syntax/keys } { color=false, phantom=false, #1 }
 
         \tikz[baseline=(Baseline.base)] {
-            \l__rslingu_syntax_set_color_cs:n { rsObjectColor }
+            \l__rslingu_syntax_set_color_cs:n { object }
 
             \node[rsContentBox] (Baseline)
             { #2 \c__rslingu_below_vmax_phantom_tl };
@@ -294,204 +284,3 @@
         }
     \group_end:
 }
-
-
-
-
-
-
-% % ==============================================
-% % =============== Части речи ===================
-% % ==============================================
-
-
-
-
-\cs_new_protected:Nn \l__rslingu_syntax_make_speech_part_cmd_cs:n {
-
-    % Сокращённое имя части речи. Например, если #1 == Noun, то сгенирируется
-    % команда \rsNounAcrS
-    \exp_after:wN
-    \NewDocumentCommand
-    \cs:w rs #1 Acr \cs_end:
-    { }
-    {
-        \use:c {
-            l__rslingu_syntax_
-            \str_lowercase:f #1
-            _short_
-            \tl_use:N \g__rslingu_current_lang_tl
-            _tl
-        }
-    }
-    
-    \exp_after:wN
-    \NewDocumentCommand
-    \cs:w rs Set #1 Acr \cs_end: 
-    { }
-    {
-        \tl_set:cn 
-        {
-            l__rslingu_syntax_
-            \str_lowercase:f #1
-            _short_
-            \tl_use:N \g__rslingu_current_lang_tl
-            _tl
-        }
-    }
-    
-    % Обёртка для частей речи. Например, если #1 == Noun, то сгенирируется
-    % команда \rsNoun
-    \exp_after:wN
-    \NewDocumentCommand
-    \cs:w rs #1 \cs_end:
-    { s m O{} }
-    {
-    \group_begin:
-        \textoverset
-        {
-            \tikz[baseline=(Aux.base)]
-            {
-                \node[rsContentBox] (Aux)
-                {
-                    \bool_if:nTF
-                        {
-                           (
-                                \l__rslingu_phantom_bool
-                                ||
-                                \l__rslingu_syntax_phantom_bool
-                            )
-                        }
-                        {
-                            \phantom{##2}
-                        }
-                        {
-                            ##2
-                        }
-                };
-                
-                \bool_if:nTF
-                {
-                    (
-                        \l__rslingu_phantom_bool
-                        ||
-                        \l__rslingu_syntax_phantom_bool
-                    )
-                }
-                { \node[rsContentBox] at (Aux.center) {\textbullet}; }
-                { }
-            }
-        }
-        {   
-            \IfBooleanTF { ##1 } { } { \cs:w rs #1 Acr \cs_end: }
-            \tl_if_blank:nTF { ##3 } {  }
-            {
-                \IfBooleanTF{ ##1 } { } {,~}
-                ##3            
-            }
-        }
-        
-    \group_end:
-    }
-}
-
-
-% Команды для сокращений для различных по умолчанию и те, которые
-% можно менять
-\cs_new_protected:Nn \l_set_pos_acr_code_gen_cs:nnn {
-    \tl_const:cn
-    { c__rslingu_syntax_ #1 _default_short_ #2 _tl }
-    { #3 }  
-    
-    \tl_set_eq:cc
-    { l__rslingu_syntax_ #1 _short_ #2 _tl }
-    { c__rslingu_syntax_ #1 _default_short_ #2 _tl }
-}
-
-
-% Существительное
-
-
-\l_set_pos_acr_code_gen_cs:nnn { noun } { russian } { сущ. } 
-\l_set_pos_acr_code_gen_cs:nnn { noun } { ukranian } { ім. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Noun }
-
-
-% Глагол
-
-\l_set_pos_acr_code_gen_cs:nnn { verb } { russian } { глаг. }
-\l_set_pos_acr_code_gen_cs:nnn { verb } { ukranian } { дієсл. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Verb }
-
-
-% Прилагательное
-
-\l_set_pos_acr_code_gen_cs:nnn { adjective } { russian } { прил. }
-\l_set_pos_acr_code_gen_cs:nnn { adjective } { ukranian } { прикм. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Adjective }
-
-
-% Наречие
-
-\l_set_pos_acr_code_gen_cs:nnn { adverb } { russian } { нареч. }
-\l_set_pos_acr_code_gen_cs:nnn { adverb } { ukranian } { присл. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Adverb }
-
-
-% Предлог
-
-\l_set_pos_acr_code_gen_cs:nnn { preposition } { russian } { предлог }
-\l_set_pos_acr_code_gen_cs:nnn { preposition } { ukranian } { прийм. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Preposition }
-
-
-% Союз
-
-\l_set_pos_acr_code_gen_cs:nnn { conjunction } { russian } { союз }
-\l_set_pos_acr_code_gen_cs:nnn { conjunction } { ukranian } { спол. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Conjunction }
-
-
-% Местоимение
-
-\l_set_pos_acr_code_gen_cs:nnn { pronoun } { russian } { мест. }
-\l_set_pos_acr_code_gen_cs:nnn { pronoun } { ukranian } { займ. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Pronoun }
-
-
-% Чатица
-
-\l_set_pos_acr_code_gen_cs:nnn { particle } { russian } { част. }
-\l_set_pos_acr_code_gen_cs:nnn { particle } { ukranian } { част. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Particle }
-
-
-% Числительное
-
-\l_set_pos_acr_code_gen_cs:nnn { numeral } { russian } { числ. }
-\l_set_pos_acr_code_gen_cs:nnn { numeral } { ukranian } { числ. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Numeral }
-
-
-% Междометие
-
-\l_set_pos_acr_code_gen_cs:nnn { interjection } { russian } { междом. }
-\l_set_pos_acr_code_gen_cs:nnn { interjection } { ukranian } { вигук }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Interjection }
-
-
-% Причастие
-
-\l_set_pos_acr_code_gen_cs:nnn { participle } { russian } { прич. }
-\l_set_pos_acr_code_gen_cs:nnn { participle } { ukranian } { дієприкм. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Participle }
-
-
-% Деепричастие
-
-\l_set_pos_acr_code_gen_cs:nnn { transgressive } { russian } { дееприч. }
-\l_set_pos_acr_code_gen_cs:nnn { transgressive } { ukranian } { дієприсл. }
-\l__rslingu_syntax_make_speech_part_cmd_cs:n { Transgressive }
-
-
-
