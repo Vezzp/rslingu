@@ -1,0 +1,45 @@
+\section{Условные обозначения}
+
+Все макросы, или текстовые модификаторы текста, пакета \texttt{rslingu} в данном руководстве
+задаются следующим образом:
+\ExplSyntaxOn
+\begin{tcolorbox}
+    \manCode {
+        \manModifier[mtype]
+        \rsSpace{}\manColon{}\rsSpace{}
+        mname
+        \rsSpace{}
+        \manOpt\manKwargs
+        \rsSpace{}
+        < [, \{ >
+                \rsSpace{}
+                \manArg{}:type_hint
+                \rsSpace{}< ], \} >
+        \rsSpace{}... \\
+
+        \manTab{} \manKwargs<> \rsSpace{}
+        kwarg_name \rsSpace{} \manColon{} \rsSpace{}type_hint = kwarg_default_value \rsSpace{} ...
+    }
+\end{tcolorbox}
+\ExplSyntaxOff
+
+\begin{itemize}
+    \item \manModifier[modifier\_type] — тип текстового модификатора, команда (\manModifier[cmd]) или окружение (\manModifier[env]).
+
+    \item \manKwargs{} — ненулевое количество именованных необязательных аргументов.
+
+    \item
+          \manArg{} — ненулевое количество обязательных и/или необязательных аргументов.
+\end{itemize}
+
+По возможности, у каждого агрумента будут указаны подсказки об обозначении аргумента и
+его типе (\texttt{type\_hint}), который может принимать следующие значения:
+
+\begin{itemize}
+    \item \texttt{tl}, от англ. \textit{token list}, — произвольный набор символов, обрабатывается целиком.
+
+    \item \texttt{clist}, от англ. \textit{comma list}, — набор произвольных символов, разделённых запятой, где
+          каждый поднабор до запятой обрабатывается независимо.
+
+    \item \texttt{bool} — логический тип, может принимать значения «true» или «false».
+\end{itemize}
