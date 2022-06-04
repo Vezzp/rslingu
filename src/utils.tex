@@ -18,66 +18,39 @@
         { rs #1 color }
         { HTML }
         { \tl_use:c { g__rslingu_ #1 _color_tl } }
+}
 
-    \exp_after:wN
-    \NewDocumentCommand
-    \cs:w
-        rsSet
-        \text_titlecase_first:n { #1 }
-        Color
-    \cs_end:
-    { m }
-    {
-        \tl_set:co { g__rslingu_ #1 _color_tl } { ##1 }
 
-        \definecolor
-            { rs #1 color }
-            { HTML }
-            { \tl_use:c { g__rslingu_ #1 _color_tl } }
-    }
+\exp_after:wN
+\NewDocumentCommand
+\cs:w
+    rsSetColor
+\cs_end:
+{ mm }
+{
+    \tl_set:co { g__rslingu_ \text_lowercase:n { #1 } _color_tl } { #2 }
 
-    \exp_after:wN
-    \NewDocumentCommand
-    \cs:w
-        rsReset
-        \text_titlecase_first:n { #1 }
-        Color
-    \cs_end:
-    { }
-    {
-         \tl_gset_eq:cc
-            { g__rslingu_ #1 _color_tl }
-            { c__rslingu_ #1 _default_color_tl }
+    \definecolor
+        { rs \text_lowercase:n { #1 } color }
+        { HTML }
+        { \tl_use:c { g__rslingu_ \text_lowercase:n { #1 } _color_tl } }
+}
 
-        \definecolor
-            { rs #1 color }
-            { HTML }
-            { \tl_use:c { g__rslingu_ #1 _color_tl } }
-    }
+\exp_after:wN
+\NewDocumentCommand
+\cs:w
+    rsResetColor
+\cs_end:
+{ m }
+{
+    \tl_gset_eq:cc
+    { g__rslingu_ #1 _color_tl }
+    { c__rslingu_ #1 _default_color_tl }
 
-    \exp_after:wN
-    \NewDocumentCommand
-    \cs:w
-        rsDefault
-        \text_titlecase_first:n { #1 }
-        Color
-    \cs_end:
-    { }
-    {
-        \tl_use:c { c__rslingu_ #1 _default_color_tl }
-    }
-
-    \exp_after:wN
-    \NewDocumentCommand
-    \cs:w
-        rsCurrent
-        \text_titlecase_first:n { #1 }
-        Color
-    \cs_end:
-    { }
-    {
-        \tl_use:c { g__rslingu_ #1 _color_tl }
-    }
+    \definecolor
+    { rs #1 color }
+    { HTML }
+    { \tl_use:c { g__rslingu_ #1 _color_tl } }
 }
 
 % Кодогенерация приватных команд для морфем.

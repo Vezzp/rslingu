@@ -1,10 +1,8 @@
 \ExplSyntaxOn
 
-% Выбор языка.
-% Используется для сокращений в синтаксическом разборе через команды частей речи.
-\tl_const:Nn \c__rslingu_default_lang_tl { russian }
-
-\seq_const_from_clist:Nn \c__rslingu_supported_lang_seq { russian,ukranian }
+% Генерация списка доступных языков для частеречных сокращений и выставление
+% языка по умолчанию.
+% template: {{ pos_lang_codegen }}
 
 \tl_new:N \g__rslingu_current_lang_tl
 \tl_set_eq:NN \g__rslingu_current_lang_tl \c__rslingu_default_lang_tl
@@ -23,10 +21,10 @@
     }
 }
 
-\cs_new_protected:Nn \l_rslingu_syntax_make_speech_part_cmd_cs:n {
+\cs_new_protected:Nn \l_rslingu_pos_codegen_cs:n {
 
     % Сокращённое имя части речи. Например, если #1 == Noun, то сгенирируется
-    % команда \rsNounAcrS
+    % команда \rsNounAcr
     \exp_after:wN
     \NewDocumentCommand
     \cs:w
@@ -143,7 +141,7 @@
     { c__rslingu_syntax_ #1 _default_short_ #2 _tl }
 }
 
-
+% Генерация частеречных сокращений для разных языков и публичных команд дл них.
 % template: {{ pos_codegen }}
 
 \ExplSyntaxOff
