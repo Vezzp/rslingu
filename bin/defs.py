@@ -27,6 +27,9 @@ SYNTAX_COLOR_MAPPING = {
 }
 
 
+POS_LANGS = ("russian", "ukranian")
+
+
 POS_CONTRACTIONS = [
     PoSContraction(
         en_full_name="noun",
@@ -89,3 +92,9 @@ POS_CONTRACTIONS = [
         lang_mapping={"russian": "дееприч.", "ukranian": "дієприсл."},
     ),
 ]
+
+for pos_contraction in POS_CONTRACTIONS:
+    if len(diff := set(POS_LANGS).difference(pos_contraction["lang_mapping"])) != 0:
+        raise ValueError(
+            f"{pos_contraction['en_full_name']} contraction not found for {diff}"
+        )

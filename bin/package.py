@@ -1,5 +1,6 @@
 import itertools
 import re
+import textwrap
 from pathlib import Path
 from typing import Final, Optional
 
@@ -55,6 +56,7 @@ def build_handler(version: Optional[str] = None) -> None:
     text = "\n".join(content_parts)
     text = _render_color_codegen(text)
     text = _render_pos_codegen(text)
+    text = _render_pos_lang_codegen(text)
 
     DST_FPATH.write_text(text)
 
@@ -104,15 +106,29 @@ def _render_pos_codegen(text: str) -> str:
             )
             pos_parts.append(pos_part)
 
-        pos_parts.append(
-            rf"\\l_rslingu_syntax_make_speech_part_cmd_cs:n {{ {en_full_name} }}"
-        )
+        pos_parts.append(rf"\\l_rslingu_pos_codegen_cs:n {{ {en_full_name} }}")
         pos_parts.append("")
 
         repl_parts.append("\n".join(pos_parts))
 
     out = render_template("pos_codegen", "\n".join(repl_parts), text)
 
+    return out
+
+
+def _render_pos_lang_codegen(text: str) -> str:
+    """"""
+    langs = ",".join(defs.POS_LANGS)
+    out = render_template(
+        "pos_lang_codegen",
+        textwrap.dedent(
+            rf"""
+            \\tl_const:Nn \\c__rslingu_default_lang_tl {{ russian }}
+            \\seq_const_from_clist:Nn \\c__rslingu_supported_lang_seq {{ {langs} }}
+        """
+        ),
+        text,
+    )
     return out
 
 
