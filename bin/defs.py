@@ -22,7 +22,7 @@ SYNTAX_COLOR_MAPPING = {
     "subject": "673ab7",
     "predicate": "e81e62",
     "attribute": "2196f3",
-    "avdverbial": "009688",
+    "adverbial": "009688",
     "object": "ffa500",
 }
 
