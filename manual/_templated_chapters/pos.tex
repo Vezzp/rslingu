@@ -1,23 +1,26 @@
 \section{Части речи}\label{sec:speech_parts}
 
-
-\subsection{Базовое использование}
-
-Все команды данной группы имеют следующую сигнатуру:
+Все частеречные команды имеют одинаковую сигнатуру:
 \ExplSyntaxOn
-\begin{tcolorbox}
-    \manModifier[cmd] \manColon{} \manCode{<name>}
+\begin{signature}
+    \manModifier[cmd] \manColon{} \manCode{pos_type}
     \manKwargs[\textasteriskcentered]
-    \manReq{ \manArg[<слово:tl>] }
-    \manOpt{ \manArg[<анализ:tl>] }
-\end{tcolorbox}
+    \manReq{ \manArg[слово:tl] }
+    \manOpt{ \manArg[анализ:tl] }
+\end{signature}
 \ExplSyntaxOff
-где \manCode{<name>} может быть одним из следующих \manModifier[значений]:
+
+где \manCode{pos\_type} --- название команды для части речи из \autoref{tab:pos-commands};
+\manKwargs[\textasteriskcentered] --- флаг того, печатать ли сокращённое название части речи над
+словом или нет; \manArg[слово:tl] --- слово для частеречного разбора;
+\manArg[анализ:tl] --- частеречный анализ слова.
 
 \begin{table}[ht!]
     \centering
     \begin{tabular}{@{}llll@{}}
         \toprule
+        \manCode{pos\_type} & Перевод & \manCode{pos\_type} & Перевод
+        \\\midrule
 
         \manModifier[rsNoun]          & существительное
                                      &
@@ -56,7 +59,10 @@
 \end{table}
 
 \begin{tnote}
-    Команды данного раздела чувствительны к опции \manCode{phantom}.
+    Команды данного раздела чувствительны к опции \manCode{phantom} внутри окружения
+    \macCode{rslingu} или команд для синтаксического разбора предложений.
+    Примеры этого можно найти в \autoref{tab:subject-usage} или на
+    \autoref{fig:rslingu-demo-full}.
 \end{tnote}
 
 Базовые сценарии использования команд для частей речи на примере \manModifier[rsNoun] представлены в таблице ниже.
@@ -102,6 +108,14 @@
          &
         \rsNoun*{существительное}[СУЩ., ср.р., им.п]
         \\\midrule
+
+        \manModifier*[rsNoun]
+        \manReq{ \manArg[существительное] }
+        \manOpt{ \manArg[СУЩ., ср.р., им.п] }
+         &
+        \rsNoun{существительное}[СУЩ., ср.р., им.п]
+        \\\midrule
+
         \bottomrule
     \end{tabular}
     \caption{Использование~команд~частей~речи}
@@ -111,54 +125,87 @@
 
 \subsection{Сокращённые названия частей речи}
 
-
-\subsubsection{Базовое использование}\label{subsubsec:pos-basic}
-
 Для отображения сокращённых названий частей речи в тексте предназначены команды со следующей сигнатурой:
 \ExplSyntaxOn
-\begin{tcolorbox}
+\begin{signature}
     \manModifier[cmd] \manColon{} \manCode{<name> Acr}
-\end{tcolorbox}
+\end{signature}
 \ExplSyntaxOff
 где \manCode{<name>} принимает значения команд из таблицы «\nameref{tab:pos-commands}».
 
 Например, \manCode{\manModifier*[rsNounAcr]\manReq{}} даст «\rsNounAcr{}», использование фигурных скобок необходимо для установки пробела после сокращения.
 
 
+\subsubsection{Модификация названий сокращений по умолчанию}
+
+
+\begin{itemize}
+    \item \manModifier[rsSetAcr] позволяет задать частеречное сокращение отличное от значения по умолчанию.
+        \ExplSyntaxOn
+        \begin{signature}
+            \manModifier[cmd] \manColon{}
+            \manCode{ rsSetAcr }
+            \manOpt{ \manArg[язык:tl] }
+            \manReq{ \manArg[часть_речи:tl]  }
+            \manReq{ \manArg[сокращение:tl]  }
+        \end{signature}
+        \ExplSyntaxOff
+    \item \manModifier[rsResetAcr] возвращает частеречное сокращение по умолчанию.
+        \ExplSyntaxOn
+        \begin{signature}
+            \manModifier[cmd] \manColon{}
+            \manCode{ rsResetAcr }
+            \manOpt{ \manArg[язык:tl] }
+            \manReq{ \manArg[часть_речи:tl]  }
+        \end{signature}
+        \ExplSyntaxOff
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{Latexcode}
+            \rsNoun{существительное}
+            \rsSetAcr[russian]{noun}{42}
+            \rsNoun{существительное}
+            \rsResetAcr[russian]{noun}
+            \rsNoun{существительное}
+        \end{Latexcode}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.4\textwidth}
+        \small
+        \rsNoun{существительное}
+        \rsSetAcr[russian]{noun}{42}
+        \rsNoun{существительное}
+        \rsResetAcr[russian]{noun}
+        \rsNoun{существительное}
+    \end{minipage}
+
+    \caption{Пример смены частечеречных сокращений}
+\end{figure}
+
+
 \subsubsection{Локализация стандартных сокращений частеречных команд}
 
-Пакет \manCode{rslingu} поддерживает локализацию для сокращений частей речи во всех командах из
-таблицы «\nameref{tab:pos-commands}» через модификатор \manModifier[rsSetLanguage]:
+Пакет \manCode{rslingu} поддерживает локализацию для частеречных сокращений во всех командах из
+\namedautoref{tab:pos-commands} через модификатор \manModifier[rsSetLanguage]:
 \ExplSyntaxOn
-\begin{tcolorbox}
+\begin{signature}
     \manCode{
         \manModifier[cmd] \manColon rsSetLanguage
-        \manReq{ \manArg[<язык: tl>] }
+        \manReq{ \manArg[язык: tl] }
     }
-\end{tcolorbox}
+\end{signature}
 \ExplSyntaxOff
 
-На данный момент доступны следующие языки:
-\begin{table}[ht!]
-    \centering
-    \begin{tabular}{@{}ll@{}}
-        \toprule
 
-        Язык       & \manArg[язык] \\
-        \midrule
-
-        русский    & russian      \\
-        украинский & ukranian     \\
-
-        \bottomrule
-    \end{tabular}
-    \caption{Доступные языки для локализации частеречных команд}
-\end{table}
+Локализация частеречных сокращений доступна для следующих языков:
+% template: {{ available_pos_langs }}
 
 Языком по умолчанию является русский. Со списком стандартных сокращений для разных языков
-можно ознакомиться в приложении \ref{appendix:pos-contractions}
-«\nameref{appendix:pos-contractions}».
-
+можно ознакомиться в \namedautoref{appendix:pos-contractions}.
 
 \begin{figure}[H]
     \centering

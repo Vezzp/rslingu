@@ -3,24 +3,24 @@
 Все макросы, или текстовые модификаторы текста, пакета \texttt{rslingu} в данном руководстве
 задаются следующим образом:
 \ExplSyntaxOn
-\begin{tcolorbox}
+\begin{signature}
     \manCode {
         \manModifier[mtype]
-        \rsSpace{}\manColon{}\rsSpace{}
+        \manSpace{}\manColon{}\manSpace{}
         mname
-        \rsSpace{}
+        \manSpace{}
         \manOpt\manKwargs
-        \rsSpace{}
+        \manSpace{}
         < [, \{ >
-                \rsSpace{}
+                \manSpace{}
                 \manArg{}:type_hint
-                \rsSpace{}< ], \} >
-        \rsSpace{}... \\
+                \manSpace{}< ], \} >
+        \manSpace{}... \\
 
-        \manTab{} \manKwargs<> \rsSpace{}
-        kwarg_name \rsSpace{} \manColon{} \rsSpace{}type_hint = kwarg_default_value \rsSpace{} ...
+        \manTab{} \manKwargs<> \manSpace{}
+        kwarg_name \manSpace{} \manColon{} \manSpace{}type_hint = kwarg_default_value \manSpace{} ...
     }
-\end{tcolorbox}
+\end{signature}
 \ExplSyntaxOff
 
 \begin{itemize}

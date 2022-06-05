@@ -32,13 +32,21 @@
 
 \NewDocumentCommand\manCode{m}{ \texttt{#1} }
 
-\NewDocumentCommand\rsSpace{} { \hspace*{.5em} }
+\NewDocumentCommand\manSpace{} { \hspace*{.5em} }
 
 \NewDocumentCommand\manTab{} { \hspace*{2em} }
 
-\NewDocumentCommand\manReq{m} { \{#1 \} }
+\NewDocumentCommand\manReq{ m } {
+    \textcolor[HTML]{F33A6A}{ \textbf{\{} }
+        #1
+    \textcolor[HTML]{F33A6A}{ \textbf{\}} }
+}
 
-\NewDocumentCommand\manOpt{m} { [ #1 ] }
+\NewDocumentCommand\manOpt{ m } {
+    \textcolor[HTML]{F4BB44}{ \textbf{[} }
+        #1
+    \textcolor[HTML]{F4BB44}{ \textbf{]} }
+}
 
 \NewDocumentCommand\manKwargs{s O{kwargs}} {
     \texttt{
@@ -95,10 +103,17 @@
     #1,
 }
 
+\newtcolorbox{signature}[1][]
+{
+    before=\begin{center},
+    after=\end{center},
+    hbox
+}
+
+
+\NewDocumentCommand\namedautoref{m}{\autoref{#1} «\nameref{#1}»}
+
+
 \ExplSyntaxOn{}
-
-
 % template: {{ dev_watermark }}
-
-
 \ExplSyntaxOff{}

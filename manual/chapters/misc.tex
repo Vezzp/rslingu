@@ -14,11 +14,11 @@
     \centering
     \small
     \begin{tabular}{@{}llll@{}}
-        \hline
+        \toprule
         Имя элемента & Код цвета & Имя элемента & Код цвета\\\midrule
-suffix & { \color[HTML]{7fdb6a} 7fdb6a } & prefix & { \color[HTML]{f44747} f44747 }\\\midrule
-root & { \color[HTML]{eedc31} eedc31 } & postfix & { \color[HTML]{966842} 966842 }\\\midrule
-ending & { \color[HTML]{0e68ce} 0e68ce } & base & { \color[HTML]{990066} 990066 }
+suffix & { \color[HTML]{7fdb6a} \textbf{7fdb6a} } & prefix & { \color[HTML]{f44747} \textbf{f44747} }\\\midrule
+root & { \color[HTML]{eedc31} \textbf{eedc31} } & postfix & { \color[HTML]{966842} \textbf{966842} }\\\midrule
+ending & { \color[HTML]{0e68ce} \textbf{0e68ce} } & base & { \color[HTML]{990066} \textbf{990066} }
         \\\bottomrule
     \end{tabular}
 
@@ -32,11 +32,11 @@ ending & { \color[HTML]{0e68ce} 0e68ce } & base & { \color[HTML]{990066} 990066 
     \centering
     \small
     \begin{tabular}{@{}llll@{}}
-        \hline
+        \toprule
         Имя элемента & Код цвета & Имя элемента & Код цвета\\\midrule
-subject & { \color[HTML]{673ab7} 673ab7 } & predicate & { \color[HTML]{e81e62} e81e62 }\\\midrule
-attribute & { \color[HTML]{2196f3} 2196f3 } & adverbial & { \color[HTML]{009688} 009688 }\\\midrule
-object & { \color[HTML]{ffa500} ffa500 }
+subject & { \color[HTML]{673ab7} \textbf{673ab7} } & predicate & { \color[HTML]{e81e62} \textbf{e81e62} }\\\midrule
+attribute & { \color[HTML]{2196f3} \textbf{2196f3} } & adverbial & { \color[HTML]{009688} \textbf{009688} }\\\midrule
+object & { \color[HTML]{ffa500} \textbf{ffa500} }
         \\\bottomrule
     \end{tabular}
 
@@ -63,7 +63,7 @@ object & { \color[HTML]{ffa500} ffa500 }
         \begin{tcolorbox}
             \manModifier[cmd] \manColon{}
             \manCode{ rsResetColor }
-            \manReq{ \manArg[имя:tl] }
+            \manReq{ \manArg[имя\_элемента:tl] }
         \end{tcolorbox}
         \ExplSyntaxOff
 \end{itemize}
@@ -110,7 +110,7 @@ object & { \color[HTML]{ffa500} ffa500 }
     \manCode{rslingu}
     \manCode{[\manKwargs{}]}
     \\
-    \manTab{} \manKwargs{} \manColon{} \manCode{color=false}, \rsSpace{} \manCode{phantom=false}
+    \manTab{} \manKwargs{} \manColon{} \manCode{color=false}, \manSpace{} \manCode{phantom=false}
 \end{tcolorbox}
 \ExplSyntaxOff
 
@@ -180,6 +180,7 @@ object & { \color[HTML]{ffa500} ffa500 }
         \caption{Результат выполнения каждого из частей кода выше.}
     \end{subfigure}
     \caption{Демонстрация возможностей окружения \manCode{rslingu} c параметрами \manCode{color} и \manCode{phantom}.}
+    \label{fig:rslingu-demo-full}
 \end{figure}
 
 
