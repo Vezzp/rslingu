@@ -1,7 +1,17 @@
 import contextlib
+import functools
 import re
 from pathlib import Path
-from typing import Any, Generator, Iterable, Iterator, Optional, Sequence, TypeVar
+from typing import (
+    Any,
+    Callable,
+    Generator,
+    Iterable,
+    Iterator,
+    Optional,
+    Sequence,
+    TypeVar,
+)
 
 
 @contextlib.contextmanager
@@ -42,3 +52,8 @@ def divide(
         start = stop
         stop += q + int(idx <= r)
         yield iter(seq[start:stop])
+
+
+def compose(*fns: Callable) -> Callable:
+    """"""
+    return functools.reduce(lambda f, g: lambda x: g(f(x)), fns, lambda x: x)

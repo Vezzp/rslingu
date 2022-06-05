@@ -29,8 +29,7 @@
     \NewDocumentCommand
     \cs:w
         rs
-        \text_titlecase_first:n
-        { #1 }
+        \text_titlecase_first:n { #1 }
         Acr
     \cs_end:
     { }
@@ -44,24 +43,7 @@
         }
     }
     
-    \exp_after:wN
-    \NewDocumentCommand
-    \cs:w
-        rsSet
-        \text_titlecase_first:n { #1 }
-        Acr
-    \cs_end: 
-    { }
-    {
-        \tl_set:cn 
-        {
-            l__rslingu_syntax_
-            #1
-            _short_
-            \tl_use:N \g__rslingu_current_lang_tl
-            _tl
-        }
-    }
+
     
     % Обёртка для частей речи. Например, если #1 == Noun, то сгенирируется
     % команда \rsNoun
@@ -122,6 +104,52 @@
         }
         
     \group_end:
+    }
+}
+
+
+\exp_after:wN
+\NewDocumentCommand
+\cs:w
+    rsSetAcr
+\cs_end: 
+{ O{} m m }
+{
+    \tl_set:cn
+    {
+        l__rslingu_syntax_
+        #2
+        _short_
+        \tl_if_empty:nTF { \tl_use:c g__rslingu_current_lang_tl } { #1 } { #1 }
+        _tl
+    }
+    {
+        #3
+    }
+}
+
+
+\exp_after:wN
+\NewDocumentCommand
+\cs:w
+    rsResetAcr
+\cs_end: 
+{ O{} m }
+{
+    \tl_set_eq:cc
+    {
+        l__rslingu_syntax_
+        #2
+        _short_
+        \tl_if_empty:nTF { #1 } { \g__rslingu_current_lang_tl } { #1 }
+        _tl
+    }
+    {
+        c__rslingu_syntax_
+        #2
+        _default_short_
+        \tl_if_empty:nTF { #1 } { \g__rslingu_current_lang_tl } { #1 }
+        _tl
     }
 }
 

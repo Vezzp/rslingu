@@ -27,7 +27,7 @@ SYNTAX_COLOR_MAPPING = {
 }
 
 
-POS_LANGS = ("russian", "ukranian")
+POS_LANGS = {"russian": "русский", "ukranian": "украинский"}
 
 
 POS_CONTRACTIONS = [

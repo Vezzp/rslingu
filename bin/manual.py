@@ -1,4 +1,6 @@
+import shlex
 import subprocess
+import functools
 import textwrap
 from pathlib import Path
 from typing import Dict, Final, Literal
@@ -7,7 +9,7 @@ import typer
 
 from . import defs
 from .package import find_version
-from .utils import divide, render_template
+from .utils import divide, render_template, compose
 
 __here__ = Path(__file__).resolve()
 
@@ -27,22 +29,25 @@ def callback() -> None:
 @app.command("build")
 def build_handler(dev: bool = True) -> None:
     """"""
-    command = " ".join(
+    command = shlex.join(
         [
             "pdflatex",
-            # "-halt-on-error",
-            # "-synctex=1",
-            # "-interaction=batchmode",
+            "-synctex=1",
+            "-interaction=nonstopmode",
             "-shell-escape",
             "manual.tex",
         ]
     )
 
+    render_compose = compose(
+        functools.partial(_render_dev_watermark, dev=dev),
+        _render_morphology_color_table,
+        _render_syntax_color_table,
+        _render_available_pos_langs,
+    )
     for chapter_fpath in MANUAL_DPATH.joinpath("_templated_chapters").glob("*.tex"):
         text = chapter_fpath.read_text()
-        rendered_text = _render_dev_watermark(text, dev=dev)
-        rendered_text = _render_morphology_color_table(text)
-        rendered_text = _render_syntax_color_table(rendered_text)
+        rendered_text = render_compose(text)
         MANUAL_DPATH.joinpath("chapters", chapter_fpath.name).write_text(rendered_text)
 
     subprocess.call(command, shell=True, cwd=MANUAL_DPATH)
@@ -51,7 +56,8 @@ def build_handler(dev: bool = True) -> None:
 def _render_dev_watermark(text: str, dev: bool) -> str:
     """"""
     if dev:
-        text = render_template(
+        print("Rendered template")
+        out = render_template(
             "dev_watermark",
             textwrap.dedent(
                 rf"""
@@ -68,8 +74,10 @@ def _render_dev_watermark(text: str, dev: bool) -> str:
             ),
             text,
         )
+    else:
+        out = text
 
-    return text
+    return out
 
 
 def _render_syntax_color_table(text: str) -> str:
@@ -104,7 +112,10 @@ def _render_color_table_impl(
         group_parts = []
         for element_name, color_hex in color_group:
             group_parts.append(
-                rf"{element_name} & {{ \\color[HTML]{{{color_hex}}} {color_hex} }}"
+                (
+                    rf"{element_name} & "
+                    rf"{{ \\color[HTML]{{{color_hex}}} \\textbf{{{color_hex}}} }}"
+                )
             )
 
         rows.append(delimeter.join(group_parts))
@@ -117,7 +128,7 @@ def _render_color_table_impl(
             \\centering
             \\small
             \\begin{{tabular}}{{@{{}}{'l' * num_cols * 2}@{{}}}}
-                \\hline
+                \\toprule
                 {joint_rows}
                 \\\\\\bottomrule
             \\end{{tabular}}
@@ -127,9 +138,36 @@ def _render_color_table_impl(
         """
     )
 
-    text = render_template(f"{table_type}_color_table", repl, text)
+    out = render_template(f"{table_type}_color_table", repl, text)
 
-    return text
+    return out
+
+
+def _render_available_pos_langs(text: str) -> str:
+    """"""
+    table_content = "\n".join(
+        [
+            rf"{ru_name} & {en_name} \\\\\\midrule"
+            for en_name, ru_name in defs.POS_LANGS.items()
+        ]
+    )
+    repl = textwrap.dedent(
+        rf"""
+        \\begin{{table}}[ht!]
+            \\centering
+            \\begin{{tabular}}{{@{{}}ll@{{}}}}
+                \\toprule
+                Язык & \\manArg[язык] \\\\\\midrule
+                {table_content}
+                \\bottomrule
+            \\end{{tabular}}
+            \\caption{{Доступные языки для локализации частеречных команд}}
+        \\end{{table}}
+        """
+    )
+    out = render_template("available_pos_langs", repl, text)
+
+    return out
 
 
 if __name__ == "__main__":

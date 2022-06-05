@@ -7,7 +7,7 @@ from typing import Final, Optional
 import typer
 
 from . import defs
-from .utils import render_template
+from .utils import compose, render_template
 
 __here__ = Path(__file__).resolve()
 
@@ -54,11 +54,11 @@ def build_handler(version: Optional[str] = None) -> None:
             content_parts.append(SRC_DPATH.joinpath(fname).read_text())
 
     text = "\n".join(content_parts)
-    text = _render_color_codegen(text)
-    text = _render_pos_codegen(text)
-    text = _render_pos_lang_codegen(text)
+    out = compose(_render_color_codegen, _render_pos_codegen, _render_pos_lang_codegen)(
+        text
+    )
 
-    DST_FPATH.write_text(text)
+    DST_FPATH.write_text(out)
 
 
 def find_version() -> str:
