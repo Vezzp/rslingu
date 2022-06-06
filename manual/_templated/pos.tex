@@ -3,15 +3,15 @@
 Все частеречные команды имеют одинаковую сигнатуру:
 \ExplSyntaxOn
 \begin{signature}
-    \manModifier[cmd] \manColon{} \manCode{pos_type}
-    \manKwargs[\textasteriskcentered]
+    \manModifier[cmd] \manColon{} \manCode{<pos_type>}
+    \textasteriskcentered
     \manReq{ \manArg[слово:tl] }
     \manOpt{ \manArg[анализ:tl] }
 \end{signature}
 \ExplSyntaxOff
 
-где \manCode{pos\_type} --- название команды для части речи из \autoref{tab:pos-commands};
-\manKwargs[\textasteriskcentered] --- флаг того, печатать ли сокращённое название части речи над
+где \manCode{<pos\_type>} --- название команды для части речи из \autoref{tab:pos-commands};
+\textasteriskcentered --- флаг того, печатать ли сокращённое название части речи над
 словом или нет; \manArg[слово:tl] --- слово для частеречного разбора;
 \manArg[анализ:tl] --- частеречный анализ слова.
 
@@ -19,37 +19,37 @@
     \centering
     \begin{tabular}{@{}llll@{}}
         \toprule
-        \manCode{pos\_type} & Перевод & \manCode{pos\_type} & Перевод
+        \manCode{pos\_type}           & Перевод         & \manCode{pos\_type} & Перевод
         \\\midrule
 
         \manModifier[rsNoun]          & существительное
-                                     &
+                                      &
         \manModifier[rsVerb]          & глагол
         \\\midrule
 
         \manModifier[rsAdverb]        & наречие
-                                     &
+                                      &
         \manModifier[rsProposition]   & предлог
         \\\midrule
 
         \manModifier[rsConjunction]   & союз
-                                     &
+                                      &
         \manModifier[rsPronoun]       & местоимение
         \\\midrule
 
         \manModifier[rsAdjective]     & прилагательное
-                                     &
+                                      &
         \manModifier[rsParticle]      & частица
         \\\midrule
 
         \manModifier[rsInterjection]  & междометие
-                                     &
+                                      &
         \manModifier[rsNumeral]       & числительное
         \\\midrule
 
 
         \manModifier[rsParticiple]    & причастие
-                                     &
+                                      &
         \manModifier[rsTransgressive] & деепричастие
 
         \\\bottomrule
@@ -125,15 +125,44 @@
 
 \subsection{Сокращённые названия частей речи}
 
-Для отображения сокращённых названий частей речи в тексте предназначены команды со следующей сигнатурой:
+Для отображения сокращённых названий частей речи в тексте можно воспользоваться следующей командой:
 \ExplSyntaxOn
 \begin{signature}
-    \manModifier[cmd] \manColon{} \manCode{<name> Acr}
+    \manModifier[cmd] \manColon{} \manCode{rsShowAcr}
+    \textasteriskcentered
+    \manOpt{ \manArg[язык:tl] }
+    \manReq{ \manArg[часть_речи:tl]  }
 \end{signature}
 \ExplSyntaxOff
-где \manCode{<name>} принимает значения команд из таблицы «\nameref{tab:pos-commands}».
 
-Например, \manCode{\manModifier*[rsNounAcr]\manReq{}} даст «\rsNounAcr{}», использование фигурных скобок необходимо для установки пробела после сокращения.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[c]{0.5\textwidth}
+        \begin{Latexcode}
+            \rsShowAcr{noun} \rsShowAcr*{noun}
+            \newline
+            \rsSetAcr[russian]{noun}{42}
+            \rsShowAcr{noun} \rsShowAcr*{noun}
+            \newline
+            \rsResetAcr[russian]{noun}
+            \rsShowAcr{noun} \rsShowAcr*{noun}
+        \end{Latexcode}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.4\textwidth}
+        \small
+        \rsShowAcr{noun} \rsShowAcr*{noun}
+        \newline
+        \rsSetAcr[russian]{noun}{42}
+        \rsShowAcr{noun} \rsShowAcr*{noun}
+        \newline
+        \rsResetAcr[russian]{noun}
+        \rsShowAcr{noun} \rsShowAcr*{noun}
+    \end{minipage}
+
+    \caption{Пример печати частечеречных сокращений}
+\end{figure}
 
 
 \subsubsection{Модификация названий сокращений по умолчанию}
@@ -141,24 +170,24 @@
 
 \begin{itemize}
     \item \manModifier[rsSetAcr] позволяет задать частеречное сокращение отличное от значения по умолчанию.
-        \ExplSyntaxOn
-        \begin{signature}
-            \manModifier[cmd] \manColon{}
-            \manCode{ rsSetAcr }
-            \manOpt{ \manArg[язык:tl] }
-            \manReq{ \manArg[часть_речи:tl]  }
-            \manReq{ \manArg[сокращение:tl]  }
-        \end{signature}
-        \ExplSyntaxOff
+          \ExplSyntaxOn
+          \begin{signature}
+              \manModifier[cmd] \manColon{}
+              \manCode{ rsSetAcr }
+              \manOpt{ \manArg[язык:tl] }
+              \manReq{ \manArg[часть_речи:tl]  }
+              \manReq{ \manArg[сокращение:tl]  }
+          \end{signature}
+          \ExplSyntaxOff
     \item \manModifier[rsResetAcr] возвращает частеречное сокращение по умолчанию.
-        \ExplSyntaxOn
-        \begin{signature}
-            \manModifier[cmd] \manColon{}
-            \manCode{ rsResetAcr }
-            \manOpt{ \manArg[язык:tl] }
-            \manReq{ \manArg[часть_речи:tl]  }
-        \end{signature}
-        \ExplSyntaxOff
+          \ExplSyntaxOn
+          \begin{signature}
+              \manModifier[cmd] \manColon{}
+              \manCode{ rsResetAcr }
+              \manOpt{ \manArg[язык:tl] }
+              \manReq{ \manArg[часть_речи:tl]  }
+          \end{signature}
+          \ExplSyntaxOff
 \end{itemize}
 
 

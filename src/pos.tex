@@ -133,7 +133,7 @@
 \NewDocumentCommand
 \cs:w
     rsResetAcr
-\cs_end: 
+\cs_end:
 { O{} m }
 {
     \tl_set_eq:cc
@@ -150,6 +150,33 @@
         _default_short_
         \tl_if_empty:nTF { #1 } { \g__rslingu_current_lang_tl } { #1 }
         _tl
+    }
+}
+
+
+\exp_after:wN
+\NewDocumentCommand
+\cs:w
+    rsShowAcr
+\cs_end:
+{ s O{} m }
+{
+    \IfBooleanTF{ #1 } {
+        \tl_use:c {
+            c__rslingu_syntax_
+            #3
+            _default_short_
+            \tl_if_empty:nTF { #2 } { \g__rslingu_current_lang_tl } { #2 }
+            _tl
+        }
+    } {
+        \tl_use:c {
+        l__rslingu_syntax_
+        #3
+        _short_
+        \tl_if_empty:nTF { #2 } { \g__rslingu_current_lang_tl } { #2 }
+        _tl
+    }
     }
 }
 

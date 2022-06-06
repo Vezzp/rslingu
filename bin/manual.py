@@ -1,6 +1,5 @@
 import shlex
 import subprocess
-import functools
 import textwrap
 from pathlib import Path
 from typing import Dict, Final, Literal
@@ -39,13 +38,17 @@ def build_handler(dev: bool = True) -> None:
         ]
     )
 
+    sty_fpath = MANUAL_DPATH.joinpath("_templated", "manual.sty")
+    MANUAL_DPATH.joinpath(sty_fpath.name).write_text(
+        _render_dev_watermark(sty_fpath.read_text(), dev=dev)
+    )
+
     render_compose = compose(
-        functools.partial(_render_dev_watermark, dev=dev),
         _render_morphology_color_table,
         _render_syntax_color_table,
         _render_available_pos_langs,
     )
-    for chapter_fpath in MANUAL_DPATH.joinpath("_templated_chapters").glob("*.tex"):
+    for chapter_fpath in MANUAL_DPATH.joinpath("_templated").glob("*.tex"):
         text = chapter_fpath.read_text()
         rendered_text = render_compose(text)
         MANUAL_DPATH.joinpath("chapters", chapter_fpath.name).write_text(rendered_text)

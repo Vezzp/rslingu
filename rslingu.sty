@@ -276,16 +276,16 @@
 
 % Генерация цветов для знаков морфем и синтаксических подчёркиваний.
 % \g__rslingu_color_codegen_cs:nn { <morpheme_name/syntax_name> } { <hex_color> }
-\g__rslingu_color_codegen_cs:nn { subject    } { 673ab7 }
-\g__rslingu_color_codegen_cs:nn { predicate  } { e81e62 }
-\g__rslingu_color_codegen_cs:nn { attribute  } { 2196f3 }
+\g__rslingu_color_codegen_cs:nn { subject    } { 673AB7 }
+\g__rslingu_color_codegen_cs:nn { predicate  } { E81E62 }
+\g__rslingu_color_codegen_cs:nn { attribute  } { 2196F3 }
 \g__rslingu_color_codegen_cs:nn { adverbial  } { 009688 }
-\g__rslingu_color_codegen_cs:nn { object     } { ffa500 }
-\g__rslingu_color_codegen_cs:nn { suffix     } { 7fdb6a }
-\g__rslingu_color_codegen_cs:nn { prefix     } { f44747 }
-\g__rslingu_color_codegen_cs:nn { root       } { eedc31 }
+\g__rslingu_color_codegen_cs:nn { object     } { FFA500 }
+\g__rslingu_color_codegen_cs:nn { suffix     } { 7FDB6A }
+\g__rslingu_color_codegen_cs:nn { prefix     } { F44747 }
+\g__rslingu_color_codegen_cs:nn { root       } { EEDC31 }
 \g__rslingu_color_codegen_cs:nn { postfix    } { 966842 }
-\g__rslingu_color_codegen_cs:nn { ending     } { 0e68ce }
+\g__rslingu_color_codegen_cs:nn { ending     } { 0E68CE }
 \g__rslingu_color_codegen_cs:nn { base       } { 990066 }
 
 % Цвет морфем, задаваемый внутри команд.
@@ -1066,7 +1066,7 @@
 \NewDocumentCommand
 \cs:w
     rsResetAcr
-\cs_end: 
+\cs_end:
 { O{} m }
 {
     \tl_set_eq:cc
@@ -1083,6 +1083,33 @@
         _default_short_
         \tl_if_empty:nTF { #1 } { \g__rslingu_current_lang_tl } { #1 }
         _tl
+    }
+}
+
+
+\exp_after:wN
+\NewDocumentCommand
+\cs:w
+    rsShowAcr
+\cs_end:
+{ s O{} m }
+{
+    \IfBooleanTF{ #1 } {
+        \tl_use:c {
+            c__rslingu_syntax_
+            #3
+            _default_short_
+            \tl_if_empty:nTF { #2 } { \g__rslingu_current_lang_tl } { #2 }
+            _tl
+        }
+    } {
+        \tl_use:c {
+        l__rslingu_syntax_
+        #3
+        _short_
+        \tl_if_empty:nTF { #2 } { \g__rslingu_current_lang_tl } { #2 }
+        _tl
+    }
     }
 }
 

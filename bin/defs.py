@@ -10,20 +10,20 @@ class PoSContraction(TypedDict):
 
 
 MORPHOLOGY_COLOR_MAPPING = {
-    "suffix": "7fdb6a",
-    "prefix": "f44747",
-    "root": "eedc31",
+    "suffix": "7FDB6A",
+    "prefix": "F44747",
+    "root": "EEDC31",
     "postfix": "966842",
-    "ending": "0e68ce",
+    "ending": "0E68CE",
     "base": "990066",
 }
 
 SYNTAX_COLOR_MAPPING = {
-    "subject": "673ab7",
-    "predicate": "e81e62",
-    "attribute": "2196f3",
+    "subject": "673AB7",
+    "predicate": "E81E62",
+    "attribute": "2196F3",
     "adverbial": "009688",
-    "object": "ffa500",
+    "object": "FFA500",
 }
 
 
