@@ -4,8 +4,17 @@
 \usepackage{fontspec}
 \usepackage{polyglossia}
 \setdefaultlanguage{russian}
-\setmainfont[Ligatures = TeX]{Noto Serif}[
-    ItalicFont = Noto Serif,
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{PT}[
+    Path = ./ fonts / PT ,
+    Extention = .ttf ,
+    UprightFont = *-Regular ,
+    BoldFont = *-Bold ,
+]
+\setmainfont{PT}[
+    Path = ./ fonts / PT ,
+    Extention = .ttf ,
+    UprightFont = *-Regular ,
 ]
 \newfontfamily\cyrillicfont{Noto Serif}
 \newfontfamily\cyrillicfontit{Noto Serif}
