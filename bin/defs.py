@@ -1,4 +1,6 @@
-from typing import Dict, TypedDict
+from __future__ import annotations
+
+from typing import TypedDict
 
 
 class PoSContraction(TypedDict):
@@ -6,7 +8,7 @@ class PoSContraction(TypedDict):
 
     en_full_name: str
     ru_full_name: str
-    lang_mapping: Dict[str, str]
+    lang_mapping: dict[str, str]
 
 
 MORPHOLOGY_COLOR_MAPPING = {

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import enum
 import shlex
 import subprocess
 import textwrap
@@ -19,6 +22,11 @@ PACKAGE_MANUAL_FPATH: Final[Path] = MANUAL_DPATH.joinpath("manual.sty")
 app = typer.Typer(name="manual")
 
 
+class Engine(str, enum.Enum):
+    XELATEX = "xelatex"
+    PDFLATEX = "pdflatex"
+
+
 @app.callback()
 def callback() -> None:
     """"""
@@ -26,11 +34,14 @@ def callback() -> None:
 
 
 @app.command("build")
-def build_handler(dev: bool = True) -> None:
+def build_handler(
+    dev: bool = True,
+    engine: Engine = typer.Option("xelatex"),
+) -> None:
     """"""
     command = shlex.join(
         [
-            "pdflatex",
+            engine.value,
             "-synctex=1",
             "-interaction=nonstopmode",
             "-shell-escape",
@@ -160,7 +171,7 @@ def _render_available_pos_langs(text: str) -> str:
             \\centering
             \\begin{{tabular}}{{@{{}}ll@{{}}}}
                 \\toprule
-                Язык & \\manArg[язык] \\\\\\midrule
+                Язык & \\rsArg[язык] \\\\\\midrule
                 {table_content}
                 \\bottomrule
             \\end{{tabular}}

@@ -12,3 +12,6 @@ manual:
 
 manual-dev:
 	python -m bin manual build --dev
+
+clear:
+	cd manual && latexmk -C manual.tex && rm -rf _minted_manual *.log
