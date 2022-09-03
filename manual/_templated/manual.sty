@@ -4,12 +4,20 @@
 \usepackage{fontspec}
 \usepackage{polyglossia}
 \setdefaultlanguage{russian}
-\setmainfont[Ligatures = TeX]{Noto Serif}[
-    ItalicFont = Noto Serif,
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{PT}[
+    Path = ../ fonts / PT ,
+    Extention = .ttf ,
+    UprightFont = *-Regular ,
+    BoldFont = *-Bold ,
 ]
-\newfontfamily\cyrillicfont{Noto Serif}
-\newfontfamily\cyrillicfontit{Noto Serif}
-\newfontfamily\cyrillicfonttt{Noto Mono}
+\setmainfont{PT}[
+    Path = ../ fonts / PT ,
+    Extention = .ttf ,
+    UprightFont = *-Regular ,
+]
+\newfontfamily\cyrillicfont{PT Serif}
+\newfontfamily\cyrillicfonttt{PT Mono}
 \else
 \usepackage[T1, T2A]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -19,7 +27,7 @@
 \usepackage[bottom=2cm,left=3cm,right=1cm,top=2cm]{geometry}
 
 \linespread{1.5}
-
+\normalsize
 \usepackage{bookmark}
 \usepackage{booktabs}
 \usepackage{multicol}
@@ -30,32 +38,36 @@
 
 \ExplSyntaxOn
 
-\NewDocumentCommand\manCode{m}{ \texttt{#1} }
+\NewDocumentCommand\rsCode{m}{ \texttt{#1} }
 
-\NewDocumentCommand\manSpace{} { \hspace*{.5em} }
+\NewDocumentCommand\rsSpace{} { ~ }
 
-\NewDocumentCommand\manTab{} { \hspace*{2em} }
+\NewDocumentCommand\rsTab{} { \hspace*{2em} }
 
-\NewDocumentCommand\manReq{ m } {
+\NewDocumentCommand\rsReq{ m } {
     \textcolor[HTML]{F33A6A}{ \textbf{\{} }
         #1
     \textcolor[HTML]{F33A6A}{ \textbf{\}} }
 }
 
-\NewDocumentCommand\manOpt{ m } {
+\NewDocumentCommand\rsOpt{ m } {
     \textcolor[HTML]{F4BB44}{ \textbf{[} }
         #1
     \textcolor[HTML]{F4BB44}{ \textbf{]} }
 }
 
-\NewDocumentCommand\manKwargs{s O{kwargs}} {
+\NewDocumentCommand\rsKwarg{s O{kwarg}} {
     \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{red!75}{#2}
     }
 }
 
-\NewDocumentCommand\manArg{s O{arg} O{}} {
+\NewDocumentCommand\rsKwargs{s O{kwargs}} {
+    #1
+}
+
+\NewDocumentCommand\rsArg{ s O{arg} O{} } {
     \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{blue!75}{#2}\textcolor{blue!75}
@@ -63,15 +75,29 @@
     }
 }
 
-\NewDocumentCommand{\manModifier} {s O{modifier} O{}} {
+\NewDocumentCommand{\rsName} { s O{name} } {
     \texttt{
         \IfBooleanTF{#1}{\textbackslash}{}
         \textcolor{ForestGreen!75}{#2}
-        #3
     }
 }
 
-\NewDocumentCommand\manColon{} {:}
+\NewDocumentCommand{\rsModifier} { s O{modifier} } {
+    \texttt{
+        \IfBooleanTF{#1}{\textbackslash}{}
+        \textcolor{Orchid}{#2}
+    }
+}
+
+\NewDocumentCommand\rsColon{} {:}
+
+\NewDocumentCommand\rsType{ O{type} } {
+    \texttt{
+        \textcolor{TealBlue}{#1}
+    } 
+}
+
+\NewDocumentCommand\rsDefault{ O{<>} } { \texttt{#1} }
 
 \ExplSyntaxOff{}
 

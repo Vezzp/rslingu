@@ -1,56 +1,60 @@
 \section{Части речи}\label{sec:speech_parts}
 
 Все частеречные команды имеют одинаковую сигнатуру:
-\ExplSyntaxOn
-\begin{signature}
-    \manModifier[cmd] \manColon{} \manCode{<pos_type>}
-    \textasteriskcentered
-    \manReq{ \manArg[слово:tl] }
-    \manOpt{ \manArg[анализ:tl] }
-\end{signature}
-\ExplSyntaxOff
+\begin{tcolorbox}
+    \rsCode{%
+        \rsModifier[cmd]
+        {}::
+        \rsName[<pos\_cmd\_name>]
+        \rsOpt{ \textasteriskcentered{} }
+        \rsReq{
+            \rsArg[слово:tl]
+        }
+        \rsOpt{ \rsArg[частеречный\_анализ:tl] }
+    }
+    \begin{itemize}
+        \item \textasteriskcentered{} — спецсимвол печати сокращённого названия части речи над словом.
+    \end{itemize}
+\end{tcolorbox}
 
-где \manCode{<pos\_type>} --- название команды для части речи из \autoref{tab:pos-commands};
-\textasteriskcentered --- флаг того, печатать ли сокращённое название части речи над
-словом или нет; \manArg[слово:tl] --- слово для частеречного разбора;
-\manArg[анализ:tl] --- частеречный анализ слова.
+где \rsName[<pos\_cmd\_name>] — название команды для части речи из \autoref{tab:pos-commands}.
 
 \begin{table}[ht!]
     \centering
     \begin{tabular}{@{}llll@{}}
         \toprule
-        \manCode{pos\_type}           & Перевод         & \manCode{pos\_type} & Перевод
+        \rsName[<pos\_cmd\_name>] & Перевод         & \rsName[<pos\_cmd\_name>] & Перевод
         \\\midrule
 
-        \manModifier[rsNoun]          & существительное
-                                      &
-        \manModifier[rsVerb]          & глагол
+        \rsName[rsNoun]           & существительное
+                                  &
+        \rsName[rsVerb]           & глагол
         \\\midrule
 
-        \manModifier[rsAdverb]        & наречие
-                                      &
-        \manModifier[rsProposition]   & предлог
+        \rsName[rsAdverb]         & наречие
+                                  &
+        \rsName[rsProposition]    & предлог
         \\\midrule
 
-        \manModifier[rsConjunction]   & союз
-                                      &
-        \manModifier[rsPronoun]       & местоимение
+        \rsName[rsConjunction]    & союз
+                                  &
+        \rsName[rsPronoun]        & местоимение
         \\\midrule
 
-        \manModifier[rsAdjective]     & прилагательное
-                                      &
-        \manModifier[rsParticle]      & частица
+        \rsName[rsAdjective]      & прилагательное
+                                  &
+        \rsName[rsParticle]       & частица
         \\\midrule
 
-        \manModifier[rsInterjection]  & междометие
-                                      &
-        \manModifier[rsNumeral]       & числительное
+        \rsName[rsInterjection]   & междометие
+                                  &
+        \rsName[rsNumeral]        & числительное
         \\\midrule
 
 
-        \manModifier[rsParticiple]    & причастие
-                                      &
-        \manModifier[rsTransgressive] & деепричастие
+        \rsName[rsParticiple]     & причастие
+                                  &
+        \rsName[rsTransgressive]  & деепричастие
 
         \\\bottomrule
     \end{tabular}
@@ -59,59 +63,59 @@
 \end{table}
 
 \begin{tnote}
-    Команды данного раздела чувствительны к опции \manCode{phantom} внутри окружения
+    Команды данного раздела чувствительны к опции \rsCode{phantom} внутри окружения
     \macCode{rslingu} или команд для синтаксического разбора предложений.
     Примеры этого можно найти в \autoref{tab:subject-usage} или на
     \autoref{fig:rslingu-demo-full}.
 \end{tnote}
 
-Базовые сценарии использования команд для частей речи на примере \manModifier[rsNoun] представлены в таблице ниже.
+Базовые сценарии использования команд для частей речи на примере \rsModifier[rsNoun] представлены в таблице ниже.
 
-\ExplSyntaxOn
+\ExplSyntaxOn{}
 \begin{table}[ht!]
     \centering
     \begin{tabular}{@{}ll@{}}
         \toprule
 
-        \manModifier*[rsNoun]
-        \manReq{ \manArg[существительное] }
+        \rsModifier*[rsNoun]
+        \rsReq{ \rsArg[существительное] }
          &
         \rsNoun{существительное}
         \\\midrule
 
-        \manModifier*[rsNoun]
-        \manReq{ \manArg[существительное] }
-        \manOpt{ \manArg[ср.р., им.п.] }
+        \rsModifier*[rsNoun]
+        \rsReq{ \rsArg[существительное] }
+        \rsOpt{ \rsArg[ср.р., им.п.] }
          &
         \rsNoun{существительное}[ ср.р., им.п. ]
         \\\midrule
 
-        \manModifier*[rsNoun]
+        \rsModifier*[rsNoun]
         \textasteriskcentered{}
-        \manReq{ \manArg[существительное] }
+        \rsReq{ \rsArg[существительное] }
          &
         \rsNoun*{существительное}
         \\\midrule
 
-        \manModifier*[rsNoun]
+        \rsModifier*[rsNoun]
         \textasteriskcentered{}
-        \manReq{ \manArg[существительное] }
-        \manOpt{ \manArg[СУЩ.] }
+        \rsReq{ \rsArg[существительное] }
+        \rsOpt{ \rsArg[СУЩ.] }
          &
         \rsNoun*{существительное}[СУЩ.]
         \\\midrule
 
-        \manModifier*[rsNoun]
+        \rsModifier*[rsNoun]
         \textasteriskcentered{}
-        \manReq{ \manArg[существительное] }
-        \manOpt{ \manArg[СУЩ., ср.р., им.п] }
+        \rsReq{ \rsArg[существительное] }
+        \rsOpt{ \rsArg[СУЩ., ср.р., им.п] }
          &
         \rsNoun*{существительное}[СУЩ., ср.р., им.п]
         \\\midrule
 
-        \manModifier*[rsNoun]
-        \manReq{ \manArg[существительное] }
-        \manOpt{ \manArg[СУЩ., ср.р., им.п] }
+        \rsModifier*[rsNoun]
+        \rsReq{ \rsArg[существительное] }
+        \rsOpt{ \rsArg[СУЩ., ср.р., им.п] }
          &
         \rsNoun{существительное}[СУЩ., ср.р., им.п]
         \\\midrule
@@ -120,20 +124,30 @@
     \end{tabular}
     \caption{Использование~команд~частей~речи}
 \end{table}
-\ExplSyntaxOff
+\ExplSyntaxOff{}
 
 
 \subsection{Сокращённые названия частей речи}
 
-Для отображения сокращённых названий частей речи в тексте можно воспользоваться следующей командой:
-\ExplSyntaxOn
-\begin{signature}
-    \manModifier[cmd] \manColon{} \manCode{rsShowAcr}
-    \textasteriskcentered
-    \manOpt{ \manArg[язык:tl] }
-    \manReq{ \manArg[часть_речи:tl]  }
-\end{signature}
-\ExplSyntaxOff
+Для отображения сокращённых названий частей речи в тексте можно воспользоваться следующей командой
+\rsName[rsShowAcr].
+
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd]
+        {}::
+        \rsName[rsShowAcr]
+        \rsOpt{\textasteriskcentered{}}
+        \rsOpt{\rsArg[язык:tl] }
+        \rsReq{\rsArg[часть\_речи:tl]}
+    }
+    \textit{
+        \begin{itemize}
+            \item \textasteriskcentered{} — спецсимвол для печати значения по сокращения умолчнию.
+        \end{itemize}
+    }
+\end{tcolorbox}
+
 
 
 \begin{figure}[H]
@@ -169,25 +183,26 @@
 
 
 \begin{itemize}
-    \item \manModifier[rsSetAcr] позволяет задать частеречное сокращение отличное от значения по умолчанию.
-          \ExplSyntaxOn
-          \begin{signature}
-              \manModifier[cmd] \manColon{}
-              \manCode{ rsSetAcr }
-              \manOpt{ \manArg[язык:tl] }
-              \manReq{ \manArg[часть_речи:tl]  }
-              \manReq{ \manArg[сокращение:tl]  }
-          \end{signature}
-          \ExplSyntaxOff
-    \item \manModifier[rsResetAcr] возвращает частеречное сокращение по умолчанию.
-          \ExplSyntaxOn
-          \begin{signature}
-              \manModifier[cmd] \manColon{}
-              \manCode{ rsResetAcr }
-              \manOpt{ \manArg[язык:tl] }
-              \manReq{ \manArg[часть_речи:tl]  }
-          \end{signature}
-          \ExplSyntaxOff
+    \item
+          \rsName[rsSetAcr] позволяет задать частеречное сокращение отличное от значения по умолчанию.
+          \begin{tcolorbox}
+              \rsModifier[cmd]
+              {}::
+              \rsName[ rsSetAcr ]
+              \rsOpt{ \rsArg[язык:tl] }
+              \rsReq{ \rsArg[часть\_речи:tl]  }
+              \rsReq{ \rsArg[сокращение:tl]  }
+          \end{tcolorbox}
+
+    \item
+          \rsName[rsResetAcr] возвращает частеречное сокращение по умолчанию.
+          \begin{tcolorbox}
+              \rsModifier[cmd]
+              {}::
+              \rsName[ rsResetAcr ]
+              \rsOpt{ \rsArg[язык:tl] }
+              \rsReq{ \rsArg[часть\_речи:tl]  }
+          \end{tcolorbox}
 \end{itemize}
 
 
@@ -218,16 +233,18 @@
 
 \subsubsection{Локализация стандартных сокращений частеречных команд}
 
-Пакет \manCode{rslingu} поддерживает локализацию для частеречных сокращений во всех командах из
-\namedautoref{tab:pos-commands} через модификатор \manModifier[rsSetLanguage]:
-\ExplSyntaxOn
-\begin{signature}
-    \manCode{
-        \manModifier[cmd] \manColon rsSetLanguage
-        \manReq{ \manArg[язык: tl] }
+Пакет \rsCode{rslingu} поддерживает локализацию для частеречных сокращений во всех командах из
+\namedautoref{tab:pos-commands} через макрос \rsName[rsSetLanguage]:
+\ExplSyntaxOn{}
+\begin{tcolorbox}
+    \rsCode{
+        \rsModifier[cmd]
+        {}::
+        \rsName[rsSetLanguage]
+        \rsReq{ \rsArg[язык: tl] }
     }
-\end{signature}
-\ExplSyntaxOff
+\end{tcolorbox}
+\ExplSyntaxOff{}
 
 
 Локализация частеречных сокращений доступна для следующих языков:

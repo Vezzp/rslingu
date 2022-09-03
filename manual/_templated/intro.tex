@@ -1,45 +1,59 @@
 \section{Условные обозначения}
 
-Все макросы, или текстовые модификаторы текста, пакета \texttt{rslingu} в данном руководстве
-задаются следующим образом:
-\ExplSyntaxOn
-\begin{signature}
-    \manCode {
-        \manModifier[mtype]
-        \manSpace{}\manColon{}\manSpace{}
-        mname
-        \manSpace{}
-        \manOpt\manKwargs
-        \manSpace{}
-        < [, \{ >
-                \manSpace{}
-                \manArg{}:type_hint
-                \manSpace{}< ], \} >
-        \manSpace{}... \\
 
-        \manTab{} \manKwargs<> \manSpace{}
-        kwarg_name \manSpace{} \manColon{} \manSpace{}type_hint = kwarg_default_value \manSpace{} ...
+\subsection*{Сигнатура макросов}
+
+Сигнатура всех макросов, или текстовых модификаторов, данного пакета задаётся следующим образом.
+\begin{tcolorbox}
+    \rsCode{%
+        \rsModifier{}
+        {}::
+        \rsName{} \\\rsTab{}
+        \rsOpt{
+            \rsKwarg{}:\rsType{}=\rsDefault{},
+            \rsKwarg{}:\rsType{}=\rsDefault{},
+            \ldots,
+            \rsKwarg{}:\rsType{}=\rsDefault{}
+        } \\\rsTab{}
+        \rsReq{ \rsArg{}:\rsType{} }
+        \rsOpt{ \rsArg{}:\rsType{} }
+        \ldots{}
+        \rsReq{ \rsArg{}:\rsType{} } \\\\
     }
-\end{signature}
-\ExplSyntaxOff
+    \textit{Опциональная документация макроса.}
+\end{tcolorbox}
 
 \begin{itemize}
-    \item \manModifier[modifier\_type] — тип текстового модификатора, команда (\manModifier[cmd]) или окружение (\manModifier[env]).
-
-    \item \manKwargs{} — ненулевое количество именованных необязательных аргументов.
+    \item
+          \rsModifier{} — тип макроса. Может быть либо командой (\rsModifier[cmd]),
+          либо окружением (\rsModifier[env]).
 
     \item
-          \manArg{} — ненулевое количество обязательных и/или необязательных аргументов.
+          \rsName{} — имя макроса.
+
+    \item
+          \rsKwarg{}:\rsType{}=\rsDefault{} — именованный аргумент с именем
+          \rsKwarg{} типом \rsType{} и значением по умолчанию \rsDefault{}.
+
+    \item
+          \rsArg{}:\rsType{} — позиционный аргумент с именем \rsArg{} и типом \rsType{}.
+
+    \item
+          \rsReq{\ldots} / \rsOpt{\ldots} — обозначения для обязательных и необязательных аргументов.
 \end{itemize}
 
-По возможности, у каждого агрумента будут указаны подсказки об обозначении аргумента и
-его типе (\texttt{type\_hint}), который может принимать следующие значения:
+
+\subsection*{Типы аргументов}
 
 \begin{itemize}
-    \item \texttt{tl}, от англ. \textit{token list}, — произвольный набор символов, обрабатывается целиком.
+    \item
+          \rsType[tl] (от англ. \textit{token list}) — произвольный набор символов, обрабатывается целиком.
 
-    \item \texttt{clist}, от англ. \textit{comma list}, — набор произвольных символов, разделённых запятой, где
+    \item
+          \rsType[clist] (от англ. \textit{comma list}) — набор произвольных символов,
+          разделённых запятой, где
           каждый поднабор до запятой обрабатывается независимо.
 
-    \item \texttt{bool} — логический тип, может принимать значения «true» или «false».
+    \item
+          \rsType[bool] — логический тип, может принимать значения «true» или «false».
 \end{itemize}

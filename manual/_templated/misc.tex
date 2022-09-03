@@ -3,7 +3,7 @@
 \subsection{Цвета в морфемном и синтаксических разборах}
 
 Каждая из команд морфемного или синтаксического разбора имеет необязательный
-параметр-флаг \manKwargs[color], который отвечает за раскрашивание обозначений морфем
+флаг \rsKwarg[color], который отвечает за раскрашивание обозначений морфем
 или синтаксических подчёркиваний.
 
 По умолчанию цвета элементов следующие:
@@ -12,32 +12,30 @@
 
 % template: {{ syntax_color_table }}
 
-
-На данный момент существуют несколько команд для работы с цветом морфем и
-синтаксических конструкций.
+Ниже представлены макросы для работы с цветом морфем и синтаксических подчёркиваний.
 \begin{itemize}
-    \item \manModifier[rsSetColor] позволяет задать цвет элемента отличный от цвета по
-    умолчанию.
-        \ExplSyntaxOn
-        \begin{tcolorbox}
-            \manModifier[cmd] \manColon{}
-            \manCode{ rsSetColor }
-            \manReq{ \manArg[имя\_элемента:tl] }
-            \manReq{ \manArg[код\_цвета:tl]  }
-        \end{tcolorbox}
-        \ExplSyntaxOff
-    \item \manModifier[rsResetColor] возвращает цвет элемента по умолчанию.
-        \ExplSyntaxOn
-        \begin{tcolorbox}
-            \manModifier[cmd] \manColon{}
-            \manCode{ rsResetColor }
-            \manReq{ \manArg[имя\_элемента:tl] }
-        \end{tcolorbox}
-        \ExplSyntaxOff
+    \item
+          \rsName[rsSetColor] позволяет задать цвет элемента отличный от цвета по
+          умолчанию.
+          \begin{tcolorbox}
+              \rsModifier[cmd]
+              {}::
+              \rsName[rsSetColor]
+              \rsReq{\rsArg[имя\_элемента:tl]}
+              \rsReq{\rsArg[код\_цвета:tl] }
+          \end{tcolorbox}
+    \item
+          \rsName[rsResetColor] возвращает цвет элемента по умолчанию.
+          \begin{tcolorbox}
+              \rsModifier[cmd]
+              {}::
+              \rsName{rsResetColor}
+              \rsReq{\rsArg[имя\_элемента:tl]}
+          \end{tcolorbox}
 \end{itemize}
 
-где \manArg[имя\_элемента:tl] --- обозначение морфемы или синтаксической конструкции в любом
-регистре на английском языке, \manArg[код\_цвета:tl] --- код цвета в шестнадцатеричном формате.
+где \rsArg[имя\_элемента:tl] --- обозначение морфемы или синтаксической конструкции в любом
+регистре на английском языке, \rsArg[код\_цвета:tl] --- код цвета в шестнадцатеричном формате.
 
 \begin{figure}[H]
     \centering
@@ -72,22 +70,26 @@
 
 \subsection{Окружение rslingu}
 
-\ExplSyntaxOn
+\ExplSyntaxOn{}
 \begin{tcolorbox}
-    \manModifier[env] \manColon{}
-    \manCode{rslingu}
-    \manCode{[\manKwargs{}]}
-    \\
-    \manTab{} \manKwargs{} \manColon{} \manCode{color=false}, \manSpace{} \manCode{phantom=false}
+    \rsCode{
+        \rsModifier[env]
+        {}::
+        \rsMan{rslingu} \\\rsTab{}
+        \rsOpt{
+            \rsKwarg[color]:\rsType[bool]=false,
+            \rsKwarg[phantom]:\rsType[bool]=false
+        }
+    }
 \end{tcolorbox}
-\ExplSyntaxOff
+\ExplSyntaxOff{}
 
 Иногда может возникать необходимость, например, морфемного разбора слов с <<разрывной>> основой. Для таких случаев нет специально
-определённых команд, подобно команде \manCode{rsMorphemicAnalysis}, так что единственный способ отобразить такие слова --- это
-последовательное использование команд для каждой из морфем. При передаче параметров \manCode{phantom} и \manCode{color} в каждую из
+определённых команд, подобно команде \rsCode{rsMorphemicAnalysis}, так что единственный способ отобразить такие слова --- это
+последовательное использование команд для каждой из морфем. При передаче параметров \rsCode{phantom} и \rsCode{color} в каждую из
 команд возникает многократное дублирование кода, что ухудшает его читаемость.
 
-Решить эту проблему призвано окружение \manCode{rslingu}, которое указании какого-либо дополнительного аргумента, <<активирует>> его для всех команд, принимающий данный аргумент, внутри окружения.
+Решить эту проблему призвано окружение \rsCode{rslingu}, которое указании какого-либо дополнительного аргумента, <<активирует>> его для всех команд, принимающий данный аргумент, внутри окружения.
 \begin{figure}[htp!]
     \centering
     \begin{subfigure}{\textwidth}
@@ -97,7 +99,7 @@
                 \rsObject{раму} \rsAdverbial{вечером}.
             \end{rslingu}
         \end{Latexcode}
-        \caption{Код с использованием окружения \manCode{rslingu}.}
+        \caption{Код с использованием окружения \rsCode{rslingu}.}
     \end{subfigure}\vspace*{.75cm}
     \begin{subfigure}{\textwidth}
         \begin{Latexcode}
@@ -105,7 +107,7 @@
             \rsPredicate[color]{\rsVerb*{мыла}} \rsObject[color]{раму}
             \rsAdverbial[color]{вечером}.
         \end{Latexcode}
-        \caption{Код без использования окружения \manCode{rslingu}.}
+        \caption{Код без использования окружения \rsCode{rslingu}.}
     \end{subfigure}\vspace*{.75cm}
     \begin{subfigure}{.9\textwidth}
         \centering
@@ -115,7 +117,7 @@
         \end{rslingu}
         \caption{Результат выполнения каждого из частей кода выше.}
     \end{subfigure}
-    \caption{Демонстрация возможностей окружения \manCode{rslingu} c параметром \manCode{color}.}
+    \caption{Демонстрация возможностей окружения \rsCode{rslingu} c параметром \rsCode{color}.}
 \end{figure}
 
 
@@ -129,7 +131,7 @@
                 \rsObject{раму} \rsAdverbial{вечером}.
             \end{rslingu}
         \end{Latexcode}
-        \caption{Код с использованием окружения \manCode{rslingu}.}
+        \caption{Код с использованием окружения \rsCode{rslingu}.}
     \end{subfigure}\vspace*{.75cm}
     \begin{subfigure}{\textwidth}
         \begin{Latexcode}
@@ -137,7 +139,7 @@
             \rsPredicate[color,phantom]{\rsVerb*{мыла}} \rsObject[color,phantom]{раму}
             \rsAdverbial[color,phantom]{вечером}.
         \end{Latexcode}
-        \caption{Код без использования окружения \manCode{rslingu}.}
+        \caption{Код без использования окружения \rsCode{rslingu}.}
     \end{subfigure}\vspace*{.75cm}
     \begin{subfigure}{.9\textwidth}
         \centering
@@ -147,7 +149,7 @@
         \end{rslingu}
         \caption{Результат выполнения каждого из частей кода выше.}
     \end{subfigure}
-    \caption{Демонстрация возможностей окружения \manCode{rslingu} c параметрами \manCode{color} и \manCode{phantom}.}
+    \caption{Демонстрация возможностей окружения \rsCode{rslingu} c параметрами \rsCode{color} и \rsCode{phantom}.}
     \label{fig:rslingu-demo-full}
 \end{figure}
 
@@ -163,12 +165,12 @@
 
     \subsection{Русский язык}
 
-    \ExplSyntaxOn
+    \ExplSyntaxOn{}
 
     \group_begin:
 
     \cs_new:Npn \l_tmpa_cs:nn #1#2 {
-        \manModifier*[ #1 ]\manReq{\manArg[ #2 ]} &
+        \rsName*[ #1 ]\rsReq{\rsArg[ #2 ]} &
         \cs:w #1 \cs_end: { #2 }
     }
 
@@ -204,12 +206,12 @@
 
     \group_end:
 
-    \ExplSyntaxOff
+    \ExplSyntaxOff{}
 
 
     \subsection{Украинский язык}
 
-    \ExplSyntaxOn
+    \ExplSyntaxOn{}
 
     \group_begin:
 
@@ -248,6 +250,6 @@
 
     \group_end:
 
-    \ExplSyntaxOff
+    \ExplSyntaxOff{}
 
 \end{appendices}
