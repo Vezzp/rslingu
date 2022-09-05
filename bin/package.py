@@ -1,81 +1,68 @@
+from __future__ import annotations
+
 import itertools
 import re
 import textwrap
 from pathlib import Path
-from typing import Final, Optional
 
 import typer
 
 from . import defs
 from .utils import compose, render_template
 
-__here__ = Path(__file__).resolve()
-
 INPUT_RE = re.compile(r"\\input\{([\w|\.]+)\}")
-SRC_DPATH: Final[Path] = __here__.parents[1].joinpath("src")
-SRC_FPATH: Final[Path] = SRC_DPATH.joinpath("main.sty")
-DST_FPATH: Final[Path] = __here__.parents[1].joinpath("rslingu.sty")
-VERSION_RE = re.compile(
-    r"(?P<exp>\\tl_const:Nn\s*\\c_rslingu_version_tl)\s*\{\s*(?P<ver>[\.\d]+)\s*\}"
-)
-
-
-version_app = typer.Typer(name="version")
 
 app = typer.Typer(name="package")
-app.add_typer(version_app)
 
 
-@version_app.command("show")
-def version_show_handler() -> None:
-    """"""
-    typer.echo(find_version())
-
-
-@version_app.command("change")
-def version_change_handler(version: str) -> None:
-    """"""
-    change_version(version)
+@app.callback()
+def callback() -> None:
+    ...
 
 
 @app.command("build")
-def build_handler(version: Optional[str] = None) -> None:
-    """"""
-    if version is not None:
-        change_version(version)
+def build_handler(
+    dst_dpath: Path = typer.Option(
+        ...,
+        "-o",
+        "--output",
+        help="Directory to save package to a file named `rslingu.sty`",
+    ),
+) -> None:
+    dst_fpath = dst_dpath.joinpath("rslingu.sty")
+    dst_fpath.parent.mkdir(exist_ok=True, parents=True)
 
-    content_parts = []
-    for line in SRC_FPATH.read_text().splitlines():
+    sty_text: str = compose(_render_release_date, _render_package_version)(
+        defs.PACKAGE_DPATH.joinpath("main.sty").read_text()
+    )
+
+    package_parts = []
+    for line in sty_text.splitlines():
         if (match := INPUT_RE.match(line)) is None:
-            content_parts.append(line)
+            package_parts.append(line)
 
         else:
             fname = match.group(1)
-            content_parts.append(SRC_DPATH.joinpath(fname).read_text())
+            package_parts.append(defs.PACKAGE_DPATH.joinpath(fname).read_text())
 
-    text = "\n".join(content_parts)
-    out = compose(_render_color_codegen, _render_pos_codegen, _render_pos_lang_codegen)(
-        text
-    )
+    full_package_text = compose(
+        _render_color_codegen, _render_pos_codegen, _render_pos_lang_codegen
+    )("\n".join(package_parts))
 
-    DST_FPATH.write_text(out)
+    dst_fpath.write_text(full_package_text)
 
 
-def find_version() -> str:
-    """"""
-    out = VERSION_RE.findall(SRC_DPATH.joinpath("main.sty").read_text())[0][-1]
+def _render_release_date(text: str) -> str:
+    out = render_template("release_date", defs.RSLINGU_DATE.strftime("%Y/%m/%d"), text)
     return out
 
 
-def change_version(version: str) -> None:
-    """"""
-    SRC_FPATH.write_text(
-        VERSION_RE.sub(rf"\g<exp> {{ {version} }}", SRC_FPATH.read_text())
-    )
+def _render_package_version(text: str) -> str:
+    out = render_template("package_version", defs.RSLINGU_VERSION, text)
+    return out
 
 
 def _render_color_codegen(text: str) -> str:
-    """"""
     out = render_template(
         "color_codegen",
         "\n".join(
@@ -93,7 +80,6 @@ def _render_color_codegen(text: str) -> str:
 
 
 def _render_pos_codegen(text: str) -> str:
-    """"""
     repl_parts = []
     for pos_contraction in defs.POS_CONTRACTIONS:
         en_full_name = pos_contraction["en_full_name"]
@@ -117,7 +103,6 @@ def _render_pos_codegen(text: str) -> str:
 
 
 def _render_pos_lang_codegen(text: str) -> str:
-    """"""
     langs = ",".join(defs.POS_LANGS)
     out = render_template(
         "pos_lang_codegen",

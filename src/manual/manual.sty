@@ -6,13 +6,13 @@
 \setdefaultlanguage{russian}
 \defaultfontfeatures{Ligatures=TeX}
 \setmainfont{PT}[
-    Path = ../ fonts / PT ,
+    Path = ./ fonts / PT ,
     Extention = .ttf ,
     UprightFont = *-Regular ,
     BoldFont = *-Bold ,
 ]
 \setmainfont{PT}[
-    Path = ../ fonts / PT ,
+    Path = ./ fonts / PT ,
     Extention = .ttf ,
     UprightFont = *-Regular ,
 ]
@@ -34,7 +34,7 @@
 \usepackage{subcaption}
 \usepackage{tcolorbox}
 
-\usepackage{../rslingu}
+\usepackage{./rslingu}
 
 \ExplSyntaxOn
 
@@ -141,15 +141,5 @@
 
 
 \ExplSyntaxOn{}
-
-\usepackage{background}
-\backgroundsetup{
-    position=current~page.west,
-    angle=90,
-    vshift=-5mm,
-    opacity=1,
-    scale=3,
-    contents=Черновик~версии~0.0.3,
-}
-
+{{##dev_watermark}}
 \ExplSyntaxOff{}

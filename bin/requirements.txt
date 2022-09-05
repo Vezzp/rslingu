@@ -1,1 +1,2 @@
 typer
+python-dotenv

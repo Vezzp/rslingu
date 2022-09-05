@@ -2,7 +2,8 @@
 % (c) Vladislav Shlenskii (vladislav.shlenskii@gmail.com).
 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
-\ProvidesPackage{rslingu}[2021/08/20 v0.02]
+
+template: \ProvidesPackage{rslingu}[{{##release_date}} v{{##package_version}}]
 
 \RequirePackage{etoolbox}
 \RequirePackage{expl3}
@@ -18,7 +19,7 @@
 
 % Версия пакета.
 
-\tl_const:Nn \c_rslingu_version_tl { 0.0.3 }
+\tl_const:Nn \c_rslingu_version_tl {{{##package_version}}}
 
 \NewDocumentCommand{\rsVersion}{}{ \c_rslingu_version_tl }
 
@@ -89,7 +90,7 @@
 
 % Генерация цветов для знаков морфем и синтаксических подчёркиваний.
 % \g__rslingu_color_codegen_cs:nn { <morpheme_name/syntax_name> } { <hex_color> }
-% template: {{ color_codegen }}
+{{##color_codegen}}
 
 \input{morphology.tex}
 \input{syntax.tex}

@@ -1,6 +1,32 @@
 from __future__ import annotations
 
+import os
+from datetime import datetime
+from pathlib import Path
 from typing import TypedDict
+
+import dotenv
+
+dotenv.load_dotenv()
+
+if (RSLINGU_VERSION_ := os.getenv("RSLINGU_VERSION")) is None:
+    raise RuntimeError(f"`RSLINGU_VERSION` is not specified")
+else:
+    RSLINGU_VERSION = RSLINGU_VERSION_
+
+
+if (RSLINGU_DATE_ := os.getenv("RSLINGU_DATE")) is None:
+    raise RuntimeError(f"`RSLINGU_DATE` env is not specified")
+else:
+    RSLINGU_DATE = datetime.strptime(RSLINGU_DATE_, "%Y-%m-%d")
+
+
+SRC_DPATH = Path(__file__).absolute().parent.parent.joinpath("src")
+PACKAGE_DPATH = SRC_DPATH.joinpath("package")
+assert PACKAGE_DPATH.exists()
+
+MANUAL_DPATH = SRC_DPATH.joinpath("manual")
+assert MANUAL_DPATH.exists()
 
 
 class PoSContraction(TypedDict):
