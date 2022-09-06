@@ -14,11 +14,9 @@ if (RSLINGU_VERSION_ := os.getenv("RSLINGU_VERSION")) is None:
 else:
     RSLINGU_VERSION = RSLINGU_VERSION_
 
-
-if (RSLINGU_DATE_ := os.getenv("RSLINGU_DATE")) is None:
-    raise RuntimeError(f"`RSLINGU_DATE` env is not specified")
-else:
-    RSLINGU_DATE = datetime.strptime(RSLINGU_DATE_, "%Y-%m-%d")
+RSLINGU_DATE = datetime.strptime(
+    os.getenv("RSLINGU_DATE", str(datetime.today())), "%Y-%m-%d"
+)
 
 
 SRC_DPATH = Path(__file__).absolute().parent.parent.joinpath("src")
